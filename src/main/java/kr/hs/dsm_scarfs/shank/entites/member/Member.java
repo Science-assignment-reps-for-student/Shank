@@ -21,4 +21,5 @@ public class Member {
     private Integer userId;
 
     private Integer homeworkId;
+
 }

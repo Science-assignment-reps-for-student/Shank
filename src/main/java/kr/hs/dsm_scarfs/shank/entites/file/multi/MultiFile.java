@@ -5,7 +5,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Setter
 @Getter
 @Builder
 @Entity
@@ -23,7 +22,7 @@ public class MultiFile {
 
     private String fileName;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String path;
 
     private LocalDateTime createdAt;
