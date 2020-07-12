@@ -1,4 +1,4 @@
-package kr.hs.dsm_scarfs.shank.domain.entitys;
+package kr.hs.dsm_scarfs.shank.domain.entites;
 
 import lombok.*;
 

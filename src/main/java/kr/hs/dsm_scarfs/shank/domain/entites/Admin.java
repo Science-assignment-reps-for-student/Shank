@@ -1,6 +1,5 @@
-package kr.hs.dsm_scarfs.shank.domain.entitys;
+package kr.hs.dsm_scarfs.shank.domain.entites;
 
-import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
@@ -8,18 +7,18 @@ import javax.persistence.*;
 @Setter
 @Getter
 @Builder
-@Entity(name = "team")
+@Entity(name = "admin")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Team {
+public class Admin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer leaderId;
+    @Column(unique = true, nullable = false)
+    private String email;
 
-    private Integer homeworkId;
+    private String password;
 
-    @NotNull
     private String name;
 }

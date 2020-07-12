@@ -1,6 +1,5 @@
-package kr.hs.dsm_scarfs.shank.domain.entitys;
+package kr.hs.dsm_scarfs.shank.domain.entites;
 
-import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,22 +16,16 @@ public class MultiFile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(unique = true)
     private Integer homeworkId;
 
-    @Column(unique = true)
     private Integer teamId;
 
-    @NotNull
     private String fileName;
 
-    @NotNull
     @Column(unique = true)
     private String path;
 
-    @NotNull
     private LocalDateTime createdAt;
 
-    @NotNull
     private boolean isLate;
 }
