@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @Builder
+@AllArgsConstructor
 @Entity(name = "homework")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Homework {

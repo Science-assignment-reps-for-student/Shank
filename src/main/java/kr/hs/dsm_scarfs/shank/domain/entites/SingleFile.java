@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @Builder
+@AllArgsConstructor
 @Entity(name = "single_file")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SingleFile {

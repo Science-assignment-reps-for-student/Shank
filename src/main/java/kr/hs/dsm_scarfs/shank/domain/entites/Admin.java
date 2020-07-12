@@ -7,6 +7,7 @@ import javax.persistence.*;
 @Setter
 @Getter
 @Builder
+@AllArgsConstructor
 @Entity(name = "admin")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Admin {

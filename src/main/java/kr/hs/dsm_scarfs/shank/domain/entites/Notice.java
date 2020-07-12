@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Setter
 @Getter
 @Builder
+@AllArgsConstructor
 @Entity(name = "notice")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Notice {

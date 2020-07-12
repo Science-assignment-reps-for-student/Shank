@@ -7,6 +7,7 @@ import javax.persistence.*;
 @Setter
 @Getter
 @Builder
+@AllArgsConstructor
 @Entity(name = "member")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {

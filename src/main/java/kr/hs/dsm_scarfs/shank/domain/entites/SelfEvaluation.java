@@ -10,6 +10,7 @@ import javax.persistence.Id;
 @Setter
 @Getter
 @Builder
+@AllArgsConstructor
 @Entity(name = "self_evaluation")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SelfEvaluation {
