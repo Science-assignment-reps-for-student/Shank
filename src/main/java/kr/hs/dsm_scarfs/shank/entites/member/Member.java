@@ -1,4 +1,4 @@
-package kr.hs.dsm_scarfs.shank.domain.entites;
+package kr.hs.dsm_scarfs.shank.entites.member;
 
 import lombok.*;
 
@@ -7,18 +7,18 @@ import javax.persistence.*;
 @Setter
 @Getter
 @Builder
+@Entity
 @AllArgsConstructor
-@Entity(name = "team")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Team {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer leaderId;
+    private Integer teamId;
+
+    private Integer userId;
 
     private Integer homeworkId;
-
-    private String name;
 }

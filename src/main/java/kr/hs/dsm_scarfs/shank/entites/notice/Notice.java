@@ -1,4 +1,4 @@
-package kr.hs.dsm_scarfs.shank.domain.entites;
+package kr.hs.dsm_scarfs.shank.entites.notice;
 
 import lombok.*;
 
@@ -8,8 +8,8 @@ import javax.persistence.*;
 @Setter
 @Getter
 @Builder
+@Entity
 @AllArgsConstructor
-@Entity(name = "notice")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Notice {
 
@@ -20,4 +20,5 @@ public class Notice {
     private String title;
 
     private String content;
+
 }

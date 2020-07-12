@@ -1,4 +1,4 @@
-package kr.hs.dsm_scarfs.shank.domain.entites;
+package kr.hs.dsm_scarfs.shank.entites.evaluation.mutual;
 
 import lombok.*;
 
@@ -10,8 +10,8 @@ import javax.persistence.Id;
 @Setter
 @Getter
 @Builder
+@Entity
 @AllArgsConstructor
-@Entity(name = "mutual_evaluation")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MutualEvaluation {
 
@@ -28,6 +28,5 @@ public class MutualEvaluation {
     private Integer communication;
 
     private Integer cooperation;
-
 
 }

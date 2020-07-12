@@ -1,4 +1,4 @@
-package kr.hs.dsm_scarfs.shank.domain.entites;
+package kr.hs.dsm_scarfs.shank.entites.evaluation.self;
 
 import lombok.*;
 
@@ -10,8 +10,8 @@ import javax.persistence.Id;
 @Setter
 @Getter
 @Builder
+@Entity
 @AllArgsConstructor
-@Entity(name = "self_evaluation")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SelfEvaluation {
 
@@ -28,4 +28,5 @@ public class SelfEvaluation {
     private Integer communication;
 
     private Integer attitude;
+
 }

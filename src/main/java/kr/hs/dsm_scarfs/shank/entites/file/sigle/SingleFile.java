@@ -1,4 +1,4 @@
-package kr.hs.dsm_scarfs.shank.domain.entites;
+package kr.hs.dsm_scarfs.shank.entites.file.sigle;
 
 import lombok.*;
 
@@ -8,25 +8,26 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @Builder
+@Entity
 @AllArgsConstructor
-@Entity(name = "multi_file")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MultiFile {
+public class SingleFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer homeworkId;
+    private Integer userId;
 
-    private Integer teamId;
+    private Integer homeworkId;
 
     private String fileName;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String path;
 
     private LocalDateTime createdAt;
 
     private boolean isLate;
+
 }

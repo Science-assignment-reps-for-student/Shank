@@ -1,4 +1,4 @@
-package kr.hs.dsm_scarfs.shank.domain.entites;
+package kr.hs.dsm_scarfs.shank.entites.admin;
 
 import lombok.*;
 
@@ -7,8 +7,8 @@ import javax.persistence.*;
 @Setter
 @Getter
 @Builder
+@Entity
 @AllArgsConstructor
-@Entity(name = "admin")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Admin {
 
@@ -22,4 +22,5 @@ public class Admin {
     private String password;
 
     private String name;
+
 }

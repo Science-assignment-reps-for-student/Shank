@@ -1,5 +1,6 @@
-package kr.hs.dsm_scarfs.shank.domain.entites;
+package kr.hs.dsm_scarfs.shank.entites.message;
 
+import kr.hs.dsm_scarfs.shank.entites.message.enums.MessageType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -8,8 +9,8 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @Builder
+@Entity
 @AllArgsConstructor
-@Entity(name = "message")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Message {
 
@@ -25,7 +26,10 @@ public class Message {
 
     private LocalDateTime time;
 
+    private MessageType type;
+
     private boolean isShow;
 
     private boolean isDeleted;
+
 }
