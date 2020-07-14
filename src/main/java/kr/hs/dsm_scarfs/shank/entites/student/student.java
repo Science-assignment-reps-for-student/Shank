@@ -24,4 +24,5 @@ public class student {
     private String password;
 
     private String name;
+
 }
