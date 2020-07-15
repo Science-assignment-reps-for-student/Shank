@@ -16,11 +16,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final StudentRepository studentRepository;
-    private final EmailVerificationRepository verificationRepository;
     private final EmailService emailService;
-    private final EmailVerificationRepository emailVerificationRepository;
+
+    private final StudentRepository studentRepository;
     private final AuthCodeRepository authCodeRepository;
+    private final EmailVerificationRepository verificationRepository;
+    private final EmailVerificationRepository emailVerificationRepository;
+
 
     @Override
     public void signUp(SignUpRequest signUpRequest) {

@@ -14,6 +14,6 @@ public class VerifyCodeRequest {
     private String email;
 
     @NotBlank
-    private String Code;
+    private String code;
 
 }
