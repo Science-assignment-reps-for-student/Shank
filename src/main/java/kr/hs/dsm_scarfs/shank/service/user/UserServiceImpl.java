@@ -11,7 +11,6 @@ import kr.hs.dsm_scarfs.shank.service.email.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {

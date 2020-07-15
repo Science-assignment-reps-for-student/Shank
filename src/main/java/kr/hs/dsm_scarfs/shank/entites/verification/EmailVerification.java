@@ -1,5 +1,6 @@
 package kr.hs.dsm_scarfs.shank.entites.verification;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
@@ -9,10 +10,11 @@ import javax.persistence.Id;
 
 @Getter
 @Builder
+@AllArgsConstructor
 @RedisHash(timeToLive = 60 * 3)
 public class EmailVerification {
 
-    private static final Long MINUTE = 60L;
+    public static final Long MINUTE = 60L;
 
     @Id
     private String email;
@@ -24,7 +26,7 @@ public class EmailVerification {
     @TimeToLive
     private Long ttl;
 
-    public void  verify() {
+    public void verify() {
         this.status = EmailVerificationStatus.VERIFIED;
         this.ttl = 3 * MINUTE;
     }
