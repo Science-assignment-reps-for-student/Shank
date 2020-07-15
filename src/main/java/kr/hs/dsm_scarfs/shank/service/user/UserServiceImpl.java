@@ -1,5 +1,6 @@
 package kr.hs.dsm_scarfs.shank.service.user;
 
+import kr.hs.dsm_scarfs.shank.entites.authcode.repository.AuthCodeRepository;
 import kr.hs.dsm_scarfs.shank.entites.student.Student;
 import kr.hs.dsm_scarfs.shank.entites.student.repository.StudentRepository;
 import kr.hs.dsm_scarfs.shank.entites.verification.EmailVerification;
@@ -19,6 +20,7 @@ public class UserServiceImpl implements UserService {
     private final EmailVerificationRepository verificationRepository;
     private final EmailService emailService;
     private final EmailVerificationRepository emailVerificationRepository;
+    private final AuthCodeRepository authCodeRepository;
 
     @Override
     public void signUp(SignUpRequest signUpRequest) {
@@ -28,6 +30,9 @@ public class UserServiceImpl implements UserService {
 
        verificationRepository.findById(signUpRequest.getEmail())
                .filter(EmailVerification::isVerified)
+               .orElseThrow(RuntimeException::new);
+
+       authCodeRepository.findByStudentNumberAndCode(signUpRequest.getNumber(), signUpRequest.getAuthCode())
                .orElseThrow(RuntimeException::new);
 
        studentRepository.save(
@@ -51,7 +56,7 @@ public class UserServiceImpl implements UserService {
         verificationRepository.save(
                 EmailVerification.builder()
                     .email(email)
-                    .authCode(code)
+                    .code(code)
                     .status(EmailVerificationStatus.UNVERIFIED)
                     .build()
         );
@@ -64,7 +69,7 @@ public class UserServiceImpl implements UserService {
         EmailVerification emailVerification = emailVerificationRepository.findById(email)
                 .orElseThrow(RuntimeException::new);
 
-        if (!emailVerification.getAuthCode().equals(code))
+        if (!emailVerification.getCode().equals(code))
             throw new RuntimeException();
 
         emailVerification.verify();

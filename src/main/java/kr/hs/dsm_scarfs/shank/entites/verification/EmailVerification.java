@@ -18,7 +18,7 @@ public class EmailVerification {
     @Id
     private String email;
 
-    private String authCode;
+    private String code;
 
     private EmailVerificationStatus status;
 
