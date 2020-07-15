@@ -29,7 +29,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     implementation 'com.amazonaws:aws-java-sdk-ses:1.11.807'
-    compile "org.projectlombok:lombok:1.18.8"
+    compileOnly("org.projectlombok:lombok:1.18.8")
     annotationProcessor("org.projectlombok:lombok:1.18.8")
     runtimeOnly 'mysql:mysql-connector-java'
 
