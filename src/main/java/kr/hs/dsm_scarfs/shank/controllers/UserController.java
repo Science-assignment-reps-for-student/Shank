@@ -14,24 +14,21 @@ import javax.validation.constraints.Email;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService service;
+    private final UserService userService;
 
     @PostMapping
     public void signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
-        service.signUp(signUpRequest);
-
+        userService.signUp(signUpRequest);
     }
 
     @PostMapping("/email/verify")
     public void sendEmail(@RequestParam("email") @Email String email) {
-        service.sendEmail(email);
-
+        userService.sendEmail(email);
     }
 
     @PutMapping("/email/verify")
     public void verifyEmail(@RequestBody @Valid VerifyCodeRequest verifyCodeRequest) {
-        service.verifyEmail(verifyCodeRequest);
-
+        userService.verifyEmail(verifyCodeRequest);
     }
 
 }
