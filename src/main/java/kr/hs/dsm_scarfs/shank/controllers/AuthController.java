@@ -18,7 +18,6 @@ public class AuthController {
 
     @PostMapping
     public TokenResponse signIn(@RequestBody @Valid AccountRequest request) {
-        System.out.println(request.getEmail());
         return authService.signIn(request);
     }
 
