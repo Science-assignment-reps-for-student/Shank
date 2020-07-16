@@ -13,5 +13,6 @@ public class AccountRequest {
     private String email;
 
     @NotBlank
+//    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")
     private String password;
 }
