@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -20,6 +21,6 @@ public class Notice {
 
     private String content;
 
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
 }
