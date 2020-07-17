@@ -4,13 +4,12 @@ import kr.hs.dsm_scarfs.shank.entites.authcode.repository.AuthCodeRepository;
 import kr.hs.dsm_scarfs.shank.entites.file.multi.repository.MultiFileRepository;
 import kr.hs.dsm_scarfs.shank.entites.file.sigle.repository.SingleFileRepository;
 import kr.hs.dsm_scarfs.shank.entites.homework.Homework;
+import kr.hs.dsm_scarfs.shank.entites.homework.enums.HomeworkType;
 import kr.hs.dsm_scarfs.shank.entites.homework.repository.HomeworkRepository;
 import kr.hs.dsm_scarfs.shank.entites.member.Member;
 import kr.hs.dsm_scarfs.shank.entites.member.repository.MemberRepository;
 import kr.hs.dsm_scarfs.shank.entites.student.Student;
 import kr.hs.dsm_scarfs.shank.entites.student.repository.StudentRepository;
-import kr.hs.dsm_scarfs.shank.entites.team.Team;
-import kr.hs.dsm_scarfs.shank.entites.team.repository.TeamRepository;
 import kr.hs.dsm_scarfs.shank.entites.verification.EmailVerification;
 import kr.hs.dsm_scarfs.shank.entites.verification.EmailVerificationRepository;
 import kr.hs.dsm_scarfs.shank.entites.verification.EmailVerificationStatus;
@@ -27,11 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
-import static kr.hs.dsm_scarfs.shank.entites.homework.enums.HomeworkType.*;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +42,6 @@ public class UserServiceImpl implements UserService {
     private final SingleFileRepository singleFileRepository;
     private final MultiFileRepository multiFileRepository;
     private final HomeworkRepository homeworkRepository;
-    private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
     @Override
     public void signUp(SignUpRequest signUpRequest) {
@@ -111,12 +105,13 @@ public class UserServiceImpl implements UserService {
 
         int remainingAssignment = 0, completionAssignment = 0;
 
+        String methodName = "findAllByDeadline"+student.getStudentClassNumber()+"After";
         Page<Homework> homeworkPage = (Page<Homework>) HomeworkRepository.class
-                .getDeclaredMethod("findAllByDeadline"+student.getStudentClassNumber()+"After", Pageable.class, LocalDate.class)
+                .getDeclaredMethod(methodName, Pageable.class, LocalDate.class)
                 .invoke(homeworkRepository, page, LocalDate.now(ZoneId.of("UTC+9")));
 
         for (Homework homework : homeworkPage) {
-            if (homework.getType().equals(MULTI)) {
+            if (homework.getType().equals(HomeworkType.MULTI)) {
                 Member member = memberRepository.findByStudentIdAndHomeworkId(student.getId(), homework.getId());
                 if (multiFileRepository.existsByHomeworkIdAndTeamId(homework.getId(), member.getTeamId()))
                     completionAssignment++;

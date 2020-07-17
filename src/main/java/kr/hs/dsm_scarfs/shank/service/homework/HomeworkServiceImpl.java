@@ -19,7 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +41,9 @@ public class HomeworkServiceImpl implements HomeworkService{
                 .orElseThrow(RuntimeException::new);
 
         List<HomeworkResponse> homeworkResponses = new ArrayList<>();
+        String methodName = "findAllByDeadline"+student.getStudentClassNumber()+"After";
         Page<Homework> homeworkPages = (Page<Homework>) HomeworkRepository.class
-                .getDeclaredMethod("findAllByDeadline"+student.getStudentClassNumber()+"After", Pageable.class, LocalDate.class)
+                .getDeclaredMethod(methodName, Pageable.class, LocalDate.class)
                 .invoke(homeworkRepository, page, LocalDate.MIN);
 
         int totalElement = (int) homeworkPages.getTotalElements();
@@ -62,7 +62,8 @@ public class HomeworkServiceImpl implements HomeworkService{
                     HomeworkResponse.builder()
                         .title(homework.getTitle())
                         .createdAt(homework.getCreatedAt())
-                        .preViewContent(homework.getContent().substring(0, Math.min(150, homework.getContent().length())))
+                        .preViewContent(homework.getContent()
+                                .substring(0, Math.min(150, homework.getContent().length())))
                         .type(homework.getType())
                         .isComplete(isComplete)
                         .build()
