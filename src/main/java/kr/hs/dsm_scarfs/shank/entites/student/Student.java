@@ -25,4 +25,8 @@ public class Student {
 
     private String name;
 
+    public String getStudentClassNumber() {
+        return String.valueOf(this.studentNumber.charAt(1));
+    }
+
 }
