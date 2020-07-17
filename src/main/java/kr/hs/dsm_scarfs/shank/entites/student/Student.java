@@ -25,4 +25,8 @@ public class Student {
 
     private String name;
 
+    private char getStudentClassNumber() {
+        return this.studentNumber.charAt(1);
+    }
+
 }
