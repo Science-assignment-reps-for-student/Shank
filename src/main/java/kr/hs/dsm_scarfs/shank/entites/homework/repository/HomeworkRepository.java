@@ -1,14 +1,22 @@
 package kr.hs.dsm_scarfs.shank.entites.homework.repository;
 
 import kr.hs.dsm_scarfs.shank.entites.homework.Homework;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
+import java.time.LocalDate;
 @Repository
 public interface HomeworkRepository extends CrudRepository<Homework, Integer> {
-    @Query(value = "SELECT * homework WHERE DATE(deadline_?1) > DATE(NOW())", nativeQuery = true)
-    List<Homework> findHomework(String classNumber);
+
+    Page<Homework> findAllByDeadline1After(Pageable page, LocalDate date);
+
+    Page<Homework> findAllByDeadline2After(Pageable page, LocalDate date);
+
+    Page<Homework> findAllByDeadline3After(Pageable page, LocalDate date);
+
+    Page<Homework> findAllByDeadline4After(Pageable page, LocalDate date);
+
 }

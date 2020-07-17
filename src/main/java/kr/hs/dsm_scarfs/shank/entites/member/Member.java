@@ -17,7 +17,7 @@ public class Member {
 
     private Integer teamId;
 
-    private Integer userId;
+    private Integer studentId;
 
     private Integer homeworkId;
 

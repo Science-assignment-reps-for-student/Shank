@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends CrudRepository<Member, Integer> {
-    Optional<Member> findByUserIdAndTeamIdIn(Integer id, List<Integer> teamId);
+    Member findByStudentIdAndHomeworkId(Integer StudentId, Integer homeworkId);
 }

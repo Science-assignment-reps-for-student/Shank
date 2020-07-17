@@ -18,18 +18,23 @@ public class Homework {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private LocalDate deadline_1;
+    @Column(name = "deadline_1")
+    private LocalDate deadline1;
 
-    private LocalDate deadline_2;
+    @Column(name = "deadline_2")
+    private LocalDate deadline2;
 
-    private LocalDate deadline_3;
+    @Column(name = "deadline_3")
+    private LocalDate deadline3;
 
-    private LocalDate deadline_4;
+    @Column(name = "deadline_4")
+    private LocalDate deadline4;
 
     private String title;
 
-    private String description;
+    private String content;
 
+    @Enumerated(EnumType.STRING)
     private HomeworkType type;
 
     private LocalDateTime createdAt;
