@@ -20,8 +20,13 @@ import kr.hs.dsm_scarfs.shank.payload.response.UserResponse;
 import kr.hs.dsm_scarfs.shank.security.auth.AuthenticationFacade;
 import kr.hs.dsm_scarfs.shank.service.email.EmailService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,8 +49,6 @@ public class UserServiceImpl implements UserService {
     private final HomeworkRepository homeworkRepository;
     private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
-
-
     @Override
     public void signUp(SignUpRequest signUpRequest) {
         studentRepository.findByStudentNumber(signUpRequest.getNumber()).ifPresent(student -> {
@@ -100,17 +103,21 @@ public class UserServiceImpl implements UserService {
         emailVerificationRepository.save(emailVerification);
     }
 
+    @SneakyThrows
     @Override
-    public UserResponse getUser() {
+    public UserResponse getUser(Pageable page) {
         Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(RuntimeException::new);
 
         int remainingAssignment = 0, completionAssignment = 0;
 
+        Page<Homework> homeworkPage = (Page<Homework>) HomeworkRepository.class
+                .getDeclaredMethod("findAllByDeadline"+student.getStudentClassNumber()+"After", Pageable.class, LocalDate.class)
+                .invoke(homeworkRepository, page, LocalDate.now(ZoneId.of("UTC+9")));
 
-        for (Homework homework : homeworkRepository.findHomework(student.getStudentNumber())) {
+        for (Homework homework : homeworkPage) {
             if (homework.getType().equals(MULTI)) {
-                Member member = getCurrentMember(student.getId(), homework.getId()).orElseThrow(RuntimeException::new);
+                Member member = memberRepository.findByStudentIdAndHomeworkId(student.getId(), homework.getId());
                 if (multiFileRepository.existsByHomeworkIdAndTeamId(homework.getId(), member.getTeamId()))
                     completionAssignment++;
                 else
@@ -138,14 +145,6 @@ public class UserServiceImpl implements UserService {
             result.append(codes[(int) (Math.random() % codes.length)]);
         }
         return result.toString();
-    }
-
-    public Optional<Member> getCurrentMember(Integer id, Integer homeworkId) {
-        List<Team> teams = teamRepository.findByHomeworkId(homeworkId).orElseGet(ArrayList::new);
-        List<Integer> teamIds = new ArrayList<>();
-        for (Team team : teams) teamIds.add(team.getId());
-
-        return memberRepository.findByUserIdAndTeamIdIn(id, teamIds);
     }
 
 }

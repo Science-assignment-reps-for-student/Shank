@@ -5,6 +5,7 @@ import kr.hs.dsm_scarfs.shank.payload.request.VerifyCodeRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.UserResponse;
 import kr.hs.dsm_scarfs.shank.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -18,8 +19,8 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public UserResponse getUser() {
-        return userService.getUser();
+    public UserResponse getUser(Pageable page) {
+        return userService.getUser(page);
     }
 
     @PostMapping
