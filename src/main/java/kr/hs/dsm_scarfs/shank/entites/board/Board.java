@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class board {
+public class Board {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,5 +30,12 @@ public class board {
     private LocalDate updatedAt;
 
     private LocalDate createdAt;
-    
+
+    private Integer view;
+
+    public Board view() {
+        this.view++;
+        return this;
+    }
+
 }

@@ -60,6 +60,8 @@ public class HomeworkServiceImpl implements HomeworkService{
 
             homeworkResponses.add(
                     HomeworkResponse.builder()
+                        .homeworkId(homework.getId())
+                        .view(homework.getView())
                         .title(homework.getTitle())
                         .createdAt(homework.getCreatedAt())
                         .preViewContent(homework.getContent()
