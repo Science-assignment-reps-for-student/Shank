@@ -112,7 +112,8 @@ public class UserServiceImpl implements UserService {
 
         for (Homework homework : homeworkPage) {
             if (homework.getType().equals(HomeworkType.MULTI)) {
-                Member member = memberRepository.findByStudentIdAndHomeworkId(student.getId(), homework.getId());
+                Member member = memberRepository.findByStudentIdAndHomeworkId(student.getId(), homework.getId())
+                        .orElseThrow(RuntimeException::new);
                 if (multiFileRepository.existsByHomeworkIdAndTeamId(homework.getId(), member.getTeamId()))
                     completionAssignment++;
                 else
