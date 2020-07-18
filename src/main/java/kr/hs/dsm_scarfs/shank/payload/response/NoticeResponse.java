@@ -9,9 +9,14 @@ import java.time.LocalDateTime;
 @Builder
 public class NoticeResponse {
 
+    private Integer noticeId;
+
     private String title;
 
     private LocalDateTime createdAt;
 
     private String preViewContent;
+
+    private Integer view;
+
 }

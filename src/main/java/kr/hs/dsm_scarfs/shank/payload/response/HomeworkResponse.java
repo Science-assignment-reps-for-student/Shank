@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 @Builder
 public class HomeworkResponse {
 
+    private Integer homeworkId;
+
     private String title;
 
     private LocalDateTime createdAt;
@@ -19,5 +21,7 @@ public class HomeworkResponse {
     private HomeworkType type;
 
     private boolean isComplete;
+
+    private Integer view;
 
 }
