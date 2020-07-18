@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface TeamRepository extends CrudRepository<Team, Integer> {
-    Optional<List<Team>> findByHomeworkId(Integer homeworkId);
+    Optional<Team> findByLeaderIdAndHomeworkId(Integer leaderId, Integer homeworkId);
 }
