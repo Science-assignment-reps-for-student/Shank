@@ -29,6 +29,8 @@ public class NoticeServiceImpl implements NoticeService{
         for (Notice notice : noticePage) {
             noticeResponses.add(
                     NoticeResponse.builder()
+                    .noticeId(notice.getId())
+                    .view(notice.getView())
                     .title(notice.getTitle())
                     .createdAt(notice.getCreatedAt())
                     .preViewContent(notice.getContent().substring(0, Math.min(150, notice.getContent().length())))
