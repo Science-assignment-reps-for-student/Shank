@@ -1,5 +1,6 @@
 package kr.hs.dsm_scarfs.shank.entites.homework;
 
+import kr.hs.dsm_scarfs.shank.entites.board.Board;
 import kr.hs.dsm_scarfs.shank.entites.homework.enums.HomeworkType;
 import lombok.*;
 
@@ -38,5 +39,12 @@ public class Homework {
     private HomeworkType type;
 
     private LocalDateTime createdAt;
+
+    private Integer view;
+
+    public Homework view() {
+        this.view++;
+        return this;
+    }
 
 }
