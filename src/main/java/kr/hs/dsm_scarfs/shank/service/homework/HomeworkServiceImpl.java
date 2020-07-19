@@ -52,7 +52,8 @@ public class HomeworkServiceImpl implements HomeworkService{
         for (Homework homework : homeworkPages) {
             boolean isComplete;
             if (homework.getType().equals(HomeworkType.MULTI)) {
-                Member member = memberRepository.findByStudentIdAndHomeworkId(student.getId(), homework.getId());
+                Member member = memberRepository.findByStudentIdAndHomeworkId(student.getId(), homework.getId())
+                        .orElseThrow(RuntimeException::new);
                 isComplete = multiFileRepository.existsByHomeworkIdAndTeamId(homework.getId(), member.getTeamId());
             } else {
                 isComplete = singleFileRepository.existsByHomeworkIdAndUserId(homework.getId(), student.getId());
