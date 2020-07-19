@@ -45,6 +45,7 @@ public class TeamServiceImpl implements TeamService{
         List<MemberResponse> memberResponses = new ArrayList<>();
 
         for (Member member : memberRepository.findAllByTeamId(team.getId())) {
+            if (member.getId().equals(leader.getId())) continue;
             Student memberStudent = studentRepository.findById(member.getId())
                     .orElseThrow(RuntimeException::new);
 
@@ -74,11 +75,19 @@ public class TeamServiceImpl implements TeamService{
         homeworkRepository.findById(teamRequest.getHomeworkId())
                 .orElseThrow(RuntimeException::new);
 
-        teamRepository.save(
+        Team team = teamRepository.save(
                 Team.builder()
                     .homeworkId(teamRequest.getHomeworkId())
                     .name(teamRequest.getTeamName())
                     .leaderId(student.getId())
+                    .build()
+        );
+
+        memberRepository.save(
+                Member.builder()
+                    .teamId(team.getId())
+                    .studentId(student.getId())
+                    .homeworkId(team.getHomeworkId())
                     .build()
         );
     }
