@@ -7,6 +7,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Optional;
+
 @Repository
 public interface HomeworkRepository extends CrudRepository<Homework, Integer> {
 
@@ -17,5 +19,4 @@ public interface HomeworkRepository extends CrudRepository<Homework, Integer> {
     Page<Homework> findAllByDeadline3After(Pageable page, LocalDate date);
 
     Page<Homework> findAllByDeadline4After(Pageable page, LocalDate date);
-
 }
