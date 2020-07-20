@@ -32,14 +32,14 @@ public class AuthServiceImpl implements AuthService{
     public TokenResponse signIn(AccountRequest request) {
         return studentRepository.findByEmail(request.getEmail())
                 .filter(student -> passwordEncoder.matches(request.getPassword(), student.getPassword()))
-                    .map(Student::getEmail)
-                    .map(email -> {
-                        String refreshToken = tokenProvider.generateRefreshToken(email);
-                        return new RefreshToken(email, refreshToken, refreshExp);
+                    .map(Student::getId)
+                    .map(id -> {
+                        String refreshToken = tokenProvider.generateRefreshToken(id);
+                        return new RefreshToken(id, refreshToken, refreshExp);
                     })
                     .map(refreshTokenRepository::save)
                     .map(refreshToken -> {
-                        String accessToken = tokenProvider.generateAccessToken(request.getEmail());
+                        String accessToken = tokenProvider.generateAccessToken(refreshToken.getId());
                         return new TokenResponse(accessToken, refreshToken.getRefreshToken(), tokenType);
                     })
                 .orElseThrow(RuntimeException::new);
@@ -53,12 +53,12 @@ public class AuthServiceImpl implements AuthService{
 
         return refreshTokenRepository.findByRefreshToken(receivedToken)
                 .map(refreshToken -> {
-                    String generatedAccessToken = tokenProvider.generateRefreshToken(refreshToken.getEmail());
+                    String generatedAccessToken = tokenProvider.generateRefreshToken(refreshToken.getId());
                     return refreshToken.update(generatedAccessToken, refreshExp);
                 })
                 .map(refreshTokenRepository::save)
                 .map(refreshToken -> {
-                    String generatedAccessToken = tokenProvider.generateAccessToken(refreshToken.getEmail());
+                    String generatedAccessToken = tokenProvider.generateAccessToken(refreshToken.getId());
                     return new TokenResponse(generatedAccessToken, refreshToken.getRefreshToken(), tokenType);
                 })
                 .orElseThrow(RuntimeException::new);
