@@ -32,7 +32,6 @@ public class EvaluationServiceImpl implements EvaluationService {
     private final MutualEvaluationRepository mutualEvaluationRepository;
     private final HomeworkRepository homeworkRepository;
     private final MemberRepository memberRepository;
-    private final TeamRepository teamRepository;
 
     @Override
     public void selfEvaluation(SelfEvaluationRequest selfEvaluationRequest) {
