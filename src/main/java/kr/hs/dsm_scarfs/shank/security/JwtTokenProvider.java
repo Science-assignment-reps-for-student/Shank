@@ -34,22 +34,24 @@ public class JwtTokenProvider {
 
     private final AuthDetailsService authDetailsService;
 
-    public String generateAccessToken(String data) {
+    public String generateAccessToken(Integer data) {
         return Jwts.builder()
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiration * 1000))
-                .setSubject(data)
+                .setSubject(data.toString())
                 .claim("type", "access_token")
+                .claim("authority", AuthorityType.STUDENT)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
-    public String generateRefreshToken(String data) {
+    public String generateRefreshToken(Integer data) {
         return Jwts.builder()
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiration * 1000))
-                .setSubject(data)
+                .setSubject(data.toString())
                 .claim("type", "refresh_token")
+                .claim("authority", AuthorityType.STUDENT)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
