@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface RefreshTokenRepository extends KeyValueRepository<RefreshToken, String> {
+public interface RefreshTokenRepository extends KeyValueRepository<RefreshToken, Integer> {
     Optional<RefreshToken> findByRefreshToken(String refreshToken);
 }
