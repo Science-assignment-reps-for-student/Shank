@@ -29,4 +29,10 @@ public class Comment {
 
     private LocalDateTime updateAt;
 
+    public Comment updateContent(String content) {
+        this.content = content;
+        this.updateAt = LocalDateTime.now();
+        return this;
+    }
+
 }

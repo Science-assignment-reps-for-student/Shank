@@ -32,4 +32,11 @@ public class Cocomment {
 
     private LocalDateTime updateAt;
 
+    public Cocomment updateContent(String content) {
+        this.content = content;
+        this.updateAt = LocalDateTime.now();
+        return this;
+    }
+
+
 }
