@@ -1,7 +1,6 @@
 package kr.hs.dsm_scarfs.shank.security.auth;
 
 import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
-import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

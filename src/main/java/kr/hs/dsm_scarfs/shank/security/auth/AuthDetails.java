@@ -1,7 +1,6 @@
 package kr.hs.dsm_scarfs.shank.security.auth;
 
 import kr.hs.dsm_scarfs.shank.entites.user.User;
-import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
 import kr.hs.dsm_scarfs.shank.security.AuthorityType;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
