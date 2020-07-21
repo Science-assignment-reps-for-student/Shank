@@ -2,8 +2,8 @@ package kr.hs.dsm_scarfs.shank.service.auth;
 
 import kr.hs.dsm_scarfs.shank.entites.refresh_token.RefreshToken;
 import kr.hs.dsm_scarfs.shank.entites.refresh_token.RefreshTokenRepository;
-import kr.hs.dsm_scarfs.shank.entites.student.Student;
-import kr.hs.dsm_scarfs.shank.entites.student.repository.StudentRepository;
+import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
+import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
 import kr.hs.dsm_scarfs.shank.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Value;
 import kr.hs.dsm_scarfs.shank.payload.request.AccountRequest;
@@ -32,14 +32,14 @@ public class AuthServiceImpl implements AuthService{
     public TokenResponse signIn(AccountRequest request) {
         return studentRepository.findByEmail(request.getEmail())
                 .filter(student -> passwordEncoder.matches(request.getPassword(), student.getPassword()))
-                    .map(Student::getId)
-                    .map(id -> {
-                        String refreshToken = tokenProvider.generateRefreshToken(id);
-                        return new RefreshToken(id, refreshToken, refreshExp);
+                    .map(Student::getEmail)
+                    .map(email -> {
+                        String refreshToken = tokenProvider.generateRefreshToken(email);
+                        return new RefreshToken(email, refreshToken, refreshExp);
                     })
                     .map(refreshTokenRepository::save)
                     .map(refreshToken -> {
-                        String accessToken = tokenProvider.generateAccessToken(refreshToken.getId());
+                        String accessToken = tokenProvider.generateAccessToken(refreshToken.getEmail());
                         return new TokenResponse(accessToken, refreshToken.getRefreshToken(), tokenType);
                     })
                 .orElseThrow(RuntimeException::new);
@@ -53,12 +53,12 @@ public class AuthServiceImpl implements AuthService{
 
         return refreshTokenRepository.findByRefreshToken(receivedToken)
                 .map(refreshToken -> {
-                    String generatedAccessToken = tokenProvider.generateRefreshToken(refreshToken.getId());
+                    String generatedAccessToken = tokenProvider.generateRefreshToken(refreshToken.getEmail());
                     return refreshToken.update(generatedAccessToken, refreshExp);
                 })
                 .map(refreshTokenRepository::save)
                 .map(refreshToken -> {
-                    String generatedAccessToken = tokenProvider.generateAccessToken(refreshToken.getId());
+                    String generatedAccessToken = tokenProvider.generateAccessToken(refreshToken.getEmail());
                     return new TokenResponse(generatedAccessToken, refreshToken.getRefreshToken(), tokenType);
                 })
                 .orElseThrow(RuntimeException::new);

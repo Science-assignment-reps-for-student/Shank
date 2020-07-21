@@ -1,6 +1,6 @@
 package kr.hs.dsm_scarfs.shank.entites.comment;
 
-import kr.hs.dsm_scarfs.shank.entites.comment.enums.CommentEnum;
+import kr.hs.dsm_scarfs.shank.security.AuthorityType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,7 +19,7 @@ public class Comment {
 
     private Integer authorId;
 
-    private CommentEnum authorType;
+    private AuthorityType authorType;
 
     private Integer boardId;
 

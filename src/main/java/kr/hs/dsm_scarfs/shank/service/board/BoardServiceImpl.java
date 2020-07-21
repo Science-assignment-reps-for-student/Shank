@@ -1,18 +1,16 @@
 package kr.hs.dsm_scarfs.shank.service.board;
 
-import kr.hs.dsm_scarfs.shank.entites.admin.Admin;
-import kr.hs.dsm_scarfs.shank.entites.admin.repository.AdminRepository;
+import kr.hs.dsm_scarfs.shank.entites.user.admin.Admin;
+import kr.hs.dsm_scarfs.shank.entites.user.admin.repository.AdminRepository;
 import kr.hs.dsm_scarfs.shank.entites.board.Board;
 import kr.hs.dsm_scarfs.shank.entites.board.repository.BoardRepository;
 import kr.hs.dsm_scarfs.shank.entites.comment.Cocomment;
 import kr.hs.dsm_scarfs.shank.entites.comment.Comment;
-import kr.hs.dsm_scarfs.shank.entites.comment.enums.CommentEnum;
 import kr.hs.dsm_scarfs.shank.entites.comment.repository.CocommentRepository;
 import kr.hs.dsm_scarfs.shank.entites.comment.repository.CommentRepository;
-import kr.hs.dsm_scarfs.shank.entites.student.Student;
-import kr.hs.dsm_scarfs.shank.entites.student.repository.StudentRepository;
+import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
 import kr.hs.dsm_scarfs.shank.payload.response.*;
-import kr.hs.dsm_scarfs.shank.security.auth.AuthenticationFacade;
+import kr.hs.dsm_scarfs.shank.security.AuthorityType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -72,7 +70,7 @@ public class BoardServiceImpl implements BoardService{
 
         for (Comment co : comment) {
             String commentWriterName;
-            if (co.getAuthorType().equals(CommentEnum.ADMIN))
+            if (co.getAuthorType().equals(AuthorityType.ADMIN))
                 commentWriterName = adminRepository.findById(co.getAuthorId())
                         .orElseThrow(RuntimeException::new).getName();
             else
@@ -83,7 +81,7 @@ public class BoardServiceImpl implements BoardService{
 
             for (Cocomment coco : cocommentRepository.findAllByCommentId(co.getId())) {
                 String cocomentWriterName;
-                if (coco.getAuthorType().equals(CommentEnum.ADMIN))
+                if (coco.getAuthorType().equals(AuthorityType.ADMIN))
                     cocomentWriterName = adminRepository.findById(co.getAuthorId())
                             .orElseThrow(RuntimeException::new).getName();
                 else
