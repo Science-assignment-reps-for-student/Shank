@@ -31,8 +31,6 @@ public class HomeworkServiceImpl implements HomeworkService{
 
     private final AuthenticationFacade authenticationFacade;
     private final UserFactory userFactory;
-
-    private final StudentRepository studentRepository;
     private final HomeworkRepository homeworkRepository;
     private final MemberRepository memberRepository;
     private final MultiFileRepository multiFileRepository;
