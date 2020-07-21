@@ -7,9 +7,8 @@ import kr.hs.dsm_scarfs.shank.entites.evaluation.self.repository.SelfEvaluationR
 import kr.hs.dsm_scarfs.shank.entites.homework.repository.HomeworkRepository;
 import kr.hs.dsm_scarfs.shank.entites.member.Member;
 import kr.hs.dsm_scarfs.shank.entites.member.repository.MemberRepository;
-import kr.hs.dsm_scarfs.shank.entites.student.Student;
-import kr.hs.dsm_scarfs.shank.entites.student.repository.StudentRepository;
-import kr.hs.dsm_scarfs.shank.entites.team.repository.TeamRepository;
+import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
+import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
 import kr.hs.dsm_scarfs.shank.payload.request.MutualEvaluationRequest;
 import kr.hs.dsm_scarfs.shank.payload.request.SelfEvaluationRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.EvaluationResponse;
