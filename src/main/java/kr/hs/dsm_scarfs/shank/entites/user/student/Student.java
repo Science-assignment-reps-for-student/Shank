@@ -1,5 +1,6 @@
-package kr.hs.dsm_scarfs.shank.entites.student;
+package kr.hs.dsm_scarfs.shank.entites.user.student;
 
+import kr.hs.dsm_scarfs.shank.entites.user.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Student {
+public class Student implements User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

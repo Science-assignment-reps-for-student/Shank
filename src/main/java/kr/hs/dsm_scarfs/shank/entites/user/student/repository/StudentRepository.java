@@ -1,6 +1,6 @@
-package kr.hs.dsm_scarfs.shank.entites.student.repository;
+package kr.hs.dsm_scarfs.shank.entites.user.student.repository;
 
-import kr.hs.dsm_scarfs.shank.entites.student.Student;
+import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
