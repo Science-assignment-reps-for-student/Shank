@@ -9,8 +9,7 @@ import kr.hs.dsm_scarfs.shank.entites.member.Member;
 import kr.hs.dsm_scarfs.shank.entites.member.repository.MemberRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.User;
 import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
-import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
-import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
+import kr.hs.dsm_scarfs.shank.payload.response.HomeworkContentResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.HomeworkListResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.HomeworkResponse;
 import kr.hs.dsm_scarfs.shank.security.auth.AuthenticationFacade;
@@ -82,5 +81,44 @@ public class HomeworkServiceImpl implements HomeworkService{
                 .totalPages(totalPage)
                 .homeworkResponses(homeworkResponses)
                 .build();
+    }
+
+    @SneakyThrows
+    @Override
+    public HomeworkContentResponse getHomeworkContent(Integer homeworkId) {
+        User user = userFactory.getUser(authenticationFacade.getUserEmail());
+
+        Homework homework = homeworkRepository.findById(homeworkId)
+                .orElseThrow(RuntimeException::new);
+
+        LocalDate deadLine = (LocalDate) Homework.class
+                .getDeclaredMethod("getDeadline" + user.getStudentClassNumber())
+                .invoke(homework);
+
+        boolean isComplete = false;
+
+        Optional<Member> member = memberRepository.findByStudentIdAndHomeworkId(user.getId(), homework.getId());
+        if (homework.getType().equals(HomeworkType.MULTI)) {
+            if (member.isPresent()) {
+                if (multiFileRepository.existsByHomeworkIdAndTeamId(homework.getId(), member.get().getTeamId())) {
+                    isComplete = true;
+                }
+            }
+        } else {
+            if (singleFileRepository.existsByHomeworkIdAndUserId(homework.getId(), user.getId()))
+                isComplete = true;
+        }
+
+        homeworkRepository.save(homework.view());
+
+        return HomeworkContentResponse.builder()
+                    .title(homework.getTitle())
+                    .type(homework.getType())
+                    .createdAt(homework.getCreatedAt())
+                    .deadLine(deadLine)
+                    .view(homework.getView())
+                    .content(homework.getContent())
+                    .isComplete(isComplete)
+                    .build();
     }
 }
