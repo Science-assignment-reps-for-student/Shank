@@ -3,6 +3,7 @@ package kr.hs.dsm_scarfs.shank.service.notice;
 import kr.hs.dsm_scarfs.shank.entites.notice.Notice;
 import kr.hs.dsm_scarfs.shank.entites.notice.repository.NoticeRepository;
 
+import kr.hs.dsm_scarfs.shank.payload.response.NoticeContentResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.NoticeListResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.NoticeResponse;
 
@@ -44,6 +45,21 @@ public class NoticeServiceImpl implements NoticeService{
                 .totalPages(noticePage.getTotalPages())
                 .noticeResponses(noticeResponses)
                 .build();
+    }
+
+    @Override
+    public NoticeContentResponse getNoticeContent(Integer noticeId) {
+        Notice notice = noticeRepository.findById(noticeId)
+                .orElseThrow(RuntimeException::new);
+
+        noticeRepository.save(notice.view());
+
+        return NoticeContentResponse.builder()
+                    .title(notice.getTitle())
+                    .content(notice.getContent())
+                    .createdAt(notice.getCreatedAt())
+                    .view(notice.getView())
+                    .build();
     }
 
 }
