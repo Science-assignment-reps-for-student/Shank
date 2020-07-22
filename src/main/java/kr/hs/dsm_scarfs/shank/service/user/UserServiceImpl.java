@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService {
                 .invoke(homeworkRepository, page, LocalDate.now(ZoneId.of("UTC+9")));
 
         for (Homework homework : homeworkPage) {
-            if (authorityType.equals(AuthorityType.STUDENT)) break;
+            if (authorityType.equals(AuthorityType.ADMIN)) break;
             Optional<Member> member = memberRepository.findByStudentIdAndHomeworkId(user.getId(), homework.getId());
 
             if (homework.getType().equals(HomeworkType.MULTI)) {
