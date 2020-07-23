@@ -11,17 +11,19 @@ import kr.hs.dsm_scarfs.shank.entites.comment.repository.CommentRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
 import kr.hs.dsm_scarfs.shank.payload.response.*;
 import kr.hs.dsm_scarfs.shank.security.AuthorityType;
+import kr.hs.dsm_scarfs.shank.service.search.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class BoardServiceImpl implements BoardService{
+public class BoardServiceImpl implements BoardService, SearchService {
 
     private final BoardRepository boardRepository;
     private final AdminRepository adminRepository;
@@ -30,31 +32,8 @@ public class BoardServiceImpl implements BoardService{
     private final CocommentRepository cocommentRepository;
 
     @Override
-    public BoardListResponse getBoardList(Pageable page) {
-        Page<Board> boardPage = boardRepository.findAllBy(page);
-
-        List<BoardResponse> boardResponse = new ArrayList<>();
-
-        for (Board board : boardPage) {
-            Admin admin = adminRepository.findById(board.getAdminId())
-                    .orElseThrow(RuntimeException::new);
-
-            boardResponse.add(
-                    BoardResponse.builder()
-                        .boardId(board.getId())
-                        .view(board.getView())
-                        .title(board.getTitle())
-                        .name(admin.getName())
-                        .createdAt(board.getCreatedAt())
-                        .build()
-            );
-        }
-
-        return BoardListResponse.builder()
-                    .totalElements((int) boardPage.getTotalElements())
-                    .totalPages(boardPage.getTotalPages())
-                    .boardResponses(boardResponse)
-                    .build();
+    public ApplicationListResponse getBoardList(Pageable page) {
+        return this.searchApplication("", page);
     }
 
     @Override
@@ -119,6 +98,34 @@ public class BoardServiceImpl implements BoardService{
                     .content(board.getContent())
                     .comments(commentsResponses)
                     .build();
+    }
+
+    @Override
+    public ApplicationListResponse searchApplication(String query, Pageable page) {
+        Page<Board> boardPage = boardRepository.findAllBy(page);
+
+        List<BoardResponse> boardResponse = new ArrayList<>();
+
+        for (Board board : boardPage) {
+            Admin admin = adminRepository.findById(board.getAdminId())
+                    .orElseThrow(RuntimeException::new);
+
+            boardResponse.add(
+                    BoardResponse.builder()
+                            .boardId(board.getId())
+                            .view(board.getView())
+                            .title(board.getTitle())
+                            .name(admin.getName())
+                            .createdAt(board.getCreatedAt())
+                            .build()
+            );
+        }
+
+        return ApplicationListResponse.builder()
+                .totalElements((int) boardPage.getTotalElements())
+                .totalPages(boardPage.getTotalPages())
+                .applicationResponses(boardResponse)
+                .build();
     }
 
 }
