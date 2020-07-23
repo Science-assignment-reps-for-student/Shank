@@ -7,11 +7,12 @@ import java.util.List;
 
 @Getter
 @Builder
-public class BoardListResponse {
+public class ApplicationListResponse {
 
     private int totalElements;
 
     private int totalPages;
 
-    private List<BoardResponse> boardResponses;
+    private List applicationResponses;
+
 }
