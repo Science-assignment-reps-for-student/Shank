@@ -1,7 +1,7 @@
 package kr.hs.dsm_scarfs.shank.controllers;
 
+import kr.hs.dsm_scarfs.shank.payload.response.ApplicationListResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.NoticeContentResponse;
-import kr.hs.dsm_scarfs.shank.payload.response.NoticeListResponse;
 import kr.hs.dsm_scarfs.shank.service.notice.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +18,7 @@ public class NoticeController {
     private final NoticeService noticeService;
 
     @GetMapping
-    public NoticeListResponse noticeList(Pageable page) {
+    public ApplicationListResponse noticeList(Pageable page) {
         return noticeService.getNoticeList(page);
     }
 
