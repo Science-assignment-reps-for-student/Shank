@@ -8,14 +8,16 @@ import kr.hs.dsm_scarfs.shank.entites.homework.enums.HomeworkType;
 import kr.hs.dsm_scarfs.shank.entites.homework.repository.HomeworkRepository;
 import kr.hs.dsm_scarfs.shank.entites.member.Member;
 import kr.hs.dsm_scarfs.shank.entites.member.repository.MemberRepository;
-import kr.hs.dsm_scarfs.shank.entites.student.Student;
-import kr.hs.dsm_scarfs.shank.entites.student.repository.StudentRepository;
+import kr.hs.dsm_scarfs.shank.entites.user.User;
+import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
+import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
 import kr.hs.dsm_scarfs.shank.entites.verification.EmailVerification;
 import kr.hs.dsm_scarfs.shank.entites.verification.EmailVerificationRepository;
 import kr.hs.dsm_scarfs.shank.entites.verification.EmailVerificationStatus;
 import kr.hs.dsm_scarfs.shank.payload.request.SignUpRequest;
 import kr.hs.dsm_scarfs.shank.payload.request.VerifyCodeRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.UserResponse;
+import kr.hs.dsm_scarfs.shank.security.AuthorityType;
 import kr.hs.dsm_scarfs.shank.security.auth.AuthenticationFacade;
 import kr.hs.dsm_scarfs.shank.service.email.EmailService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Optional;
 
 
 @Service
@@ -100,34 +103,49 @@ public class UserServiceImpl implements UserService {
     @SneakyThrows
     @Override
     public UserResponse getUser(Pageable page) {
-        Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(RuntimeException::new);
+        User user;
+        AuthorityType authorityType = authenticationFacade.getAuthorityType();
+        if (authorityType.equals(AuthorityType.STUDENT))
+            user = studentRepository.findByEmail(authenticationFacade.getUserEmail())
+                    .orElseThrow(RuntimeException::new);
+        else
+            user = Student.builder()
+                    .id(0)
+                    .name("Admin")
+                    .studentNumber("1101")
+                    .build();
 
         int remainingAssignment = 0, completionAssignment = 0;
 
-        String methodName = "findAllByDeadline"+student.getStudentClassNumber()+"After";
+        String methodName = "findAllByDeadline" + user.getStudentClassNumber() + "After";
         Page<Homework> homeworkPage = (Page<Homework>) HomeworkRepository.class
                 .getDeclaredMethod(methodName, Pageable.class, LocalDate.class)
                 .invoke(homeworkRepository, page, LocalDate.now(ZoneId.of("UTC+9")));
 
         for (Homework homework : homeworkPage) {
+            if (authorityType.equals(AuthorityType.ADMIN)) break;
+            Optional<Member> member = memberRepository.findByStudentIdAndHomeworkId(user.getId(), homework.getId());
+
             if (homework.getType().equals(HomeworkType.MULTI)) {
-                Member member = memberRepository.findByStudentIdAndHomeworkId(student.getId(), homework.getId())
-                        .orElseThrow(RuntimeException::new);
-                if (multiFileRepository.existsByHomeworkIdAndTeamId(homework.getId(), member.getTeamId()))
-                    completionAssignment++;
-                else
-                    remainingAssignment++;
+                if (member.isPresent()) {
+                    if (multiFileRepository.existsByHomeworkIdAndTeamId(homework.getId(), member.get().getTeamId())) {
+                        completionAssignment++;
+                        continue;
+                    }
+                }
+
+                remainingAssignment++;
             } else {
-                if (singleFileRepository.existsByHomeworkIdAndUserId(homework.getId(), student.getId()))
+                if (singleFileRepository.existsByHomeworkIdAndUserId(homework.getId(), user.getId()))
                     completionAssignment++;
                 else
                     remainingAssignment++;
             }
         }
+
         return UserResponse.builder()
-                .name(student.getName())
-                .studentNumber(student.getStudentNumber())
+                .name(user.getName())
+                .studentNumber(user.getStudentNumber())
                 .completionAssignment(completionAssignment)
                 .remainingAssignment(remainingAssignment)
                 .build();

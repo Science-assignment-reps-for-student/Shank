@@ -2,8 +2,8 @@ package kr.hs.dsm_scarfs.shank.service.auth;
 
 import kr.hs.dsm_scarfs.shank.entites.refresh_token.RefreshToken;
 import kr.hs.dsm_scarfs.shank.entites.refresh_token.RefreshTokenRepository;
-import kr.hs.dsm_scarfs.shank.entites.student.Student;
-import kr.hs.dsm_scarfs.shank.entites.student.repository.StudentRepository;
+import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
+import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
 import kr.hs.dsm_scarfs.shank.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Value;
 import kr.hs.dsm_scarfs.shank.payload.request.AccountRequest;
@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService{
                     })
                     .map(refreshTokenRepository::save)
                     .map(refreshToken -> {
-                        String accessToken = tokenProvider.generateAccessToken(request.getEmail());
+                        String accessToken = tokenProvider.generateAccessToken(refreshToken.getEmail());
                         return new TokenResponse(accessToken, refreshToken.getRefreshToken(), tokenType);
                     })
                 .orElseThrow(RuntimeException::new);

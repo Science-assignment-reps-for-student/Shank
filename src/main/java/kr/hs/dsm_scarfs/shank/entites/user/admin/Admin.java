@@ -1,5 +1,6 @@
-package kr.hs.dsm_scarfs.shank.entites.admin;
+package kr.hs.dsm_scarfs.shank.entites.user.admin;
 
+import kr.hs.dsm_scarfs.shank.entites.user.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Admin {
+public class Admin implements User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,5 +22,13 @@ public class Admin {
     private String password;
 
     private String name;
+
+    public String getStudentNumber() {
+        return "1101";
+    }
+
+    public String getStudentClassNumber() {
+        return "1";
+    }
 
 }

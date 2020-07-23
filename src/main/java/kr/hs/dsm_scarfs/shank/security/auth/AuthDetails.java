@@ -1,6 +1,7 @@
 package kr.hs.dsm_scarfs.shank.security.auth;
 
-import kr.hs.dsm_scarfs.shank.entites.student.Student;
+import kr.hs.dsm_scarfs.shank.entites.user.User;
+import kr.hs.dsm_scarfs.shank.security.AuthorityType;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +12,8 @@ import java.util.Collection;
 @AllArgsConstructor
 public class AuthDetails implements UserDetails {
 
-    private final Student student;
+    private User user;
+    private AuthorityType authorityType;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -20,12 +22,12 @@ public class AuthDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return student.getPassword();
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return student.getEmail();
+        return user.getEmail();
     }
 
     @Override
@@ -48,4 +50,7 @@ public class AuthDetails implements UserDetails {
         return true;
     }
 
+    public AuthorityType getAuthorityType() {
+        return authorityType;
+    }
 }

@@ -7,8 +7,9 @@ import kr.hs.dsm_scarfs.shank.entites.homework.enums.HomeworkType;
 import kr.hs.dsm_scarfs.shank.entites.homework.repository.HomeworkRepository;
 import kr.hs.dsm_scarfs.shank.entites.member.Member;
 import kr.hs.dsm_scarfs.shank.entites.member.repository.MemberRepository;
-import kr.hs.dsm_scarfs.shank.entites.student.Student;
-import kr.hs.dsm_scarfs.shank.entites.student.repository.StudentRepository;
+import kr.hs.dsm_scarfs.shank.entites.user.User;
+import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
+import kr.hs.dsm_scarfs.shank.payload.response.HomeworkContentResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.HomeworkListResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.HomeworkResponse;
 import kr.hs.dsm_scarfs.shank.security.auth.AuthenticationFacade;
@@ -21,14 +22,14 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class HomeworkServiceImpl implements HomeworkService{
 
     private final AuthenticationFacade authenticationFacade;
-
-    private final StudentRepository studentRepository;
+    private final UserFactory userFactory;
     private final HomeworkRepository homeworkRepository;
     private final MemberRepository memberRepository;
     private final MultiFileRepository multiFileRepository;
@@ -37,11 +38,10 @@ public class HomeworkServiceImpl implements HomeworkService{
     @SneakyThrows
     @Override
     public HomeworkListResponse getHomeworkList(Pageable page) {
-        Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(RuntimeException::new);
+        User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         List<HomeworkResponse> homeworkResponses = new ArrayList<>();
-        String methodName = "findAllByDeadline"+student.getStudentClassNumber()+"After";
+        String methodName = "findAllByDeadline"+user.getStudentClassNumber()+"After";
         Page<Homework> homeworkPages = (Page<Homework>) HomeworkRepository.class
                 .getDeclaredMethod(methodName, Pageable.class, LocalDate.class)
                 .invoke(homeworkRepository, page, LocalDate.MIN);
@@ -50,13 +50,15 @@ public class HomeworkServiceImpl implements HomeworkService{
         int totalPage = homeworkPages.getTotalPages();
 
         for (Homework homework : homeworkPages) {
-            boolean isComplete;
+            boolean isComplete = false;
             if (homework.getType().equals(HomeworkType.MULTI)) {
-                Member member = memberRepository.findByStudentIdAndHomeworkId(student.getId(), homework.getId())
-                        .orElseThrow(RuntimeException::new);
-                isComplete = multiFileRepository.existsByHomeworkIdAndTeamId(homework.getId(), member.getTeamId());
+                Optional<Member> member = memberRepository.findByStudentIdAndHomeworkId(user.getId(), homework.getId());
+                if (member.isPresent()) {
+                    isComplete = multiFileRepository.existsByHomeworkIdAndTeamId(homework.getId(),
+                            member.get().getTeamId());
+                }
             } else {
-                isComplete = singleFileRepository.existsByHomeworkIdAndUserId(homework.getId(), student.getId());
+                isComplete = singleFileRepository.existsByHomeworkIdAndUserId(homework.getId(), user.getId());
             }
 
             homeworkResponses.add(
@@ -79,5 +81,44 @@ public class HomeworkServiceImpl implements HomeworkService{
                 .totalPages(totalPage)
                 .homeworkResponses(homeworkResponses)
                 .build();
+    }
+
+    @SneakyThrows
+    @Override
+    public HomeworkContentResponse getHomeworkContent(Integer homeworkId) {
+        User user = userFactory.getUser(authenticationFacade.getUserEmail());
+
+        Homework homework = homeworkRepository.findById(homeworkId)
+                .orElseThrow(RuntimeException::new);
+
+        LocalDate deadLine = (LocalDate) Homework.class
+                .getDeclaredMethod("getDeadline" + user.getStudentClassNumber())
+                .invoke(homework);
+
+        boolean isComplete = false;
+
+        Optional<Member> member = memberRepository.findByStudentIdAndHomeworkId(user.getId(), homework.getId());
+        if (homework.getType().equals(HomeworkType.MULTI)) {
+            if (member.isPresent()) {
+                if (multiFileRepository.existsByHomeworkIdAndTeamId(homework.getId(), member.get().getTeamId())) {
+                    isComplete = true;
+                }
+            }
+        } else {
+            if (singleFileRepository.existsByHomeworkIdAndUserId(homework.getId(), user.getId()))
+                isComplete = true;
+        }
+
+        homeworkRepository.save(homework.view());
+
+        return HomeworkContentResponse.builder()
+                    .title(homework.getTitle())
+                    .type(homework.getType())
+                    .createdAt(homework.getCreatedAt())
+                    .deadLine(deadLine)
+                    .view(homework.getView())
+                    .content(homework.getContent())
+                    .isComplete(isComplete)
+                    .build();
     }
 }
