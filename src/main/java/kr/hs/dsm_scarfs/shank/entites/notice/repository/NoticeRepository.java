@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NoticeRepository extends CrudRepository<Notice, Integer> {
     Page<Notice> findAllBy(Pageable page);
+    Page<Notice> findAllByTitleContainsOrContentContains(String tileQuery, String contentQuery, Pageable page);
 }
