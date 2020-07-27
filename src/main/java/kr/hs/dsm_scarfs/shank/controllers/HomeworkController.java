@@ -23,7 +23,7 @@ public class HomeworkController {
         return homeworkService.getHomeworkList(page);
     }
 
-    @GetMapping("{/homeworkId}")
+    @GetMapping("/{homeworkId}")
     public HomeworkContentResponse getHomeworkContent(@PathVariable Integer homeworkId) {
         return homeworkService.getHomeworkContent(homeworkId);
     }
