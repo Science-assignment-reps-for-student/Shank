@@ -20,8 +20,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -41,15 +43,15 @@ public class HomeworkServiceImpl implements HomeworkService, SearchService {
     @SneakyThrows
     @Override
     public ApplicationListResponse getHomeworkList(Pageable page) {
-//        return this.getHomeworkList(homeworkRepository -> {
-//            User user = userFactory.getUser(authenticationFacade.getUserEmail());
-//
-//            String methodName = "findAllByDeadline" + user.getStudentClassNumber() + "After";
-//            return (Page<Homework>) homeworkRepository.getClass()
-//                    .getMethod("findAllByDeadline1After", Object.class, Object.class)
-//                    .invoke(homeworkRepository, page, LocalDate.MIN);
-//        });
-        return null;
+        User user = userFactory.getUser(authenticationFacade.getUserEmail());
+
+        String methodName = "findAllByDeadline" + user.getStudentClassNumber() + "After";
+        System.out.println(Arrays.toString(homeworkRepository.getClass().getDeclaredMethods()));
+        return this.getHomeworkList(
+                (Page<Homework>) homeworkRepository.getClass()
+                    .getDeclaredMethod(methodName, Pageable.class, LocalDate.class)
+                    .invoke(homeworkRepository, page, LocalDate.MIN)
+        );
     }
 
     @SneakyThrows
@@ -94,15 +96,14 @@ public class HomeworkServiceImpl implements HomeworkService, SearchService {
     @Override
     public ApplicationListResponse searchApplication(String query, Pageable page) {
         return this.getHomeworkList(
-                homeworkRepository -> homeworkRepository.findAllByTitleContainsOrContentContains(query, query, page)
+                homeworkRepository.findAllByTitleContainsOrContentContains(query, query, page)
         );
     }
 
-    public ApplicationListResponse getHomeworkList(Function<HomeworkRepository, Page<Homework>> mapper) {
+    public ApplicationListResponse getHomeworkList(Page<Homework> homeworkPages) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         List<HomeworkResponse> homeworkResponses = new ArrayList<>();
-        Page<Homework> homeworkPages = mapper.apply(homeworkRepository);
 
         int totalElement = (int) homeworkPages.getTotalElements();
         int totalPage = homeworkPages.getTotalPages();
