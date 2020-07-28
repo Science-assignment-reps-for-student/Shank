@@ -9,10 +9,11 @@ import kr.hs.dsm_scarfs.shank.entites.member.Member;
 import kr.hs.dsm_scarfs.shank.entites.member.repository.MemberRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.User;
 import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
+import kr.hs.dsm_scarfs.shank.payload.response.ApplicationListResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.HomeworkContentResponse;
-import kr.hs.dsm_scarfs.shank.payload.response.HomeworkListResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.HomeworkResponse;
 import kr.hs.dsm_scarfs.shank.security.auth.AuthenticationFacade;
+import kr.hs.dsm_scarfs.shank.service.search.SearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
@@ -21,12 +22,13 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class HomeworkServiceImpl implements HomeworkService{
+public class HomeworkServiceImpl implements HomeworkService, SearchService {
 
     private final AuthenticationFacade authenticationFacade;
     private final UserFactory userFactory;
@@ -37,50 +39,16 @@ public class HomeworkServiceImpl implements HomeworkService{
 
     @SneakyThrows
     @Override
-    public HomeworkListResponse getHomeworkList(Pageable page) {
+    public ApplicationListResponse getHomeworkList(Pageable page) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
-        List<HomeworkResponse> homeworkResponses = new ArrayList<>();
-        String methodName = "findAllByDeadline"+user.getStudentClassNumber()+"After";
-        Page<Homework> homeworkPages = (Page<Homework>) HomeworkRepository.class
-                .getDeclaredMethod(methodName, Pageable.class, LocalDate.class)
-                .invoke(homeworkRepository, page, LocalDate.MIN);
-
-        int totalElement = (int) homeworkPages.getTotalElements();
-        int totalPage = homeworkPages.getTotalPages();
-
-        for (Homework homework : homeworkPages) {
-            boolean isComplete = false;
-            if (homework.getType().equals(HomeworkType.MULTI)) {
-                Optional<Member> member = memberRepository.findByStudentIdAndHomeworkId(user.getId(), homework.getId());
-                if (member.isPresent()) {
-                    isComplete = multiFileRepository.existsByHomeworkIdAndTeamId(homework.getId(),
-                            member.get().getTeamId());
-                }
-            } else {
-                isComplete = singleFileRepository.existsByHomeworkIdAndUserId(homework.getId(), user.getId());
-            }
-
-            homeworkResponses.add(
-                    HomeworkResponse.builder()
-                        .homeworkId(homework.getId())
-                        .view(homework.getView())
-                        .title(homework.getTitle())
-                        .createdAt(homework.getCreatedAt())
-                        .preViewContent(homework.getContent()
-                                .substring(0, Math.min(150, homework.getContent().length())))
-                        .type(homework.getType())
-                        .isComplete(isComplete)
-                        .build()
-            );
-        }
-
-
-        return HomeworkListResponse.builder()
-                .totalElements(totalElement)
-                .totalPages(totalPage)
-                .homeworkResponses(homeworkResponses)
-                .build();
+        String methodName = "findAllByDeadline" + user.getStudentClassNumber() + "After";
+        System.out.println(Arrays.toString(homeworkRepository.getClass().getDeclaredMethods()));
+        return this.getHomeworkList(
+                (Page<Homework>) homeworkRepository.getClass()
+                    .getDeclaredMethod(methodName, Pageable.class, LocalDate.class)
+                    .invoke(homeworkRepository, page, LocalDate.MIN)
+        );
     }
 
     @SneakyThrows
@@ -121,4 +89,54 @@ public class HomeworkServiceImpl implements HomeworkService{
                     .isComplete(isComplete)
                     .build();
     }
+
+    @Override
+    public ApplicationListResponse searchApplication(String query, Pageable page) {
+        return this.getHomeworkList(
+                homeworkRepository.findAllByTitleContainsOrContentContains(query, query, page)
+        );
+    }
+
+    public ApplicationListResponse getHomeworkList(Page<Homework> homeworkPages) {
+        User user = userFactory.getUser(authenticationFacade.getUserEmail());
+
+        List<HomeworkResponse> homeworkResponses = new ArrayList<>();
+
+        int totalElement = (int) homeworkPages.getTotalElements();
+        int totalPage = homeworkPages.getTotalPages();
+
+        for (Homework homework : homeworkPages) {
+            boolean isComplete = false;
+            if (homework.getType().equals(HomeworkType.MULTI)) {
+                Optional<Member> member = memberRepository.findByStudentIdAndHomeworkId(user.getId(), homework.getId());
+                if (member.isPresent()) {
+                    isComplete = multiFileRepository.existsByHomeworkIdAndTeamId(homework.getId(),
+                            member.get().getTeamId());
+                }
+            } else {
+                isComplete = singleFileRepository.existsByHomeworkIdAndUserId(homework.getId(), user.getId());
+            }
+
+            homeworkResponses.add(
+                    HomeworkResponse.builder()
+                            .homeworkId(homework.getId())
+                            .view(homework.getView())
+                            .title(homework.getTitle())
+                            .createdAt(homework.getCreatedAt())
+                            .preViewContent(homework.getContent()
+                                    .substring(0, Math.min(150, homework.getContent().length())))
+                            .type(homework.getType())
+                            .isComplete(isComplete)
+                            .build()
+            );
+        }
+
+
+        return ApplicationListResponse.builder()
+                .totalElements(totalElement)
+                .totalPages(totalPage)
+                .applicationResponses(homeworkResponses)
+                .build();
+    }
+
 }

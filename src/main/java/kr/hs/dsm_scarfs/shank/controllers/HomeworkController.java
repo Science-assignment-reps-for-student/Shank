@@ -1,7 +1,7 @@
 package kr.hs.dsm_scarfs.shank.controllers;
 
+import kr.hs.dsm_scarfs.shank.payload.response.ApplicationListResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.HomeworkContentResponse;
-import kr.hs.dsm_scarfs.shank.payload.response.HomeworkListResponse;
 import kr.hs.dsm_scarfs.shank.service.homework.HomeworkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -19,11 +19,11 @@ public class HomeworkController {
     private final HomeworkService homeworkService;
 
     @GetMapping
-    public HomeworkListResponse homeworkList(Pageable page) {
+    public ApplicationListResponse homeworkList(Pageable page) {
         return homeworkService.getHomeworkList(page);
     }
 
-    @GetMapping("{/homeworkId}")
+    @GetMapping("/{homeworkId}")
     public HomeworkContentResponse getHomeworkContent(@PathVariable Integer homeworkId) {
         return homeworkService.getHomeworkContent(homeworkId);
     }
