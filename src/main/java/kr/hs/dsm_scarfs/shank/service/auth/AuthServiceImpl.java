@@ -4,6 +4,8 @@ import kr.hs.dsm_scarfs.shank.entites.refresh_token.RefreshToken;
 import kr.hs.dsm_scarfs.shank.entites.refresh_token.RefreshTokenRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
 import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
+import kr.hs.dsm_scarfs.shank.exceptions.InvalidTokenException;
+import kr.hs.dsm_scarfs.shank.exceptions.UserNotFoundException;
 import kr.hs.dsm_scarfs.shank.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Value;
 import kr.hs.dsm_scarfs.shank.payload.request.AccountRequest;
@@ -42,14 +44,14 @@ public class AuthServiceImpl implements AuthService{
                         String accessToken = tokenProvider.generateAccessToken(refreshToken.getEmail());
                         return new TokenResponse(accessToken, refreshToken.getRefreshToken(), tokenType);
                     })
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
     }
 
     @Override
     public TokenResponse refreshToken(String receivedToken) {
         if (!tokenProvider.isRefreshToken(receivedToken))
-            throw new RuntimeException();
+            throw new InvalidTokenException();
 
         return refreshTokenRepository.findByRefreshToken(receivedToken)
                 .map(refreshToken -> {
@@ -61,7 +63,7 @@ public class AuthServiceImpl implements AuthService{
                     String generatedAccessToken = tokenProvider.generateAccessToken(refreshToken.getEmail());
                     return new TokenResponse(generatedAccessToken, refreshToken.getRefreshToken(), tokenType);
                 })
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(InvalidTokenException::new);
     }
 
 }

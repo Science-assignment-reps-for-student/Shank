@@ -14,6 +14,7 @@ import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
 import kr.hs.dsm_scarfs.shank.entites.verification.EmailVerification;
 import kr.hs.dsm_scarfs.shank.entites.verification.EmailVerificationRepository;
 import kr.hs.dsm_scarfs.shank.entites.verification.EmailVerificationStatus;
+import kr.hs.dsm_scarfs.shank.exceptions.*;
 import kr.hs.dsm_scarfs.shank.payload.request.SignUpRequest;
 import kr.hs.dsm_scarfs.shank.payload.request.VerifyCodeRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.UserResponse;
@@ -49,15 +50,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public void signUp(SignUpRequest signUpRequest) {
         studentRepository.findByStudentNumber(signUpRequest.getNumber()).ifPresent(student -> {
-            throw new RuntimeException();
+                throw new NumberDuplicationException();
         });
 
        verificationRepository.findById(signUpRequest.getEmail())
                .filter(EmailVerification::isVerified)
-               .orElseThrow(RuntimeException::new);
+               .orElseThrow(InvalidAuthEmailException::new);
 
        authCodeRepository.findByStudentNumberAndCode(signUpRequest.getNumber(), signUpRequest.getAuthCode())
-               .orElseThrow(RuntimeException::new);
+               .orElseThrow(InvalidAuthCodeException::new);
 
        studentRepository.save(
                Student.builder()
@@ -72,7 +73,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void sendEmail(String email) {
         studentRepository.findByEmail(email).ifPresent(student -> {
-            throw new RuntimeException();
+            throw new UserNotFoundException();
         });
 
         String code = randomCode();
@@ -91,10 +92,10 @@ public class UserServiceImpl implements UserService {
         String email = verifyCodeRequest.getEmail();
         String code = verifyCodeRequest.getCode();
         EmailVerification emailVerification = emailVerificationRepository.findById(email)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(InvalidAuthEmailException::new);
 
         if (!emailVerification.getCode().equals(code))
-            throw new RuntimeException();
+            throw new InvalidAuthEmailException();
 
         emailVerification.verify();
         emailVerificationRepository.save(emailVerification);
@@ -107,7 +108,7 @@ public class UserServiceImpl implements UserService {
         AuthorityType authorityType = authenticationFacade.getAuthorityType();
         if (authorityType.equals(AuthorityType.STUDENT))
             user = studentRepository.findByEmail(authenticationFacade.getUserEmail())
-                    .orElseThrow(RuntimeException::new);
+                    .orElseThrow(UserNotFoundException::new);
         else
             user = Student.builder()
                     .id(0)

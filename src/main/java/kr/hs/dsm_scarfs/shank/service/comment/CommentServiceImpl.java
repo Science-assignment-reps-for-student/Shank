@@ -7,6 +7,9 @@ import kr.hs.dsm_scarfs.shank.entites.comment.repository.CocommentRepository;
 import kr.hs.dsm_scarfs.shank.entites.comment.repository.CommentRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.User;
 import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
+import kr.hs.dsm_scarfs.shank.exceptions.ApplicationNotFoundException;
+import kr.hs.dsm_scarfs.shank.exceptions.CommentNotFoundException;
+import kr.hs.dsm_scarfs.shank.exceptions.PermissionDeniedException;
 import kr.hs.dsm_scarfs.shank.security.AuthorityType;
 import kr.hs.dsm_scarfs.shank.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +34,7 @@ public class CommentServiceImpl implements CommentService{
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         boardRepository.findById(boardId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(ApplicationNotFoundException::new);
 
         commentRepository.save(
                 Comment.builder()
@@ -50,7 +53,7 @@ public class CommentServiceImpl implements CommentService{
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         commentRepository.findById(commentId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(CommentNotFoundException::new);
 
         cocommentRepository.save(
                 Cocomment.builder()
@@ -68,10 +71,10 @@ public class CommentServiceImpl implements CommentService{
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(CommentNotFoundException::new);
 
         if (!comment.getAuthorId().equals(user.getId()))
-            throw new RuntimeException();
+            throw new PermissionDeniedException();
 
         commentRepository.save(comment.updateContent(content));
     }
@@ -81,7 +84,7 @@ public class CommentServiceImpl implements CommentService{
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         Cocomment cocomment = cocommentRepository.findById(cocommentId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(CommentNotFoundException::new);
 
         if (!cocomment.getAuthorId().equals(user.getId()))
             throw new RuntimeException();
@@ -107,10 +110,10 @@ public class CommentServiceImpl implements CommentService{
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         Cocomment cocomment = cocommentRepository.findById(cocommentId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(CommentNotFoundException::new);
 
         if (!cocomment.getAuthorId().equals(user.getId()))
-            throw new RuntimeException();
+            throw new PermissionDeniedException();
 
         cocommentRepository.delete(cocomment);
     }

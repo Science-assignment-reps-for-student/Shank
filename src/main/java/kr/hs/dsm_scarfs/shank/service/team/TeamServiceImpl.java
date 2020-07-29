@@ -7,6 +7,7 @@ import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
 import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
 import kr.hs.dsm_scarfs.shank.entites.team.Team;
 import kr.hs.dsm_scarfs.shank.entites.team.repository.TeamRepository;
+import kr.hs.dsm_scarfs.shank.exceptions.*;
 import kr.hs.dsm_scarfs.shank.payload.request.TeamRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.MemberResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.TeamResponse;
@@ -31,23 +32,23 @@ public class TeamServiceImpl implements TeamService{
     @Override
     public TeamResponse getTeam(Integer homeworkId) {
         Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         homeworkRepository.findById(homeworkId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(ApplicationNotFoundException::new);
 
         Team team = teamRepository.findByLeaderIdAndHomeworkId(student.getId(), homeworkId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(TeamNotFoundException::new);
 
         Student leader = studentRepository.findById(team.getLeaderId())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(TeamLeaderNotFoundException::new);
 
         List<MemberResponse> memberResponses = new ArrayList<>();
 
         for (Member member : memberRepository.findAllByTeamId(team.getId())) {
             if (member.getId().equals(leader.getId())) continue;
             Student memberStudent = studentRepository.findById(member.getId())
-                    .orElseThrow(RuntimeException::new);
+                    .orElseThrow(MemberNotFoundException::new);
 
             memberResponses.add(
                     MemberResponse.builder()
@@ -70,10 +71,10 @@ public class TeamServiceImpl implements TeamService{
     @Override
     public void addTeam(TeamRequest teamRequest) {
         Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         homeworkRepository.findById(teamRequest.getHomeworkId())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(ApplicationNotFoundException::new);
 
         Team team = teamRepository.save(
                 Team.builder()
@@ -95,12 +96,12 @@ public class TeamServiceImpl implements TeamService{
     @Override
     public void deleteTeam(Integer teamId) {
         Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         Team team = teamRepository.findById(teamId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(TeamNotFoundException::new);
 
-        if (!student.getId().equals(team.getLeaderId())) throw new RuntimeException();
+        if (!student.getId().equals(team.getLeaderId())) throw new UserNotLeaderException();
 
         memberRepository.deleteAllByTeamId(teamId);
         teamRepository.delete(team);

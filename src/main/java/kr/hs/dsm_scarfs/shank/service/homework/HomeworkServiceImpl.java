@@ -9,6 +9,7 @@ import kr.hs.dsm_scarfs.shank.entites.member.Member;
 import kr.hs.dsm_scarfs.shank.entites.member.repository.MemberRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.User;
 import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
+import kr.hs.dsm_scarfs.shank.exceptions.ApplicationNotFoundException;
 import kr.hs.dsm_scarfs.shank.payload.response.ApplicationListResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.HomeworkContentResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.HomeworkResponse;
@@ -57,7 +58,7 @@ public class HomeworkServiceImpl implements HomeworkService, SearchService {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         Homework homework = homeworkRepository.findById(homeworkId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(ApplicationNotFoundException::new);
 
         LocalDate deadLine = (LocalDate) Homework.class
                 .getDeclaredMethod("getDeadline" + user.getStudentClassNumber())

@@ -1,5 +1,6 @@
 package kr.hs.dsm_scarfs.shank.service.board;
 
+import kr.hs.dsm_scarfs.shank.entites.user.User;
 import kr.hs.dsm_scarfs.shank.entites.user.admin.Admin;
 import kr.hs.dsm_scarfs.shank.entites.user.admin.repository.AdminRepository;
 import kr.hs.dsm_scarfs.shank.entites.board.Board;
@@ -8,7 +9,11 @@ import kr.hs.dsm_scarfs.shank.entites.comment.Cocomment;
 import kr.hs.dsm_scarfs.shank.entites.comment.Comment;
 import kr.hs.dsm_scarfs.shank.entites.comment.repository.CocommentRepository;
 import kr.hs.dsm_scarfs.shank.entites.comment.repository.CommentRepository;
+import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
 import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
+import kr.hs.dsm_scarfs.shank.exceptions.ApplicationNotFoundException;
+import kr.hs.dsm_scarfs.shank.exceptions.UserNotFoundException;
+import kr.hs.dsm_scarfs.shank.exceptions.UserNotLeaderException;
 import kr.hs.dsm_scarfs.shank.payload.response.*;
 import kr.hs.dsm_scarfs.shank.security.AuthorityType;
 import kr.hs.dsm_scarfs.shank.service.search.SearchService;
@@ -18,7 +23,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -31,6 +35,8 @@ public class BoardServiceImpl implements BoardService, SearchService {
     private final CommentRepository commentRepository;
     private final CocommentRepository cocommentRepository;
 
+    private final User defaultUser = Student.builder().name("(알수없음)").build();
+
     @Override
     public ApplicationListResponse getBoardList(Pageable page) {
         return this.searchApplication("", page);
@@ -39,10 +45,10 @@ public class BoardServiceImpl implements BoardService, SearchService {
     @Override
     public BoardContentResponse getBoardContent(Integer boardId) {
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(ApplicationNotFoundException::new);
 
         Admin admin = adminRepository.findById(board.getAdminId())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotLeaderException::new);
 
         List<Comment> comment = commentRepository.findAllByBoardId(boardId);
         List<BoardCommentsResponse> commentsResponses = new ArrayList<>();
@@ -51,10 +57,10 @@ public class BoardServiceImpl implements BoardService, SearchService {
             String commentWriterName;
             if (co.getAuthorType().equals(AuthorityType.ADMIN))
                 commentWriterName = adminRepository.findById(co.getAuthorId())
-                        .orElseThrow(RuntimeException::new).getName();
+                        .orElseGet(() -> (Admin) defaultUser).getName();
             else
                 commentWriterName = studentRepository.findById(co.getAuthorId())
-                    .orElseThrow(RuntimeException::new).getName();
+                    .orElseGet(() -> (Student) defaultUser).getName();
 
             List<BoardCocommentsResponse> cocommentsResponses = new ArrayList<>();
 
@@ -62,10 +68,10 @@ public class BoardServiceImpl implements BoardService, SearchService {
                 String cocomentWriterName;
                 if (coco.getAuthorType().equals(AuthorityType.ADMIN))
                     cocomentWriterName = adminRepository.findById(co.getAuthorId())
-                            .orElseThrow(RuntimeException::new).getName();
+                            .orElseGet(() -> (Admin) defaultUser).getName();
                 else
                     cocomentWriterName = studentRepository.findById(co.getAuthorId())
-                            .orElseThrow(RuntimeException::new).getName();
+                            .orElseGet(() -> (Student) defaultUser).getName();
 
                 cocommentsResponses.add(
                         BoardCocommentsResponse.builder()
@@ -108,7 +114,7 @@ public class BoardServiceImpl implements BoardService, SearchService {
 
         for (Board board : boardPage) {
             Admin admin = adminRepository.findById(board.getAdminId())
-                    .orElseThrow(RuntimeException::new);
+                    .orElseThrow(UserNotFoundException::new);
 
             boardResponse.add(
                     BoardResponse.builder()

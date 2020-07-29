@@ -7,6 +7,10 @@ import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
 import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
 import kr.hs.dsm_scarfs.shank.entites.team.Team;
 import kr.hs.dsm_scarfs.shank.entites.team.repository.TeamRepository;
+import kr.hs.dsm_scarfs.shank.exceptions.MemberAlreadyIncludeException;
+import kr.hs.dsm_scarfs.shank.exceptions.MemberNotFoundException;
+import kr.hs.dsm_scarfs.shank.exceptions.TeamNotFoundException;
+import kr.hs.dsm_scarfs.shank.exceptions.UserNotLeaderException;
 import kr.hs.dsm_scarfs.shank.payload.request.MemberRequest;
 import kr.hs.dsm_scarfs.shank.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
@@ -26,15 +30,15 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public void setMember(MemberRequest memberRequest) {
         Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotLeaderException::new);
 
         Team team = teamRepository.findById(memberRequest.getTeamId())
                 .filter(t -> student.getId().equals(t.getLeaderId()))
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(TeamNotFoundException::new);
 
 
         memberRepository.findByStudentIdAndHomeworkId(memberRequest.getTargetId(), team.getHomeworkId())
-                .ifPresent(member -> { throw new RuntimeException();});
+                .ifPresent(member -> { throw new MemberAlreadyIncludeException();});
 
         memberRepository.save(
                 Member.builder()
@@ -48,14 +52,14 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public void deleteMember(Integer targetId) {
         Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotLeaderException::new);
 
         Member member = memberRepository.findById(targetId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(MemberNotFoundException::new);
 
         teamRepository.findById(member.getTeamId())
                 .filter(t -> student.getId().equals(t.getLeaderId()))
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(TeamNotFoundException::new);
 
         memberRepository.delete(member);
     }

@@ -9,6 +9,7 @@ import kr.hs.dsm_scarfs.shank.entites.member.Member;
 import kr.hs.dsm_scarfs.shank.entites.member.repository.MemberRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
 import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
+import kr.hs.dsm_scarfs.shank.exceptions.*;
 import kr.hs.dsm_scarfs.shank.payload.request.MutualEvaluationRequest;
 import kr.hs.dsm_scarfs.shank.payload.request.SelfEvaluationRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.EvaluationResponse;
@@ -35,13 +36,13 @@ public class EvaluationServiceImpl implements EvaluationService {
     @Override
     public void selfEvaluation(SelfEvaluationRequest selfEvaluationRequest) {
         Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         homeworkRepository.findById(selfEvaluationRequest.getHomeworkId())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(ApplicationNotFoundException::new);
 
         selfEvaluationRepository.findByHomeworkIdAndStudentId(selfEvaluationRequest.getHomeworkId(), student.getId())
-                .ifPresent(selfEvaluation -> {throw new RuntimeException();});
+                .ifPresent(selfEvaluation -> {throw new UserAlreadyEvaluationException();});
 
         selfEvaluationRepository.save(
                 SelfEvaluation.builder()
@@ -57,22 +58,22 @@ public class EvaluationServiceImpl implements EvaluationService {
     @Override
     public void mutualEvaluation(MutualEvaluationRequest mutualEvaluationRequest) {
         Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         Student target = studentRepository.findById(mutualEvaluationRequest.getTargetId())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(TargetNotFoundException::new);
 
         homeworkRepository.findById(mutualEvaluationRequest.getHomeworkId())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(ApplicationNotFoundException::new);
 
         Integer homeworkId = mutualEvaluationRequest.getHomeworkId();
         Integer userId = student.getId();
         Integer targetId = target.getId();
 
-        if (userId.equals(targetId)) throw new RuntimeException();
+        if (userId.equals(targetId)) throw new TargetNotFoundException();
 
         mutualEvaluationRepository.findByHomeworkIdAndUserIdAndTargetId(homeworkId, userId, targetId)
-                .ifPresent(mutualEvaluation -> {throw new RuntimeException();});
+                .ifPresent(mutualEvaluation -> {throw new UserAlreadyEvaluationException();});
 
         mutualEvaluationRepository.save(
                 MutualEvaluation.builder()
@@ -89,10 +90,10 @@ public class EvaluationServiceImpl implements EvaluationService {
     @Override
     public List<EvaluationResponse> getEvaluationInfo(Integer homeworkId) {
         Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         homeworkRepository.findById(homeworkId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(ApplicationNotFoundException::new);
 
         Member me = memberRepository.findByHomeworkIdAndStudentId(homeworkId, student.getId());
         List<Member> members = memberRepository.findAllByTeamIdAndStudentIdNot(me.getTeamId(), student.getId());
@@ -111,7 +112,7 @@ public class EvaluationServiceImpl implements EvaluationService {
         );
         for (Member member : members) {
             Student memberStudent = studentRepository.findById(member.getStudentId())
-                    .orElseThrow(RuntimeException::new);
+                    .orElseThrow(MemberNotFoundException::new);
 
             evaluationResponses.add(
                     EvaluationResponse.builder()
