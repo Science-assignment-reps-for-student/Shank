@@ -47,6 +47,7 @@ public class SpringLogger implements Filter {
             ));
 
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println(String.format(
                     "%s %s - %s - [%s %s] %s",
                     stringDate,
