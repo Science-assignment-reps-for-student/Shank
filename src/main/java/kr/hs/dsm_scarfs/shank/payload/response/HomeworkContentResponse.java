@@ -3,6 +3,7 @@ package kr.hs.dsm_scarfs.shank.payload.response;
 import kr.hs.dsm_scarfs.shank.entites.homework.enums.HomeworkType;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,6 +24,14 @@ public class HomeworkContentResponse {
     private String content;
 
     private Integer view;
+
+    private String nextBoardTitle;
+
+    private String preBoardTitle;
+
+    private Integer nextBoardId;
+
+    private Integer preBoardId;
 
     private boolean isComplete;
 

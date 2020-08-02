@@ -17,4 +17,12 @@ public class NoticeContentResponse {
 
     private Integer view;
 
+    private String nextNoticeTitle;
+
+    private String preNoticeTitle;
+
+    private Integer nextNoticeId;
+
+    private Integer preNoticeId;
+
 }

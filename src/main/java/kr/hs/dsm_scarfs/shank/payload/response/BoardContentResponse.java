@@ -20,13 +20,13 @@ public class BoardContentResponse {
 
     private String content;
 
-    private String nextBoardName;
+    private String nextBoardTitle;
 
-    private String preBoardName;
+    private String preBoardTitle;
 
-    private Integer nextBoardNumber;
+    private Integer nextBoardId;
 
-    private Integer preBoardNumber;
+    private Integer preBoardId;
 
     private List<BoardCommentsResponse> comments;
 
