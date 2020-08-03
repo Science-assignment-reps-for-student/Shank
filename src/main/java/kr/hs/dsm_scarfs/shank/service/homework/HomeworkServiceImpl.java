@@ -7,6 +7,7 @@ import kr.hs.dsm_scarfs.shank.entites.homework.enums.HomeworkType;
 import kr.hs.dsm_scarfs.shank.entites.homework.repository.HomeworkRepository;
 import kr.hs.dsm_scarfs.shank.entites.member.Member;
 import kr.hs.dsm_scarfs.shank.entites.member.repository.MemberRepository;
+import kr.hs.dsm_scarfs.shank.entites.notice.Notice;
 import kr.hs.dsm_scarfs.shank.entites.user.User;
 import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
 import kr.hs.dsm_scarfs.shank.exceptions.ApplicationNotFoundException;
@@ -66,6 +67,12 @@ public class HomeworkServiceImpl implements HomeworkService, SearchService {
 
         boolean isComplete = false;
 
+        Homework nextHomework = homeworkRepository.findTop1ByIdAfterOrderByIdAsc(homeworkId)
+                .orElseGet(() -> Homework.builder().build());
+
+        Homework preHomework = homeworkRepository.findTop1ByIdBeforeOrderByIdAsc(homeworkId)
+                .orElseGet(() -> Homework.builder().build());
+
         Optional<Member> member = memberRepository.findByStudentIdAndHomeworkId(user.getId(), homework.getId());
         if (homework.getType().equals(HomeworkType.MULTI)) {
             if (member.isPresent()) {
@@ -87,6 +94,10 @@ public class HomeworkServiceImpl implements HomeworkService, SearchService {
                     .deadLine(deadLine)
                     .view(homework.getView())
                     .content(homework.getContent())
+                    .nextBoardTitle(nextHomework.getTitle())
+                    .preBoardTitle(preHomework.getTitle())
+                    .nextBoardId(nextHomework.getId())
+                    .preBoardId(preHomework.getId())
                     .isComplete(isComplete)
                     .build();
     }

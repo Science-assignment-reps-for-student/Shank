@@ -1,5 +1,6 @@
 package kr.hs.dsm_scarfs.shank.service.board;
 
+import kr.hs.dsm_scarfs.shank.entites.homework.Homework;
 import kr.hs.dsm_scarfs.shank.entites.user.User;
 import kr.hs.dsm_scarfs.shank.entites.user.admin.Admin;
 import kr.hs.dsm_scarfs.shank.entites.user.admin.repository.AdminRepository;
@@ -53,6 +54,12 @@ public class BoardServiceImpl implements BoardService, SearchService {
         List<Comment> comment = commentRepository.findAllByBoardId(boardId);
         List<BoardCommentsResponse> commentsResponses = new ArrayList<>();
 
+        Board nextBoard = boardRepository.findTop1ByIdAfterOrderByIdAsc(boardId)
+                .orElseGet(() -> Board.builder().build());
+
+        Board preBoard = boardRepository.findTop1ByIdBeforeOrderByIdAsc(boardId)
+                .orElseGet(() -> Board.builder().build());
+
         for (Comment co : comment) {
             String commentWriterName;
             if (co.getAuthorType().equals(AuthorityType.ADMIN))
@@ -102,6 +109,10 @@ public class BoardServiceImpl implements BoardService, SearchService {
                     .createdAt(board.getCreatedAt())
                     .view(board.getView())
                     .content(board.getContent())
+                    .nextBoardTitle(nextBoard.getTitle())
+                    .preBoardTitle(preBoard.getTitle())
+                    .nextBoardId(nextBoard.getId())
+                    .preBoardId(preBoard.getId())
                     .comments(commentsResponses)
                     .build();
     }

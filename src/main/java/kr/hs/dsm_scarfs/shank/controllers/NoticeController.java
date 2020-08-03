@@ -22,7 +22,7 @@ public class NoticeController {
         return noticeService.getNoticeList(page);
     }
 
-    @GetMapping("{/noticeId}")
+    @GetMapping("/{noticeId}")
     public NoticeContentResponse getNoticeContent(@PathVariable Integer noticeId) {
         return noticeService.getNoticeContent(noticeId);
     }
