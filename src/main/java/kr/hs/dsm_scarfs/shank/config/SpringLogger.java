@@ -27,7 +27,6 @@ public class SpringLogger implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 
-
         Date date = new Date();
         SimpleDateFormat DateFor = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss,S");
         String stringDate= DateFor.format(date);
@@ -59,4 +58,5 @@ public class SpringLogger implements Filter {
             ));
         }
     }
+
 }
