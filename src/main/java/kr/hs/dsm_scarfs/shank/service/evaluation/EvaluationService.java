@@ -3,6 +3,8 @@ package kr.hs.dsm_scarfs.shank.service.evaluation;
 import kr.hs.dsm_scarfs.shank.payload.request.MutualEvaluationRequest;
 import kr.hs.dsm_scarfs.shank.payload.request.SelfEvaluationRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.EvaluationResponse;
+import kr.hs.dsm_scarfs.shank.payload.response.SelfEvaluationResponse;
+import kr.hs.dsm_scarfs.shank.payload.response.TargetEvaluationInfo;
 
 import java.util.List;
 
@@ -10,4 +12,6 @@ public interface EvaluationService {
     void selfEvaluation(SelfEvaluationRequest selfEvaluationRequest);
     void mutualEvaluation(MutualEvaluationRequest mutualEvaluationRequest);
     List<EvaluationResponse> getEvaluationInfo(Integer homeworkId);
+    SelfEvaluationResponse selfEvaluationInfo(Integer homeworkId);
+    TargetEvaluationInfo targetEvaluationInfo(Integer homeworkId, Integer targetId);
 }

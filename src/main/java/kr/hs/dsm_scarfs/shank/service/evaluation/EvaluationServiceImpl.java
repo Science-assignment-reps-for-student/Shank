@@ -7,12 +7,16 @@ import kr.hs.dsm_scarfs.shank.entites.evaluation.self.repository.SelfEvaluationR
 import kr.hs.dsm_scarfs.shank.entites.homework.repository.HomeworkRepository;
 import kr.hs.dsm_scarfs.shank.entites.member.Member;
 import kr.hs.dsm_scarfs.shank.entites.member.repository.MemberRepository;
+import kr.hs.dsm_scarfs.shank.entites.user.User;
+import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
 import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
 import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
 import kr.hs.dsm_scarfs.shank.exceptions.*;
 import kr.hs.dsm_scarfs.shank.payload.request.MutualEvaluationRequest;
 import kr.hs.dsm_scarfs.shank.payload.request.SelfEvaluationRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.EvaluationResponse;
+import kr.hs.dsm_scarfs.shank.payload.response.SelfEvaluationResponse;
+import kr.hs.dsm_scarfs.shank.payload.response.TargetEvaluationInfo;
 import kr.hs.dsm_scarfs.shank.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EvaluationServiceImpl implements EvaluationService {
 
+    private final UserFactory userFactory;
     private final AuthenticationFacade authenticationFacade;
 
     private final StudentRepository studentRepository;
@@ -127,6 +132,35 @@ public class EvaluationServiceImpl implements EvaluationService {
         }
 
         return evaluationResponses;
+    }
+
+    @Override
+    public SelfEvaluationResponse selfEvaluationInfo(Integer homeworkId) {
+        User user = userFactory.getUser(authenticationFacade.getUserEmail());
+
+        SelfEvaluation selfEvaluation = selfEvaluationRepository.findByHomeworkIdAndStudentId(homeworkId, user.getId())
+                .orElseThrow(ApplicationNotFoundException::new);
+
+        return SelfEvaluationResponse.builder()
+                    .attitude(selfEvaluation.getAttitude())
+                    .communication(selfEvaluation.getCommunication())
+                    .scientificAccuracy(selfEvaluation.getScientificAccuracy())
+                    .createdAt(selfEvaluation.getCreatedAt())
+                    .build();
+    }
+
+    @Override
+    public TargetEvaluationInfo targetEvaluationInfo(Integer homeworkId, Integer targetId) {
+        User user = userFactory.getUser(authenticationFacade.getUserEmail());
+
+        MutualEvaluation mutualEvaluation =
+                mutualEvaluationRepository.findByHomeworkIdAndUserIdAndTargetId(homeworkId, user.getId(), targetId)
+                        .orElseThrow(ApplicationNotFoundException::new);
+
+        return TargetEvaluationInfo.builder()
+                    .communication(mutualEvaluation.getCommunication())
+                    .cooperation(mutualEvaluation.getCooperation())
+                    .build();
     }
 
 }
