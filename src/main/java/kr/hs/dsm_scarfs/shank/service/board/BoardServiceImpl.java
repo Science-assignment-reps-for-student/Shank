@@ -17,7 +17,6 @@ import kr.hs.dsm_scarfs.shank.exceptions.ApplicationNotFoundException;
 import kr.hs.dsm_scarfs.shank.exceptions.PermissionDeniedException;
 import kr.hs.dsm_scarfs.shank.exceptions.UserNotFoundException;
 import kr.hs.dsm_scarfs.shank.exceptions.UserNotLeaderException;
-import kr.hs.dsm_scarfs.shank.payload.request.BoardRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.*;
 import kr.hs.dsm_scarfs.shank.security.AuthorityType;
 import kr.hs.dsm_scarfs.shank.security.auth.AuthenticationFacade;
@@ -34,6 +33,7 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -74,6 +74,9 @@ public class BoardServiceImpl implements BoardService, SearchService {
 
         Board preBoard = boardRepository.findTop1ByIdBeforeOrderByIdAsc(boardId)
                 .orElseGet(() -> Board.builder().build());
+
+        List<String> imageNames = new ArrayList<>();
+        imageRepository.findByBoardId(boardId).forEach(image -> imageNames.add(image.getFileName()));
 
         for (Comment co : comment) {
             String commentWriterName;
@@ -128,6 +131,7 @@ public class BoardServiceImpl implements BoardService, SearchService {
                     .preBoardTitle(preBoard.getTitle())
                     .nextBoardId(nextBoard.getId())
                     .preBoardId(preBoard.getId())
+                    .images(imageNames)
                     .comments(commentsResponses)
                     .build();
     }
@@ -146,15 +150,15 @@ public class BoardServiceImpl implements BoardService, SearchService {
 
     @SneakyThrows
     @Override
-    public void writeBoard(BoardRequest boardWrite, MultipartFile[] files) {
+    public void writeBoard(String title, String content, MultipartFile[] files) {
         Admin admin = adminRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(PermissionDeniedException::new);
 
         Board board = boardRepository.save(
                 Board.builder()
-                        .title(boardWrite.getTitle())
+                        .title(title)
                         .adminId(admin.getId())
-                        .content(boardWrite.getContent())
+                        .content(content)
                         .createdAt(LocalDate.now())
                         .build()
         );
@@ -163,33 +167,31 @@ public class BoardServiceImpl implements BoardService, SearchService {
             String fileName = UUID.randomUUID().toString();
             imageRepository.save(
                     Image.builder()
-                        .boardId(board.getId())
-                        .fileName(fileName)
-                        .build()
+                            .boardId(board.getId())
+                            .fileName(fileName)
+                            .build()
             );
             file.transferTo(new File(imageDirPath, fileName));
         }
-
-
     }
 
     @SneakyThrows
     @Override
-    public void changeBoard(Integer boardId, BoardRequest boardRequest, MultipartFile[] files) {
+    public void changeBoard(Integer boardId, String title, String content, MultipartFile[] files) {
         Admin admin = adminRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(PermissionDeniedException::new);
 
         boardRepository.save(
                 Board.builder()
-                    .title(boardRequest.getTitle())
-                    .content(boardRequest.getContent())
-                    .createdAt(LocalDate.now())
-                    .adminId(admin.getId())
-                    .build()
+                        .title(title)
+                        .content(content)
+                        .createdAt(LocalDate.now())
+                        .adminId(admin.getId())
+                        .build()
         );
 
         List<Image> images = imageRepository.findByBoardId(boardId);
-        
+
         for (Image image : images) {
             new File(imageDirPath, image.getFileName()).deleteOnExit();
         }
