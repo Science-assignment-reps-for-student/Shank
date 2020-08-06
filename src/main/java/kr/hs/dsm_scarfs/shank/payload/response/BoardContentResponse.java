@@ -28,6 +28,8 @@ public class BoardContentResponse {
 
     private Integer preBoardId;
 
+    private List<String> images;
+
     private List<BoardCommentsResponse> comments;
 
 }
