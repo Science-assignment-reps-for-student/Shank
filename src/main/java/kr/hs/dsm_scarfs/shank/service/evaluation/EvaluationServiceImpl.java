@@ -12,8 +12,8 @@ import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
 import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
 import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
 import kr.hs.dsm_scarfs.shank.exceptions.*;
-import kr.hs.dsm_scarfs.shank.payload.request.MutualEvaluationRequest;
-import kr.hs.dsm_scarfs.shank.payload.request.SelfEvaluationRequest;
+import kr.hs.dsm_scarfs.shank.payload.request.TeamEvaluationRequest;
+import kr.hs.dsm_scarfs.shank.payload.request.PersonalEvaluationRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.EvaluationResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.SelfEvaluationResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.TargetEvaluationInfo;
@@ -39,7 +39,7 @@ public class EvaluationServiceImpl implements EvaluationService {
     private final MemberRepository memberRepository;
 
     @Override
-    public void selfEvaluation(SelfEvaluationRequest selfEvaluationRequest) {
+    public void selfEvaluation(PersonalEvaluationRequest selfEvaluationRequest) {
         Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
@@ -61,17 +61,17 @@ public class EvaluationServiceImpl implements EvaluationService {
     }
 
     @Override
-    public void mutualEvaluation(MutualEvaluationRequest mutualEvaluationRequest) {
+    public void mutualEvaluation(TeamEvaluationRequest teamEvaluationRequest) {
         Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
-        Student target = studentRepository.findById(mutualEvaluationRequest.getTargetId())
+        Student target = studentRepository.findById(teamEvaluationRequest.getTargetId())
                 .orElseThrow(TargetNotFoundException::new);
 
-        homeworkRepository.findById(mutualEvaluationRequest.getHomeworkId())
+        homeworkRepository.findById(teamEvaluationRequest.getHomeworkId())
                 .orElseThrow(ApplicationNotFoundException::new);
 
-        Integer homeworkId = mutualEvaluationRequest.getHomeworkId();
+        Integer homeworkId = teamEvaluationRequest.getHomeworkId();
         Integer userId = student.getId();
         Integer targetId = target.getId();
 
@@ -85,8 +85,8 @@ public class EvaluationServiceImpl implements EvaluationService {
                     .homeworkId(homeworkId)
                     .userId(userId)
                     .targetId(targetId)
-                    .communication(mutualEvaluationRequest.getCommunication())
-                    .cooperation(mutualEvaluationRequest.getCooperation())
+                    .communication(teamEvaluationRequest.getCommunication())
+                    .cooperation(teamEvaluationRequest.getCooperation())
                     .createdAt(LocalDateTime.now())
                     .build()
         );
