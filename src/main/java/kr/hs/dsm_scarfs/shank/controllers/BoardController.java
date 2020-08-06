@@ -1,6 +1,5 @@
 package kr.hs.dsm_scarfs.shank.controllers;
 
-import kr.hs.dsm_scarfs.shank.payload.request.BoardRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.ApplicationListResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.BoardContentResponse;
 import kr.hs.dsm_scarfs.shank.service.board.BoardService;
@@ -26,14 +25,19 @@ public class BoardController {
         return boardService.getBoardContent(boardId);
     }
 
-    @PostMapping("/write")
-    public void writeBoard(@RequestParam BoardRequest boardWrite, MultipartFile[] files) {
-        boardService.writeBoard(boardWrite, files);
+    @PostMapping
+    public void writeBoard(@RequestParam String title,
+                           @RequestParam String content,
+                           MultipartFile[] files) {
+        boardService.writeBoard(title, content, files);
     }
 
     @PutMapping("/{boardId}")
-    public void changeBoard(@PathVariable Integer boardId, @RequestParam BoardRequest boardRequest, MultipartFile[] files) {
-        boardService.changeBoard(boardId, boardRequest, files);
+    public void changeBoard(@PathVariable Integer boardId,
+                            @RequestParam String title,
+                            @RequestParam String content,
+                            MultipartFile[] files) {
+        boardService.changeBoard(boardId, title, content, files);
     }
 
 
