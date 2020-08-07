@@ -1,10 +1,14 @@
 package kr.hs.dsm_scarfs.shank.payload.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
 @Getter
-public class MutualEvaluationRequest {
+@NoArgsConstructor
+@AllArgsConstructor
+public class TeamEvaluationRequest {
 
     private Integer homeworkId;
 

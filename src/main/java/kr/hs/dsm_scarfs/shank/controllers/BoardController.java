@@ -6,6 +6,7 @@ import kr.hs.dsm_scarfs.shank.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/board")
@@ -24,5 +25,25 @@ public class BoardController {
         return boardService.getBoardContent(boardId);
     }
 
+    @PostMapping
+    public void writeBoard(@RequestParam String title,
+                           @RequestParam String content,
+                           MultipartFile[] files) {
+        boardService.writeBoard(title, content, files);
+    }
+
+    @PutMapping("/{boardId}")
+    public void changeBoard(@PathVariable Integer boardId,
+                            @RequestParam String title,
+                            @RequestParam String content,
+                            MultipartFile[] files) {
+        boardService.changeBoard(boardId, title, content, files);
+    }
+
+
+    @DeleteMapping("/{boardId}")
+    public void deleteBoardContent(@PathVariable Integer boardId) {
+        boardService.deleteBoard(boardId);
+    }
 
 }

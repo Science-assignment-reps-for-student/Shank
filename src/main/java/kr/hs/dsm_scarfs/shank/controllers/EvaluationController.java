@@ -1,8 +1,10 @@
 package kr.hs.dsm_scarfs.shank.controllers;
 
-import kr.hs.dsm_scarfs.shank.payload.request.MutualEvaluationRequest;
-import kr.hs.dsm_scarfs.shank.payload.request.SelfEvaluationRequest;
+import kr.hs.dsm_scarfs.shank.payload.request.TeamEvaluationRequest;
+import kr.hs.dsm_scarfs.shank.payload.request.PersonalEvaluationRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.EvaluationResponse;
+import kr.hs.dsm_scarfs.shank.payload.response.SelfEvaluationResponse;
+import kr.hs.dsm_scarfs.shank.payload.response.TargetEvaluationInfo;
 import kr.hs.dsm_scarfs.shank.service.evaluation.EvaluationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -21,14 +23,24 @@ public class EvaluationController {
         return evaluationService.getEvaluationInfo(homeworkId);
     }
 
+    @GetMapping("/info/personal/{homeworkId}")
+    public SelfEvaluationResponse selfEvaluationInfo(@PathVariable Integer homeworkId) {
+        return evaluationService.selfEvaluationInfo(homeworkId);
+    }
+
+    @GetMapping("/info/team/{homeworkId}")
+    public TargetEvaluationInfo targetEvaluationInfo(@PathVariable Integer homeworkId, @RequestParam Integer targetId) {
+        return evaluationService.targetEvaluationInfo(homeworkId, targetId);
+    }
+
     @PostMapping("/self")
-    public void selfEvaluation(@RequestBody SelfEvaluationRequest selfEvaluationRequest) {
+    public void selfEvaluation(@RequestBody PersonalEvaluationRequest selfEvaluationRequest) {
         evaluationService.selfEvaluation(selfEvaluationRequest);
     }
 
     @PostMapping("/mutual")
-    public void mutualEvaluation(@RequestBody MutualEvaluationRequest mutualEvaluationRequest) {
-        evaluationService.mutualEvaluation(mutualEvaluationRequest);
+    public void mutualEvaluation(@RequestBody TeamEvaluationRequest teamEvaluationRequest) {
+        evaluationService.mutualEvaluation(teamEvaluationRequest);
     }
 
 }
