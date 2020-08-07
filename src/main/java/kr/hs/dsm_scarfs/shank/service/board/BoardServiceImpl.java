@@ -144,7 +144,7 @@ public class BoardServiceImpl implements BoardService, SearchService {
         adminRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
-        imageRepository.deleteById(boardId);
+        imageRepository.deleteByBoardId(boardId);
         boardRepository.deleteById(boardId);
     }
 
