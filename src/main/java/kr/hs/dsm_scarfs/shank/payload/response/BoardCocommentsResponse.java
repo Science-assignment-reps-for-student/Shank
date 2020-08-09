@@ -11,6 +11,8 @@ public class BoardCocommentsResponse {
 
     private Integer cocommentId;
 
+    private Integer studentNumber;
+
     private String content;
 
     private String writerName;

@@ -12,6 +12,8 @@ public class BoardCommentsResponse {
 
     private Integer commentId;
 
+    private Integer studentNumber;
+
     private String content;
 
     private String writerName;
