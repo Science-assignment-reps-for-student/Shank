@@ -1,6 +1,7 @@
 package kr.hs.dsm_scarfs.shank.entites.user.admin;
 
 import kr.hs.dsm_scarfs.shank.entites.user.User;
+import kr.hs.dsm_scarfs.shank.security.AuthorityType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,6 +30,11 @@ public class Admin implements User {
 
     public String getStudentClassNumber() {
         return "1";
+    }
+
+    @Override
+    public kr.hs.dsm_scarfs.shank.entites.message.enums.AuthorityType getType() {
+        return AuthorityType.ADMIN;
     }
 
 }

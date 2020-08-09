@@ -1,6 +1,7 @@
 package kr.hs.dsm_scarfs.shank.entites.user.student;
 
 import kr.hs.dsm_scarfs.shank.entites.user.User;
+import kr.hs.dsm_scarfs.shank.security.AuthorityType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,6 +29,10 @@ public class Student implements User {
 
     public String getStudentClassNumber() {
         return String.valueOf(this.studentNumber.charAt(1));
+    }
+
+    public kr.hs.dsm_scarfs.shank.entites.message.enums.AuthorityType getType() {
+        return AuthorityType.STUDENT;
     }
 
 }
