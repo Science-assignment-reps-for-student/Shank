@@ -1,6 +1,6 @@
 package kr.hs.dsm_scarfs.shank.entites.message;
 
-import kr.hs.dsm_scarfs.shank.entites.message.enums.MessageType;
+import kr.hs.dsm_scarfs.shank.entites.message.enums.AuthorityType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,13 +20,13 @@ public class Message {
 
     private Integer userId;
 
-    private Integer adminId;
+    private Integer targetId;
 
     private String message;
 
     private LocalDateTime time;
 
-    private MessageType type;
+    private AuthorityType type;
 
     private boolean isShow;
 
