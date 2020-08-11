@@ -8,6 +8,8 @@ import kr.hs.dsm_scarfs.shank.security.auth.AuthDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -31,6 +33,24 @@ public class UserFactory {
         if (student.isPresent()) return student.get();
         else return adminRepository.findByEmail(email)
                 .orElseThrow(RuntimeException::new);
+    }
+
+    public List<User> getChattedMessageList(User user) {
+        List<User> users = new ArrayList<>();
+        if (user.getType().equals(AuthorityType.STUDENT)) {
+            users.addAll(adminRepository.getChattedAdmin(user.getId()));
+        } else {
+            users.addAll(studentRepository.getChattedStudent(user.getId()));
+        }
+
+        return users;
+    }
+
+    public int[] getSortedId(User user1, User user2) {
+        if (user1.getType().equals(AuthorityType.STUDENT))
+            return new int[]{user1.getId(), user2.getId()};
+        else
+            return new int[]{user2.getId(), user1.getId()};
     }
 
 }
