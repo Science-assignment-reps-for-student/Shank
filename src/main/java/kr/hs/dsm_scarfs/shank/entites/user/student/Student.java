@@ -20,18 +20,19 @@ public class Student implements User {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(unique = true, nullable = false)
-    private String studentNumber;
-
     private String password;
 
     private String name;
+
+
+    @Column(unique = true, nullable = false)
+    private String studentNumber;
 
     public String getStudentClassNumber() {
         return String.valueOf(this.studentNumber.charAt(1));
     }
 
-    public kr.hs.dsm_scarfs.shank.entites.message.enums.AuthorityType getType() {
+    public AuthorityType getType() {
         return AuthorityType.STUDENT;
     }
 

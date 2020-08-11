@@ -33,7 +33,7 @@ public class Admin implements User {
     }
 
     @Override
-    public kr.hs.dsm_scarfs.shank.entites.message.enums.AuthorityType getType() {
+    public AuthorityType getType() {
         return AuthorityType.ADMIN;
     }
 
