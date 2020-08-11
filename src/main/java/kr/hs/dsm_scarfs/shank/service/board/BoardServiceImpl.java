@@ -82,7 +82,8 @@ public class BoardServiceImpl implements BoardService, SearchService {
         imageRepository.findByBoardId(boardId).forEach(image -> imageNames.add(image.getFileName()));
 
         for (Comment co : comment) {
-            User writerUser =
+
+
             String commentWriterName;
             if (co.getAuthorType().equals(AuthorityType.ADMIN))
                 commentWriterName = adminRepository.findById(co.getAuthorId())
