@@ -1,12 +1,12 @@
 package kr.hs.dsm_scarfs.shank.entites.message;
 
-import kr.hs.dsm_scarfs.shank.entites.message.enums.AuthorityType;
+import kr.hs.dsm_scarfs.shank.security.AuthorityType;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Setter
 @Getter
 @Builder
 @Entity
@@ -18,18 +18,24 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer userId;
+    private Integer studentId;
 
-    private Integer targetId;
+    private Integer adminId;
 
     private String message;
 
     private LocalDateTime time;
 
+    @Enumerated(EnumType.STRING)
     private AuthorityType type;
 
     private boolean isShow;
 
     private boolean isDeleted;
+
+    public Message read() {
+        this.isShow = true;
+        return this;
+    }
 
 }
