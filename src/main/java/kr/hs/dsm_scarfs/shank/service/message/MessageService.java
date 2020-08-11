@@ -10,5 +10,5 @@ public interface MessageService {
     List<MessageListResponse> getMessageList();
     List<MessageResponse> getChats(Integer userId);
     void readMessage(Integer messageId);
-    MessageResponse chat(Integer userId, MessageRequest messageRequest);
+    MessageResponse chat(Integer targetId, MessageRequest messageRequest);
 }

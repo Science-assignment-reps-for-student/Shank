@@ -1,7 +1,6 @@
 package kr.hs.dsm_scarfs.shank.service.message;
 
 import kr.hs.dsm_scarfs.shank.entites.message.Message;
-import kr.hs.dsm_scarfs.shank.entites.message.enums.AuthorityType;
 import kr.hs.dsm_scarfs.shank.entites.message.repository.MessageRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.User;
 import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
@@ -9,10 +8,13 @@ import kr.hs.dsm_scarfs.shank.exceptions.MessageNotFoundException;
 import kr.hs.dsm_scarfs.shank.payload.request.MessageRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.MessageListResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.MessageResponse;
+import kr.hs.dsm_scarfs.shank.security.AuthorityType;
+import kr.hs.dsm_scarfs.shank.security.JwtTokenProvider;
 import kr.hs.dsm_scarfs.shank.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService{
 
+    private final JwtTokenProvider jwtTokenProvider;
     private final UserFactory userFactory;
     private final AuthenticationFacade authenticationFacade;
 
@@ -30,29 +33,55 @@ public class MessageServiceImpl implements MessageService{
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
         List<MessageListResponse> messageListResponses = new ArrayList<>();
 
-        if (user.getType().equals(AuthorityType.STUDENT)) {
-            messageRepository.findFirstByStudentIdOrderByTimeDesc(user.getId())
-                    .ifPresent(message -> messageListResponses.add(
-                            MessageListResponse.builder()
-                                .userId(user.getId())
-                                .userNumber(user.getStudentNumber())
-                                .userName(user.getName())
-                                .message(message.getMessage())
-                                .messageTime(message.getTime())
-                            .build()
-                    ));
+        for (User targetUser : userFactory.getChattedMessageList(user)) {
+            int[] sortedId = userFactory.getSortedId(user, targetUser);
+            Message message = messageRepository.findFirstByStudentIdAndAdminIdOrderByTimeDesc(
+                    sortedId[0], sortedId[1]
+            ).orElseThrow(MessageNotFoundException::new);
+
+            messageListResponses.add(
+                    MessageListResponse.builder()
+                        .userId(targetUser.getId())
+                        .userNumber(targetUser.getStudentNumber())
+                        .userName(targetUser.getName())
+                        .message(message.getMessage())
+                        .messageTime(message.getTime())
+                        .isShow(user.getType().equals(message.getType()) || message.isShow())
+                        .isDeleted(message.isDeleted())
+                        .build()
+            );
         }
-        return null;
+
+        return messageListResponses;
     }
 
     @Override
     public List<MessageResponse> getChats(Integer targetId) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
-        List<Message> messages = messageRepository
-                .findAllByUserIdAndTargetIdAndTypeOrderByTimeAsc(user.getId(), targetId, user.getType());
+        List<Message> messages;
+        if (user.getType().equals(AuthorityType.STUDENT))
+            messages = messageRepository
+                    .findAllByStudentIdAndAdminIdOrderByTimeAsc(user.getId(), targetId);
+        else
+            messages = messageRepository
+                    .findAllByStudentIdAndAdminIdOrderByTimeAsc(targetId, user.getId());
 
-        List<MessageRepository> messageRepositories = new ArrayList<>();
+        List<MessageResponse> messageResponses = new ArrayList<>();
+        for (Message message : messages) {
+            messageResponses.add(
+                    MessageResponse.builder()
+                        .id(message.getId())
+                        .message(message.getMessage())
+                        .time(message.getTime())
+                        .type(message.getType())
+                        .build()
+            );
+            if (!user.getType().equals(message.getType()))
+                messageRepository.save(message.read());
+        }
+
+        return messageResponses;
     }
 
     @Override
@@ -63,12 +92,39 @@ public class MessageServiceImpl implements MessageService{
 
         if (user.getType().equals(message.getType())) return;
 
-        message.setShow(true);
-        messageRepository.save(message);
+        messageRepository.save(message.read());
     }
 
     @Override
-    public MessageResponse chat(Integer userId, MessageRequest messageRequest) {
-        return null;
+    public MessageResponse chat(Integer targetId, MessageRequest messageRequest) {
+        User user = userFactory.getUser(jwtTokenProvider.getUserEmail(messageRequest.getToken()));
+        String content = messageRequest.getMessage();
+
+        Integer studentId, adminId;
+        if (user.getType().equals(AuthorityType.STUDENT)) {
+            studentId = user.getId();
+            adminId = targetId;
+        } else {
+            studentId = targetId;
+            adminId = user.getId();
+        }
+
+        Message message = messageRepository.save(
+                Message.builder()
+                    .studentId(studentId)
+                    .adminId(adminId)
+                    .message(content)
+                    .time(LocalDateTime.now())
+                    .isDeleted(false)
+                    .isShow(false)
+                    .build()
+        );
+
+        return MessageResponse.builder()
+                .id(message.getId())
+                .message(message.getMessage())
+                .time(message.getTime())
+                .type(message.getType())
+                .build();
     }
 }
