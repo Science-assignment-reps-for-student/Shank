@@ -1,5 +1,6 @@
 package kr.hs.dsm_scarfs.shank.payload.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,6 +14,7 @@ public class NoticeResponse {
 
     private String title;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
     private String preViewContent;
