@@ -1,6 +1,6 @@
 package kr.hs.dsm_scarfs.shank.entites.user;
 
-import kr.hs.dsm_scarfs.shank.entites.message.enums.AuthorityType;
+import kr.hs.dsm_scarfs.shank.security.AuthorityType;
 
 public interface User {
     Integer getId();
