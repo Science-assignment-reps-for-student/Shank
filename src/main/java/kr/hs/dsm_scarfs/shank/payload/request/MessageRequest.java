@@ -12,8 +12,6 @@ import lombok.NoArgsConstructor;
 public class MessageRequest {
 
     private String token;
-
     private String message;
 
-    private Long messageTime;
 }
