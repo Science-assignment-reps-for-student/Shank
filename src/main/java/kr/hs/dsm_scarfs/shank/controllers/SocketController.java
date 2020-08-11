@@ -36,9 +36,12 @@ public class SocketController {
         messageService.readMessage(messageId);
     }
 
-    @MessageMapping("/send/{userId}")
-    @SendTo({"/receive/{userId}", "/receive/admin"})
-    public MessageResponse chat(@DestinationVariable Integer userId, MessageRequest messageRequest) {
-        return messageService.chat(userId, messageRequest);
+    @MessageMapping("/send/{studentId}/{adminId}")
+    @SendTo({"/receive/{studentId}/{adminId}", "/receive/admin"})
+    public MessageResponse sendToAdmin(@DestinationVariable Integer studentId,
+                                       @DestinationVariable Integer adminId,
+                                       MessageRequest messageRequest) {
+        return messageService.chat(studentId, adminId, messageRequest);
     }
+
 }
