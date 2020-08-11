@@ -1,5 +1,7 @@
 package kr.hs.dsm_scarfs.shank.entites.user;
 
+import kr.hs.dsm_scarfs.shank.security.AuthorityType;
+
 public interface User {
     Integer getId();
     String getEmail();
@@ -7,4 +9,5 @@ public interface User {
     String getName();
     String getStudentNumber();
     String getStudentClassNumber();
+    AuthorityType getType();
 }

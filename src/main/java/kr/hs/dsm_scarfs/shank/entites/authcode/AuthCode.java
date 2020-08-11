@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Getter
-@Builder
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,4 +15,5 @@ public class AuthCode {
     private String studentNumber;
 
     private String code;
+
 }

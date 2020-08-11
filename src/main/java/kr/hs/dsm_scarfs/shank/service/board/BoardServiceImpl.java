@@ -24,6 +24,7 @@ import kr.hs.dsm_scarfs.shank.service.search.SearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.embedded.undertow.UndertowServletWebServer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -66,6 +67,8 @@ public class BoardServiceImpl implements BoardService, SearchService {
         Admin admin = adminRepository.findById(board.getAdminId())
                 .orElseThrow(UserNotLeaderException::new);
 
+
+
         List<Comment> comment = commentRepository.findAllByBoardId(boardId);
         List<BoardCommentsResponse> commentsResponses = new ArrayList<>();
 
@@ -79,6 +82,8 @@ public class BoardServiceImpl implements BoardService, SearchService {
         imageRepository.findByBoardId(boardId).forEach(image -> imageNames.add(image.getFileName()));
 
         for (Comment co : comment) {
+
+
             String commentWriterName;
             if (co.getAuthorType().equals(AuthorityType.ADMIN))
                 commentWriterName = adminRepository.findById(co.getAuthorId())
@@ -90,6 +95,8 @@ public class BoardServiceImpl implements BoardService, SearchService {
             List<BoardCocommentsResponse> cocommentsResponses = new ArrayList<>();
 
             for (Cocomment coco : cocommentRepository.findAllByCommentId(co.getId())) {
+                User user = studentRepository.findById(coco.getAuthorId())
+                        .orElse((Student) defaultUser);
                 String cocomentWriterName;
                 if (coco.getAuthorType().equals(AuthorityType.ADMIN))
                     cocomentWriterName = adminRepository.findById(co.getAuthorId())
@@ -103,6 +110,7 @@ public class BoardServiceImpl implements BoardService, SearchService {
                             .cocommentId(coco.getId())
                             .content(coco.getContent())
                             .createdAt(coco.getUpdateAt())
+                            .studentNumber(user.getId())
                             .writerName(cocomentWriterName)
                             .build()
                 );

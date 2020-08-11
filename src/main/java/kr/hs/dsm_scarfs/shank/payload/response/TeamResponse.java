@@ -20,7 +20,4 @@ public class TeamResponse {
 
     private List<MemberResponse> memberList;
 
-
-
-
 }
