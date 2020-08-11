@@ -5,6 +5,7 @@ import kr.hs.dsm_scarfs.shank.entites.message.repository.MessageRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.User;
 import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
 import kr.hs.dsm_scarfs.shank.exceptions.MessageNotFoundException;
+import kr.hs.dsm_scarfs.shank.exceptions.PermissionDeniedException;
 import kr.hs.dsm_scarfs.shank.payload.request.MessageRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.MessageListResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.MessageResponse;
@@ -96,24 +97,16 @@ public class MessageServiceImpl implements MessageService{
     }
 
     @Override
-    public MessageResponse chat(Integer targetId, MessageRequest messageRequest) {
+    public MessageResponse chat(Integer studentId, Integer adminId, MessageRequest messageRequest) {
         User user = userFactory.getUser(jwtTokenProvider.getUserEmail(messageRequest.getToken()));
-        String content = messageRequest.getMessage();
-
-        Integer studentId, adminId;
-        if (user.getType().equals(AuthorityType.STUDENT)) {
-            studentId = user.getId();
-            adminId = targetId;
-        } else {
-            studentId = targetId;
-            adminId = user.getId();
-        }
+        if (!user.getId().equals(studentId) && !user.getId().equals(adminId))
+            throw new PermissionDeniedException();
 
         Message message = messageRepository.save(
                 Message.builder()
                     .studentId(studentId)
                     .adminId(adminId)
-                    .message(content)
+                    .message(messageRequest.getMessage())
                     .time(LocalDateTime.now())
                     .isDeleted(false)
                     .isShow(false)
