@@ -129,14 +129,14 @@ public class HomeworkServiceImpl implements HomeworkService, SearchService {
                 isComplete = singleFileRepository.existsByHomeworkIdAndUserId(homework.getId(), user.getId());
             }
 
+            String preViewContent = homework.getContent().substring(0, Math.min(50, homework.getContent().length()));
             homeworkResponses.add(
                     HomeworkResponse.builder()
                             .homeworkId(homework.getId())
                             .view(homework.getView())
                             .title(homework.getTitle())
                             .createdAt(homework.getCreatedAt())
-                            .preViewContent(homework.getContent()
-                                    .substring(0, Math.min(150, homework.getContent().length())))
+                            .preViewContent(preViewContent)
                             .type(homework.getType())
                             .isComplete(isComplete)
                             .build()

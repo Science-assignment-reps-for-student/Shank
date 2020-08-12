@@ -230,12 +230,14 @@ public class BoardServiceImpl implements BoardService, SearchService {
             Admin admin = adminRepository.findById(board.getAdminId())
                     .orElseThrow(UserNotFoundException::new);
 
+            String preViewContent = board.getContent().substring(0, Math.min(50, board.getContent().length()));
             boardResponse.add(
                     BoardResponse.builder()
                             .boardId(board.getId())
                             .view(board.getView())
                             .title(board.getTitle())
                             .name(admin.getName())
+                            .preViewContent(preViewContent)
                             .createdAt(board.getCreatedAt())
                             .build()
             );
