@@ -15,9 +15,12 @@ public class BoardResponse {
     private String title;
 
     private String name;
+    
+    private String preViewContent;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDate createdAt;
 
     private Integer view;
+
 }
