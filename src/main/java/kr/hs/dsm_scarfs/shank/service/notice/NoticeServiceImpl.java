@@ -62,13 +62,14 @@ public class NoticeServiceImpl implements NoticeService, SearchService {
         List<NoticeResponse> noticeResponses = new ArrayList<>();
 
         for (Notice notice : noticePage) {
+            String preViewContent = notice.getContent().substring(0, Math.min(50, notice.getContent().length()));
             noticeResponses.add(
                     NoticeResponse.builder()
                             .noticeId(notice.getId())
                             .view(notice.getView())
                             .title(notice.getTitle())
                             .createdAt(notice.getCreatedAt())
-                            .preViewContent(notice.getContent().substring(0, Math.min(150, notice.getContent().length())))
+                            .preViewContent(preViewContent)
                             .build()
             );
         }
