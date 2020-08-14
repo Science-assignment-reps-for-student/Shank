@@ -9,6 +9,7 @@ import kr.hs.dsm_scarfs.shank.entites.homework.repository.HomeworkRepository;
 import kr.hs.dsm_scarfs.shank.entites.member.Member;
 import kr.hs.dsm_scarfs.shank.entites.member.repository.MemberRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.User;
+import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
 import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
 import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
 import kr.hs.dsm_scarfs.shank.entites.verification.EmailVerification;
@@ -47,6 +48,9 @@ public class UserServiceImpl implements UserService {
     private final MultiFileRepository multiFileRepository;
     private final HomeworkRepository homeworkRepository;
     private final MemberRepository memberRepository;
+
+    private final UserFactory userFactory;
+
     @Override
     public void signUp(SignUpRequest signUpRequest) {
         studentRepository.findByStudentNumber(signUpRequest.getNumber()).ifPresent(student -> {
@@ -95,36 +99,25 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(InvalidAuthEmailException::new);
 
         if (!emailVerification.getCode().equals(code))
-            throw new InvalidAuthEmailException();
+            throw new InvalidAuthCodeException();
 
-        emailVerification.verify();
-        emailVerificationRepository.save(emailVerification);
+        emailVerificationRepository.save(emailVerification.verify());
     }
 
     @SneakyThrows
     @Override
     public UserResponse getUser(Pageable page) {
-        User user;
-        AuthorityType authorityType = authenticationFacade.getAuthorityType();
-        if (authorityType.equals(AuthorityType.STUDENT))
-            user = studentRepository.findByEmail(authenticationFacade.getUserEmail())
-                    .orElseThrow(UserNotFoundException::new);
-        else
-            user = Student.builder()
-                    .id(0)
-                    .name("Admin")
-                    .studentNumber("1101")
-                    .build();
+        User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         int remainingAssignment = 0, completionAssignment = 0;
 
         String methodName = "findAllByDeadline" + user.getStudentClassNumber() + "After";
         Page<Homework> homeworkPage = (Page<Homework>) HomeworkRepository.class
                 .getDeclaredMethod(methodName, Pageable.class, LocalDate.class)
-                .invoke(homeworkRepository, page, LocalDate.now(ZoneId.of("UTC+9")));
+                .invoke(homeworkRepository, page, LocalDate.now(ZoneId.of("Asia/Seoul")));
 
         for (Homework homework : homeworkPage) {
-            if (authorityType.equals(AuthorityType.ADMIN)) break;
+            if (user.getType().equals(AuthorityType.ADMIN)) break;
             Optional<Member> member = memberRepository.findByStudentIdAndHomeworkId(user.getId(), homework.getId());
 
             if (homework.getType().equals(HomeworkType.MULTI)) {
