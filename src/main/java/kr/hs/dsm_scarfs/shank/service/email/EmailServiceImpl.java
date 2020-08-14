@@ -1,6 +1,5 @@
 package kr.hs.dsm_scarfs.shank.service.email;
 
-import lombok.RequiredArgsConstructor;
 import net.sargue.mailgun.Configuration;
 import net.sargue.mailgun.Mail;
 import net.sargue.mailgun.Response;
@@ -8,9 +7,13 @@ import net.sargue.mailgun.content.Body;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Objects;
+
 @Service
-@RequiredArgsConstructor
-public class SesEmailServiceImpl implements EmailService{
+public class EmailServiceImpl implements EmailService {
 
     @Value("${spring.email.domain}")
     private String domain;
@@ -25,17 +28,29 @@ public class SesEmailServiceImpl implements EmailService{
                 .apiKey(apiKey)
                 .from("Avocat", "avocat@dsm.hs.kr");
 
-        Body builder = new Body("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n" +
-                "<html xmlns=\"http://www.w3.org/1999/xhtml\"><body><p style=\"color: red\">Test</p></body></html>", "");
+        Body builder = new Body(convertHtmlWithCode(code), null);
 
         Response response = Mail.using(configuration)
                 .to(receiveEmail)
-                .subject("아보캣 인증 메일")
+                .subject("Avocat 회원 인증 메일")
                 .content(builder)
                 .build()
                 .send();
 
+        if (!response.isOk())
+            throw new RuntimeException();
+    }
 
+    private String convertHtmlWithCode(String code) {
+        InputStream inputStream = getClass().getResourceAsStream("static/email.html");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+        StringBuilder stringBuilder = new StringBuilder();
+        reader.lines()
+                .filter(Objects::nonNull)
+                .forEach(stringBuilder::append);
+
+        return stringBuilder.toString().replace("{%code%}", code);
     }
 
 }
