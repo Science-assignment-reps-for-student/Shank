@@ -28,7 +28,7 @@ public class EmailServiceImpl implements EmailService {
                 .apiKey(apiKey)
                 .from("Avocat", "avocat@dsm.hs.kr");
 
-        Body builder = new Body(convertHtmlWithCode(code), null);
+        Body builder = new Body(convertHtmlWithCode(code), "");
 
         Response response = Mail.using(configuration)
                 .to(receiveEmail)
