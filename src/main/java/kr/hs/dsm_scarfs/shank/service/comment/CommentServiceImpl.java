@@ -102,6 +102,7 @@ public class CommentServiceImpl implements CommentService{
         if (!comment.getAuthorId().equals(user.getId()))
             throw new RuntimeException();
 
+        cocommentRepository.deleteAllByCommentId(commentId);
         commentRepository.delete(comment);
     }
 

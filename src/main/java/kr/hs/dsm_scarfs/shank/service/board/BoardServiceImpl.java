@@ -3,6 +3,7 @@ package kr.hs.dsm_scarfs.shank.service.board;
 import kr.hs.dsm_scarfs.shank.entites.file.image.Image;
 import kr.hs.dsm_scarfs.shank.entites.file.image.repository.ImageRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.User;
+import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
 import kr.hs.dsm_scarfs.shank.entites.user.admin.Admin;
 import kr.hs.dsm_scarfs.shank.entites.user.admin.repository.AdminRepository;
 import kr.hs.dsm_scarfs.shank.entites.board.Board;
@@ -20,6 +21,7 @@ import kr.hs.dsm_scarfs.shank.exceptions.UserNotLeaderException;
 import kr.hs.dsm_scarfs.shank.payload.response.*;
 import kr.hs.dsm_scarfs.shank.security.AuthorityType;
 import kr.hs.dsm_scarfs.shank.security.auth.AuthenticationFacade;
+import kr.hs.dsm_scarfs.shank.service.comment.CommentService;
 import kr.hs.dsm_scarfs.shank.service.search.SearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -41,13 +43,17 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService, SearchService {
 
+    private final CommentService commentService;
+
     private final BoardRepository boardRepository;
     private final AdminRepository adminRepository;
     private final StudentRepository studentRepository;
     private final CommentRepository commentRepository;
     private final ImageRepository imageRepository;
     private final CocommentRepository cocommentRepository;
+
     private final AuthenticationFacade authenticationFacade;
+    private final UserFactory userFactory;
 
     private final User defaultUser = Student.builder().name("(알수없음)").build();
 
@@ -61,6 +67,8 @@ public class BoardServiceImpl implements BoardService, SearchService {
 
     @Override
     public BoardContentResponse getBoardContent(Integer boardId) {
+        User user = userFactory.getUser(authenticationFacade.getUserEmail());
+
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(ApplicationNotFoundException::new);
 
@@ -82,36 +90,32 @@ public class BoardServiceImpl implements BoardService, SearchService {
         imageRepository.findByBoardId(boardId).forEach(image -> imageNames.add(image.getFileName()));
 
         for (Comment co : comment) {
-
-
-            String commentWriterName;
+            User commentWriter;
             if (co.getAuthorType().equals(AuthorityType.ADMIN))
-                commentWriterName = adminRepository.findById(co.getAuthorId())
-                        .orElseGet(() -> (Admin) defaultUser).getName();
+                commentWriter = adminRepository.findById(co.getAuthorId())
+                        .orElseGet(() -> (Admin) defaultUser);
             else
-                commentWriterName = studentRepository.findById(co.getAuthorId())
-                    .orElseGet(() -> (Student) defaultUser).getName();
+                commentWriter = studentRepository.findById(co.getAuthorId())
+                    .orElseGet(() -> (Student) defaultUser);
 
             List<BoardCocommentsResponse> cocommentsResponses = new ArrayList<>();
-
             for (Cocomment coco : cocommentRepository.findAllByCommentId(co.getId())) {
-                User user = studentRepository.findById(coco.getAuthorId())
-                        .orElse((Student) defaultUser);
-                String cocomentWriterName;
+                User cocommentWriter;
                 if (coco.getAuthorType().equals(AuthorityType.ADMIN))
-                    cocomentWriterName = adminRepository.findById(co.getAuthorId())
-                            .orElseGet(() -> (Admin) defaultUser).getName();
+                    cocommentWriter = adminRepository.findById(co.getAuthorId())
+                            .orElseGet(() -> (Admin) defaultUser);
                 else
-                    cocomentWriterName = studentRepository.findById(co.getAuthorId())
-                            .orElseGet(() -> (Student) defaultUser).getName();
+                    cocommentWriter = studentRepository.findById(co.getAuthorId())
+                            .orElseGet(() -> (Student) defaultUser);
 
                 cocommentsResponses.add(
                         BoardCocommentsResponse.builder()
                             .cocommentId(coco.getId())
                             .content(coco.getContent())
                             .createdAt(coco.getUpdateAt())
-                            .studentNumber(user.getId())
-                            .writerName(cocomentWriterName)
+                            .studentNumber(cocommentWriter.getStudentNumber())
+                            .writerName(cocommentWriter.getName())
+                            .isMine(user.equals(cocommentWriter))
                             .build()
                 );
             }
@@ -120,9 +124,11 @@ public class BoardServiceImpl implements BoardService, SearchService {
                 BoardCommentsResponse.builder()
                         .commentId(co.getId())
                         .content(co.getContent())
-                        .writerName(commentWriterName)
+                        .studentNumber(commentWriter.getStudentNumber())
+                        .writerName(commentWriter.getName())
                         .createdAt(co.getUpdateAt())
                         .cocomments(cocommentsResponses)
+                        .isMine(user.equals(commentWriter))
                         .build()
             );
         }
@@ -146,11 +152,14 @@ public class BoardServiceImpl implements BoardService, SearchService {
 
     @Override
     public void deleteBoard(Integer boardId) {
-        boardRepository.findById(boardId)
+       boardRepository.findById(boardId)
                 .orElseThrow(ApplicationNotFoundException::new);
 
         adminRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
+
+        for (Comment comment : commentRepository.findAllByBoardId(boardId))
+            commentService.deleteComment(comment.getId());
 
         imageRepository.deleteByBoardId(boardId);
         boardRepository.deleteById(boardId);

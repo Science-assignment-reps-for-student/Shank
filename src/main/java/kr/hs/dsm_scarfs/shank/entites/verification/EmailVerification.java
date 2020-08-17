@@ -25,9 +25,11 @@ public class EmailVerification {
     @TimeToLive
     private Long ttl;
 
-    public void verify() {
+    public EmailVerification verify() {
         this.status = EmailVerificationStatus.VERIFIED;
         this.ttl = 3 * MINUTE;
+
+        return this;
     }
 
     public boolean isVerified() {

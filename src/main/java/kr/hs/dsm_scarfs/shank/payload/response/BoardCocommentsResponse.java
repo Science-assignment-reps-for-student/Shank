@@ -12,7 +12,7 @@ public class BoardCocommentsResponse {
 
     private Integer cocommentId;
 
-    private Integer studentNumber;
+    private String studentNumber;
 
     private String content;
 
@@ -20,5 +20,7 @@ public class BoardCocommentsResponse {
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
+
+    private boolean isMine;
 
 }

@@ -13,7 +13,7 @@ public class BoardCommentsResponse {
 
     private Integer commentId;
 
-    private Integer studentNumber;
+    private String studentNumber;
 
     private String content;
 
@@ -23,5 +23,7 @@ public class BoardCommentsResponse {
     private LocalDateTime createdAt;
 
     private List<BoardCocommentsResponse> cocomments;
+
+    private boolean isMine;
 
 }

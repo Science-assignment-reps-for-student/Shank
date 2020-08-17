@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface CocommentRepository extends CrudRepository<Cocomment, Integer> {
     List<Cocomment> findAllByCommentId(Integer commentId);
+    void deleteAllByCommentId(Integer commentId);
 }
