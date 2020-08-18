@@ -1,7 +1,10 @@
 package kr.hs.dsm_scarfs.shank.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import kr.hs.dsm_scarfs.shank.ShankApplication;
+import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
 import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
 import kr.hs.dsm_scarfs.shank.entites.verification.EmailVerification;
 import kr.hs.dsm_scarfs.shank.entites.verification.EmailVerificationRepository;
@@ -26,13 +29,14 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = ShankApplication.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({"test", "local"})
-public class UserApiTest {
+class UserApiTest {
 
     @LocalServerPort
     private int port;
@@ -78,7 +82,7 @@ public class UserApiTest {
     @Test
     public void signUpTest() throws Exception {
         emailVerifyTest();
-        AccountRequest request = new AccountRequest("machiro119@naver.com", "password");
+        AccountRequest request = new AccountRequest("machiro119@naver.com", "P@ssw0rd");
         requestMvc(post("/user"), request);
     }
 
