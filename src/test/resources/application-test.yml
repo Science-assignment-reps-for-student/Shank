@@ -9,11 +9,6 @@ spring:
   redis:
     port: 6379
     host: localhost
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:test
-    username: test
-    password: 1234
   jackson:
     property-naming-strategy: SNAKE_CASE
   servlet:
@@ -24,6 +19,16 @@ spring:
   email:
     domain: sandbox9668967a8f5409f80f64dfc4c80268a.mailgun.org
     apikey: 721eac5bd22ea10ad4f0d904e896d815-f7d0b107-de72998d
+  jpa:
+    hibernate:
+      ddl-auto: create
+    generate-ddl: true
+
+spring.datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test
+    username: test
+    password: 1234
 
 auth:
   jwt:
