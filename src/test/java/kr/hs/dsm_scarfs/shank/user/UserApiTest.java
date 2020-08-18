@@ -1,6 +1,8 @@
 package kr.hs.dsm_scarfs.shank.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import kr.hs.dsm_scarfs.shank.ShankApplication;
 import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
 import kr.hs.dsm_scarfs.shank.entites.verification.EmailVerification;
@@ -30,7 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = ShankApplication.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({"test", "local"})
 class UserApiTest {
@@ -91,9 +92,14 @@ class UserApiTest {
 
     private void requestMvc(MockHttpServletRequestBuilder methode, Object obj) throws Exception {
         String baseUrl = "http://localhost:" + port;
-
+        System.out.println(new ObjectMapper()
+                .registerModule(new JavaTimeModule())
+                .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
+                .writeValueAsString(obj));
         mvc.perform(methode
                 .content(new ObjectMapper()
+                        .registerModule(new JavaTimeModule())
+                        .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
                         .writeValueAsString(obj))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk());
