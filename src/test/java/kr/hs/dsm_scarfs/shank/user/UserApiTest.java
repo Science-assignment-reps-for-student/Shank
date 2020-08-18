@@ -1,15 +1,12 @@
 package kr.hs.dsm_scarfs.shank.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import kr.hs.dsm_scarfs.shank.ShankApplication;
-import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
 import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
 import kr.hs.dsm_scarfs.shank.entites.verification.EmailVerification;
 import kr.hs.dsm_scarfs.shank.entites.verification.EmailVerificationRepository;
 import kr.hs.dsm_scarfs.shank.entites.verification.EmailVerificationStatus;
-import kr.hs.dsm_scarfs.shank.payload.request.AccountRequest;
+import kr.hs.dsm_scarfs.shank.payload.request.SignUpRequest;
 import kr.hs.dsm_scarfs.shank.payload.request.VerifyCodeRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -82,7 +79,13 @@ class UserApiTest {
     @Test
     public void signUpTest() throws Exception {
         emailVerifyTest();
-        AccountRequest request = new AccountRequest("machiro119@naver.com", "P@ssw0rd");
+        SignUpRequest request = new SignUpRequest(
+                "machiro119@naver.com",
+                "P@ssw0rd",
+                "1111",
+                "이대성",
+                "ABCDE"
+        );
         requestMvc(post("/user"), request);
     }
 
