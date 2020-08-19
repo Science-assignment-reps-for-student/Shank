@@ -80,8 +80,6 @@ class UserApiTest {
     @Test
     public void signUpTest() throws Exception {
         emailVerifyTest();
-        System.out.println(emailVerificationRepository.findById("machiro119@naver.com")
-                .orElseThrow(RuntimeException::new).getCode());
         SignUpRequest request = new SignUpRequest(
                 "machiro119@naver.com",
                 "P@ssw0rd",
