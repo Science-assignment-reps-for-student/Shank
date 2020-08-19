@@ -15,10 +15,10 @@ import java.util.Objects;
 @Service
 public class EmailServiceImpl implements EmailService {
 
-    @Value("${spring.email.domain}")
+    @Value("${email.domain}")
     private String domain;
 
-    @Value("${spring.email.apikey}")
+    @Value("${email.apikey}")
     private String apiKey;
 
     @Override
