@@ -1,5 +1,5 @@
 server:
-  port: 8000
+  port: ${SERVER_PORT}
 
 spring:
   h2:
@@ -7,38 +7,37 @@ spring:
       enabled: true
       path: /h2
   redis:
-    port: 6379
-    host: localhost
+    port: ${REDIS_PORT}
+    host: ${REDIS_HOST}
   jackson:
-    property-naming-strategy: SNAKE_CASE
+    property-naming-strategy: ${JACKSON_STRATEGY}
   servlet:
     multipart:
       enabled: true
       max-file-size: 200MB
       max-request-size: 215MB
   email:
-    domain: sandbox9668967a8f5409f80f64dfc4c80268a.mailgun.org
-    apikey: 721eac5bd22ea10ad4f0d904e896d815-f7d0b107-de72998d
+    domain: ${EMAIL_DOMAIN}
+    apikey: ${EMAIL_APIKEY}
   jpa:
-    hibernate:
-      ddl-auto: create
+    database: h2
     generate-ddl: true
 
 spring.datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:test
-    username: test
-    password: 1234
+  driver-class-name: org.h2.Driver
+  url: jdbc:h2:mem:test
+  username: test
+  password: 1234
 
 auth:
   jwt:
-    secret: YXNk
+    secret: ${JWT_SECRET}
     exp:
-      access: 480000
-      refresh: 480000
-    header: Authorization
-    prefix: Bearer
+      access: ${JWT_ACCESS}
+      refresh: ${JWT_REFRESH}
+    header: ${JWT_HEADER}
+    prefix: ${JWT_PREFIX}
 
 image:
   upload:
-    dir: C:/Users/Miu/OneDrive/바탕 화면/test123
+    dir: ${IMAGE_DIR}
