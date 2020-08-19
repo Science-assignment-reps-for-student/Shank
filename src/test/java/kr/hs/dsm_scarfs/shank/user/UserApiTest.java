@@ -97,7 +97,7 @@ class UserApiTest {
                         .registerModule(new JavaTimeModule())
                         .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
                         .writeValueAsString(obj))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk());
     }
 }
