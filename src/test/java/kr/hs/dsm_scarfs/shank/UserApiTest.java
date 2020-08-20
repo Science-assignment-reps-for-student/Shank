@@ -1,4 +1,4 @@
-package kr.hs.dsm_scarfs.shank.user;
+package kr.hs.dsm_scarfs.shank;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
@@ -72,7 +72,7 @@ class UserApiTest {
     }
 
     @Test
-    public void emailVerifyTest() throws Exception {
+        public void emailVerifyTest() throws Exception {
         VerifyCodeRequest request = new VerifyCodeRequest("machiro119@naver.com", "이메일인증코드");
         requestMvc(put("/user/email/verify"), request);
     }
