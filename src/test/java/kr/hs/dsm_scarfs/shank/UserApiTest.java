@@ -18,15 +18,16 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -90,13 +91,22 @@ class UserApiTest {
         requestMvc(post("/user"), request);
     }
 
-    private void requestMvc(MockHttpServletRequestBuilder methode, Object obj) throws Exception {
-        mvc.perform(methode
+    @Test
+    @WithMockUser(username = "machiro119@naver.com", password = "P@ssw0rd")
+    public void getUserInfoTest() throws Exception {
+        signUpTest();
+        MvcResult result = requestMvc(get("/user"), null);
+        String content = result.getResponse().getContentAsString();
+        System.out.println(content);
+    }
+
+    private MvcResult requestMvc(MockHttpServletRequestBuilder methode, Object obj) throws Exception {
+        return mvc.perform(methode
                 .content(new ObjectMapper()
                         .registerModule(new JavaTimeModule())
                         .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
                         .writeValueAsString(obj))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()).andReturn();
     }
 }
