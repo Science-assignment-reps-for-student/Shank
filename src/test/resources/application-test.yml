@@ -28,10 +28,10 @@ spring.datasource:
 
 auth:
   jwt:
-    secret: ${JWT_SECRET:dGVzdA==}
+    secret: ${JWT_SECRET_KEY:dGVzdA==}
     exp:
-      access: ${JWT_ACCESS:10}
-      refresh: ${JWT_REFRESH:10}
+      access: ${JWT_ACCESS_EXP:10}
+      refresh: ${JWT_REFRESH_EXP:10}
     header: ${JWT_HEADER:header}
     prefix: ${JWT_PREFIX:prefix}
 
