@@ -38,4 +38,11 @@ public class Board {
         return this;
     }
 
+    public Board update(String title, String content) {
+        this.title = title;
+        this.content = content;
+        this.updatedAt = LocalDate.now();
+        return this;
+    }
+
 }
