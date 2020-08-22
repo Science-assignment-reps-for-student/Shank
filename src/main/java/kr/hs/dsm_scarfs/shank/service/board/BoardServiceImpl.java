@@ -31,13 +31,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -177,10 +176,12 @@ public class BoardServiceImpl implements BoardService, SearchService {
                         .adminId(admin.getId())
                         .content(content)
                         .createdAt(LocalDate.now())
+                        .view(0)
                         .build()
         );
 
-        for (MultipartFile file : files) {
+        for (MultipartFile file : Optional.ofNullable(files)
+                .orElseGet(() -> new MultipartFile[0])) {
             String fileName = UUID.randomUUID().toString();
             imageRepository.save(
                     Image.builder()
@@ -198,14 +199,10 @@ public class BoardServiceImpl implements BoardService, SearchService {
         Admin admin = adminRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(PermissionDeniedException::new);
 
-        boardRepository.save(
-                Board.builder()
-                        .title(title)
-                        .content(content)
-                        .createdAt(LocalDate.now())
-                        .adminId(admin.getId())
-                        .build()
-        );
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(RuntimeException::new);
+
+        boardRepository.save(board.update(title, content));
 
         List<Image> images = imageRepository.findByBoardId(boardId);
 
@@ -215,7 +212,8 @@ public class BoardServiceImpl implements BoardService, SearchService {
 
         imageRepository.deleteByBoardId(boardId);
 
-        for (MultipartFile file : files) {
+        for (MultipartFile file : Optional.ofNullable(files)
+                .orElseGet(() -> new MultipartFile[0])) {
             String fileName = UUID.randomUUID().toString();
             imageRepository.save(
                     Image.builder()
