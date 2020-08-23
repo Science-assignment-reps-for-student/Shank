@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Builder
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Student implements User {
 
     @Id
@@ -23,7 +23,6 @@ public class Student implements User {
     private String password;
 
     private String name;
-
 
     @Column(unique = true, nullable = false)
     private String studentNumber;

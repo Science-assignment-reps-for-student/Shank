@@ -9,6 +9,6 @@ public interface BoardService {
     ApplicationListResponse getBoardList(Pageable page);
     BoardContentResponse getBoardContent(Integer boardId);
     void deleteBoard(Integer boardId);
-    void writeBoard(String title, String content, MultipartFile[] files);
+    Integer writeBoard(String title, String content, MultipartFile[] files);
     void changeBoard(Integer boardId, String title, String content, MultipartFile[] files);
 }

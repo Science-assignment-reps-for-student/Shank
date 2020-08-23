@@ -8,6 +8,7 @@ import kr.hs.dsm_scarfs.shank.entites.board.repository.BoardRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.admin.Admin;
 import kr.hs.dsm_scarfs.shank.entites.user.admin.repository.AdminRepository;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.event.annotation.AfterTestClass;
+import org.springframework.test.context.event.annotation.BeforeTestClass;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -51,28 +54,20 @@ class BoardApiTest {
     private PasswordEncoder passwordEncoder;
 
     @BeforeEach
-    public void setup() {
+    public void setupMvc() {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .build();
+    }
 
+    @BeforeEach
+    public void setup() {
         adminRepository.save(
                 Admin.builder()
                     .id(1)
                     .email("test")
                     .name("홍길동")
                     .password(passwordEncoder.encode("P@ssw0rd"))
-                    .build()
-        );
-
-        boardRepository.save(
-                Board.builder()
-                    .id(1)
-                    .title("제목")
-                    .content("내용")
-                    .classNumber(1)
-                    .adminId(1)
-                    .view(0)
                     .build()
         );
     }
@@ -85,26 +80,30 @@ class BoardApiTest {
     }
 
     @Test
-    @Order(1)
     @WithMockUser(username = "test", password = "P@ssw0rd")
-    public void writeTest() throws Exception {
-        mvc.perform(post("/board")
-                .param("title", "제목")
-                .param("content", "내용"))
+    public void getBoardListTest() throws Exception {
+        writeBoard();
+        mvc.perform(get("/board")).andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(username = "test", password = "P@ssw0rd")
+    public void writeTest() throws Exception {
+        writeBoard();
+    }
+
+    @Test
+    @WithMockUser(username = "test", password = "P@ssw0rd")
     public void getBoardContentTest() throws Exception {
-        mvc.perform(get("/board/1"))
+        mvc.perform(get("/board/" + writeBoard()))
                 .andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(username = "test", password = "P@ssw0rd")
     public void changeTest() throws Exception {
-        mvc.perform(put("/board/1")
+        mvc.perform(put("/board/" + writeBoard())
                 .param("title", "바뀐 제목")
                 .param("content", "바뀐 내용"))
                 .andExpect(status().isOk());
@@ -113,8 +112,18 @@ class BoardApiTest {
     @Test
     @WithMockUser(username = "test", password = "P@ssw0rd")
     public void deleteTest() throws Exception {
-        mvc.perform(delete("/board/1"))
+        mvc.perform(delete("/board/" + writeBoard()))
                 .andExpect(status().isOk());
+    }
+
+    private Integer writeBoard() throws Exception {
+        MvcResult result = mvc.perform(post("/board")
+                .param("title", "제목")
+                .param("content", "내용"))
+                .andExpect(status().isOk()).andReturn();
+
+        String boardId = result.getResponse().getContentAsString();
+        return Integer.parseInt(boardId);
     }
 
 }

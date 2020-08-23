@@ -20,16 +20,16 @@ public class BoardController {
         return boardService.getBoardList(page);
     }
 
+    @PostMapping
+    public Integer writeBoard(@RequestParam String title,
+                           @RequestParam String content,
+                           MultipartFile[] files) {
+        return boardService.writeBoard(title, content, files);
+    }
+
     @GetMapping("/{boardId}")
     public BoardContentResponse getBoardContent(@PathVariable Integer boardId) {
         return boardService.getBoardContent(boardId);
-    }
-
-    @PostMapping
-    public void writeBoard(@RequestParam String title,
-                           @RequestParam String content,
-                           MultipartFile[] files) {
-        boardService.writeBoard(title, content, files);
     }
 
     @PutMapping("/{boardId}")

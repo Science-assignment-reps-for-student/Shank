@@ -1,5 +1,6 @@
 package kr.hs.dsm_scarfs.shank.entites.user;
 
+import kr.hs.dsm_scarfs.shank.entites.user.admin.Admin;
 import kr.hs.dsm_scarfs.shank.entites.user.admin.repository.AdminRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
 import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
@@ -51,6 +52,18 @@ public class UserFactory {
             return new int[]{user1.getId(), user2.getId()};
         else
             return new int[]{user2.getId(), user1.getId()};
+    }
+
+    public <T extends User> T getDefaultUser(Class<T> authorityType) {
+        if (authorityType.equals(Student.class))
+            return (T) Student.builder()
+                    .studentNumber("1101")
+                    .name("(알수없음)")
+                    .build();
+        else
+            return (T) Admin.builder()
+                    .name("(알수없음)")
+                    .build();
     }
 
 }

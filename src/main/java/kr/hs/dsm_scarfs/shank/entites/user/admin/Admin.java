@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Builder
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Admin implements User {
 
     @Id

@@ -26,15 +26,12 @@ import kr.hs.dsm_scarfs.shank.service.search.SearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.embedded.undertow.UndertowServletWebServer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -54,8 +51,6 @@ public class BoardServiceImpl implements BoardService, SearchService {
     private final AuthenticationFacade authenticationFacade;
     private final UserFactory userFactory;
 
-    private final User defaultUser = Student.builder().name("(알수없음)").build();
-
     @Value("${image.upload.dir}")
     private String imageDirPath;
 
@@ -74,8 +69,6 @@ public class BoardServiceImpl implements BoardService, SearchService {
         Admin admin = adminRepository.findById(board.getAdminId())
                 .orElseThrow(UserNotLeaderException::new);
 
-
-
         List<Comment> comment = commentRepository.findAllByBoardId(boardId);
         List<BoardCommentsResponse> commentsResponses = new ArrayList<>();
 
@@ -86,26 +79,27 @@ public class BoardServiceImpl implements BoardService, SearchService {
                 .orElseGet(() -> Board.builder().build());
 
         List<String> imageNames = new ArrayList<>();
-        imageRepository.findByBoardId(boardId).forEach(image -> imageNames.add(image.getFileName()));
+        for (Image image : imageRepository.findByBoardId(boardId))
+            imageNames.add(image.getFileName());
 
         for (Comment co : comment) {
             User commentWriter;
             if (co.getAuthorType().equals(AuthorityType.ADMIN))
                 commentWriter = adminRepository.findById(co.getAuthorId())
-                        .orElseGet(() -> (Admin) defaultUser);
+                        .orElseGet(() -> userFactory.getDefaultUser(Admin.class));
             else
                 commentWriter = studentRepository.findById(co.getAuthorId())
-                    .orElseGet(() -> (Student) defaultUser);
+                    .orElseGet(() -> userFactory.getDefaultUser(Student.class));
 
             List<BoardCocommentsResponse> cocommentsResponses = new ArrayList<>();
             for (Cocomment coco : cocommentRepository.findAllByCommentId(co.getId())) {
                 User cocommentWriter;
                 if (coco.getAuthorType().equals(AuthorityType.ADMIN))
                     cocommentWriter = adminRepository.findById(co.getAuthorId())
-                            .orElseGet(() -> (Admin) defaultUser);
+                            .orElseGet(() -> userFactory.getDefaultUser(Admin.class));
                 else
                     cocommentWriter = studentRepository.findById(co.getAuthorId())
-                            .orElseGet(() -> (Student) defaultUser);
+                            .orElseGet(() -> userFactory.getDefaultUser(Student.class));
 
                 cocommentsResponses.add(
                         BoardCocommentsResponse.builder()
@@ -166,7 +160,7 @@ public class BoardServiceImpl implements BoardService, SearchService {
 
     @SneakyThrows
     @Override
-    public void writeBoard(String title, String content, MultipartFile[] files) {
+    public Integer writeBoard(String title, String content, MultipartFile[] files) {
         Admin admin = adminRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(PermissionDeniedException::new);
 
@@ -191,6 +185,8 @@ public class BoardServiceImpl implements BoardService, SearchService {
             );
             file.transferTo(new File(imageDirPath, fileName));
         }
+
+        return board.getId();
     }
 
     @SneakyThrows
@@ -235,7 +231,7 @@ public class BoardServiceImpl implements BoardService, SearchService {
 
         for (Board board : boardPage) {
             Admin admin = adminRepository.findById(board.getAdminId())
-                    .orElseThrow(UserNotFoundException::new);
+                    .orElseGet(() -> userFactory.getDefaultUser(Admin.class));
 
             String preViewContent = board.getContent().substring(0, Math.min(50, board.getContent().length()));
             boardResponse.add(
