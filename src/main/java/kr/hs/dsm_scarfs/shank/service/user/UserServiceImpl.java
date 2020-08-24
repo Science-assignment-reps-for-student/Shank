@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Optional;
+import java.util.Random;
 
 
 @Service
@@ -81,6 +82,7 @@ public class UserServiceImpl implements UserService {
         });
 
         String code = randomCode();
+        System.out.println(code);
         emailService.sendEmail(email, code);
         verificationRepository.save(
                 EmailVerification.builder()
@@ -150,8 +152,9 @@ public class UserServiceImpl implements UserService {
         String[] codes = "QWERTYUIOPASDFGHJKLZXCVBNM0123456789".split("");
 
         for (int i = 0; i < 6; i++) {
-            result.append(codes[(int) (Math.random() % codes.length)]);
+            result.append(codes[new Random().nextInt(codes.length)]);
         }
+
         return result.toString();
     }
 

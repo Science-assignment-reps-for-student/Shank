@@ -1,10 +1,12 @@
 package kr.hs.dsm_scarfs.shank.service.email;
 
+import lombok.SneakyThrows;
 import net.sargue.mailgun.Configuration;
 import net.sargue.mailgun.Mail;
 import net.sargue.mailgun.Response;
 import net.sargue.mailgun.content.Body;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -41,8 +43,9 @@ public class EmailServiceImpl implements EmailService {
             throw new RuntimeException();
     }
 
+    @SneakyThrows
     private String convertHtmlWithCode(String code) {
-        InputStream inputStream = getClass().getResourceAsStream("static/email.html");
+        InputStream inputStream = new ClassPathResource("static/email.html").getInputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
         StringBuilder stringBuilder = new StringBuilder();
