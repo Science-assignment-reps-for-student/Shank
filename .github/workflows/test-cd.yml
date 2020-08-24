@@ -1,4 +1,4 @@
-name: Shank Server CD
+name: Shank Server Test CI-CD
 
 on:
   push:
