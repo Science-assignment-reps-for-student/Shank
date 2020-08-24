@@ -1,0 +1,22 @@
+name: Shank Server CD
+
+on:
+  push:
+    branches: [ test ]
+
+jobs:
+  CD:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build Docker Image
+        run: docker build -t leaguelugas/shank:dev .
+
+      - name: Publish To Registry
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: leaguelugas/shank:dev
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
