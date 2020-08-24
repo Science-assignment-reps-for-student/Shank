@@ -7,7 +7,6 @@ import kr.hs.dsm_scarfs.shank.entites.homework.enums.HomeworkType;
 import kr.hs.dsm_scarfs.shank.entites.homework.repository.HomeworkRepository;
 import kr.hs.dsm_scarfs.shank.entites.member.Member;
 import kr.hs.dsm_scarfs.shank.entites.member.repository.MemberRepository;
-import kr.hs.dsm_scarfs.shank.entites.notice.Notice;
 import kr.hs.dsm_scarfs.shank.entites.user.User;
 import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
 import kr.hs.dsm_scarfs.shank.exceptions.ApplicationNotFoundException;
@@ -45,11 +44,10 @@ public class HomeworkServiceImpl implements HomeworkService, SearchService {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         String methodName = "findAllByDeadline" + user.getStudentClassNumber() + "After";
-        System.out.println(Arrays.toString(homeworkRepository.getClass().getDeclaredMethods()));
         return this.getHomeworkList(
                 (Page<Homework>) homeworkRepository.getClass()
                     .getDeclaredMethod(methodName, Pageable.class, LocalDate.class)
-                    .invoke(homeworkRepository, page, LocalDate.MIN)
+                    .invoke(homeworkRepository, page, LocalDate.ofYearDay(2020, 1))
         );
     }
 
