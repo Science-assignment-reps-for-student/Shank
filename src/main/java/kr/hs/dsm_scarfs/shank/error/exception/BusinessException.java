@@ -3,7 +3,7 @@ package kr.hs.dsm_scarfs.shank.error.exception;
 import lombok.Getter;
 
 @Getter
-public class BusinessException extends RuntimeException{
+public class BusinessException extends RuntimeException {
 
     private ErrorCode errorCode;
 
