@@ -64,7 +64,6 @@ class BoardApiTest {
     public void setup() {
         adminRepository.save(
                 Admin.builder()
-                    .id(1)
                     .email("test")
                     .name("홍길동")
                     .password(passwordEncoder.encode("P@ssw0rd"))
@@ -96,7 +95,7 @@ class BoardApiTest {
     @Test
     @WithMockUser(username = "test", password = "P@ssw0rd")
     public void getBoardContentTest() throws Exception {
-        mvc.perform(get("/board/" + writeBoard()));
+        mvc.perform(get("/board/" + writeBoard())).andDo(print());
                 //andExpect(status().isOk());
     }
 
