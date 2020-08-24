@@ -95,7 +95,7 @@ class UserApiTest {
     @WithMockUser(username = "machiro119@naver.com", password = "P@ssw0rd")
     public void getUserInfoTest() throws Exception {
         signUpTest();
-        requestMvc(get("/user"), null);
+        requestMvc(get("/user/me"), null);
     }
 
     private MvcResult requestMvc(MockHttpServletRequestBuilder methode, Object obj) throws Exception {

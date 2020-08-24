@@ -18,7 +18,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping
+    @GetMapping("/me")
     public UserResponse getUser(Pageable page) {
         return userService.getUser(page);
     }
