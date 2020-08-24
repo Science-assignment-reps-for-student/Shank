@@ -2,8 +2,6 @@ server:
   port: ${SERVER_PORT:8080}
 
 spring:
-  profiles:
-    active: test
   h2:
     console:
       enabled: true
