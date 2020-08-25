@@ -39,7 +39,7 @@ public class SpringLogger implements Filter {
                     "%s %s - %s - [%s %s] %s",
                     stringDate,
                     info,
-                    req.getRemoteHost(),
+                    req.getHeader("X-Real_IP"),
                     req.getMethod(),
                     req.getRequestURI(),
                     res.getStatus()
