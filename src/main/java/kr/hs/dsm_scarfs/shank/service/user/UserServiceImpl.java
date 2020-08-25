@@ -140,6 +140,7 @@ public class UserServiceImpl implements UserService {
         }
 
         return UserResponse.builder()
+                .id(user.getId())
                 .name(user.getName())
                 .studentNumber(user.getStudentNumber())
                 .completionAssignment(completionAssignment)

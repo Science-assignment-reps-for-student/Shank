@@ -7,6 +7,8 @@ import lombok.Getter;
 @Builder
 public class UserResponse {
 
+    private Integer id;
+
     private String name;
 
     private String studentNumber;
@@ -14,4 +16,5 @@ public class UserResponse {
     private Integer remainingAssignment;
 
     private Integer completionAssignment;
+
 }
