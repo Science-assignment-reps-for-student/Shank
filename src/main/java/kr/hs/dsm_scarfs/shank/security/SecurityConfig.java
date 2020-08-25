@@ -43,6 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                     .antMatchers("/v2/shank/auth").permitAll()
                     .antMatchers("/v2/shank/user/me").authenticated()
                     .antMatchers("/v2/shank/user/**").permitAll()
+                    .antMatchers("/v2/shank/socket/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .apply(new JwtConfigurer(jwtTokenProvider)).and()
