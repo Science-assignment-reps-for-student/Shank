@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TeamRequest {
 
-    private Integer homeworkId;
+    private Integer assignmentId;
 
     private String teamName;
 }

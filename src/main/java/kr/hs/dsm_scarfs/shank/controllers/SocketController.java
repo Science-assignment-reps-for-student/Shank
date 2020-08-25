@@ -8,32 +8,34 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@RestController("/message")
 @RequiredArgsConstructor
 public class SocketController {
 
     private final MessageService messageService;
 
-    @GetMapping("/message")
+    @GetMapping
     public List<MessageListResponse> getMessageList() {
         return messageService.getMessageList();
     }
 
-    @GetMapping("/message/{userId}")
+    @GetMapping("/{userId}")
     public List<MessageResponse> getChats(@PathVariable Integer userId) {
         return messageService.getChats(userId);
     }
 
-    @PostMapping("/message/{messageId}")
+    @PostMapping("/{messageId}")
     public void readMessage(@PathVariable Integer messageId) {
         messageService.readMessage(messageId);
+    }
+
+    @DeleteMapping("/{messageId}")
+    public void deleteMessage(@PathVariable Integer messageId) {
+        messageService.deleteMessage(messageId);
     }
 
     @MessageMapping("/send/{studentId}/{adminId}")

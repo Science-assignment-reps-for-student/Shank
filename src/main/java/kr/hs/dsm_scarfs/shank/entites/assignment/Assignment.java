@@ -1,7 +1,6 @@
-package kr.hs.dsm_scarfs.shank.entites.homework;
+package kr.hs.dsm_scarfs.shank.entites.assignment;
 
-import kr.hs.dsm_scarfs.shank.entites.board.Board;
-import kr.hs.dsm_scarfs.shank.entites.homework.enums.HomeworkType;
+import kr.hs.dsm_scarfs.shank.entites.assignment.enums.HomeworkType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,7 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Homework {
+public class Assignment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +41,7 @@ public class Homework {
 
     private Integer view;
 
-    public Homework view() {
+    public Assignment view() {
         this.view++;
         return this;
     }

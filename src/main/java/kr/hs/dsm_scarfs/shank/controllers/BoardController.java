@@ -16,8 +16,9 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping
-    public ApplicationListResponse boardList(Pageable page) {
-        return boardService.getBoardList(page);
+    public ApplicationListResponse boardList(@RequestParam("class_number") Integer classNumber,
+                                             Pageable page) {
+        return boardService.getBoardList(classNumber, page);
     }
 
     @PostMapping

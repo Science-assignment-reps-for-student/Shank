@@ -28,8 +28,8 @@ public class Admin implements User {
         return "1101";
     }
 
-    public String getStudentClassNumber() {
-        return "1";
+    public Integer getStudentClassNumber() {
+        return 1;
     }
 
     @Override

@@ -27,8 +27,8 @@ public class Student implements User {
     @Column(unique = true, nullable = false)
     private String studentNumber;
 
-    public String getStudentClassNumber() {
-        return String.valueOf(this.studentNumber.charAt(1));
+    public Integer getStudentClassNumber() {
+        return Integer.parseInt(String.valueOf(this.studentNumber.charAt(1)));
     }
 
     public AuthorityType getType() {

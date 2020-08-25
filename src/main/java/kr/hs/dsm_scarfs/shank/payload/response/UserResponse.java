@@ -1,5 +1,6 @@
 package kr.hs.dsm_scarfs.shank.payload.response;
 
+import kr.hs.dsm_scarfs.shank.security.AuthorityType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,6 +13,8 @@ public class UserResponse {
     private String name;
 
     private String studentNumber;
+
+    private AuthorityType type;
 
     private Integer remainingAssignment;
 

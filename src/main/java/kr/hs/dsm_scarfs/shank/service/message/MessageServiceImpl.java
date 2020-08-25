@@ -97,6 +97,14 @@ public class MessageServiceImpl implements MessageService{
     }
 
     @Override
+    public void deleteMessage(Integer messageId) {
+        Message message = messageRepository.findById(messageId)
+                .orElseThrow(MessageNotFoundException::new);
+
+        messageRepository.save(message.delete());
+    }
+
+    @Override
     public MessageResponse chat(Integer studentId, Integer adminId, MessageRequest messageRequest) {
         User user = userFactory.getUser(jwtTokenProvider.getUserEmail(messageRequest.getToken()));
         if (!user.getId().equals(studentId) && !user.getId().equals(adminId))

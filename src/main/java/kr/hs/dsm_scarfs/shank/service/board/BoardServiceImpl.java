@@ -37,7 +37,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class BoardServiceImpl implements BoardService, SearchService {
+public class BoardServiceImpl implements BoardService {
 
     private final CommentService commentService;
 
@@ -55,8 +55,12 @@ public class BoardServiceImpl implements BoardService, SearchService {
     private String imageDirPath;
 
     @Override
-    public ApplicationListResponse getBoardList(Pageable page) {
-        return this.searchApplication("", page);
+    public ApplicationListResponse getBoardList(Integer classNumber, Pageable page) {
+        User user = userFactory.getUser(authenticationFacade.getUserEmail());
+        if (user.getType().equals(AuthorityType.ADMIN))
+            return this.searchBoard("", classNumber, page);
+        else
+            return this.searchBoard("", user.getStudentClassNumber(), page);
     }
 
     @Override
@@ -224,8 +228,8 @@ public class BoardServiceImpl implements BoardService, SearchService {
     }
 
     @Override
-    public ApplicationListResponse searchApplication(String query, Pageable page) {
-        Page<Board> boardPage = boardRepository.findAllBy(page);
+    public ApplicationListResponse searchBoard(String query, Integer classNumber, Pageable page) {
+        Page<Board> boardPage = boardRepository.findAllByClassNumber(classNumber, page);
 
         List<BoardResponse> boardResponse = new ArrayList<>();
 

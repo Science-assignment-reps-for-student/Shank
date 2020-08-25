@@ -8,6 +8,6 @@ public interface User {
     String getPassword();
     String getName();
     String getStudentNumber();
-    String getStudentClassNumber();
+    Integer getStudentClassNumber();
     AuthorityType getType();
 }

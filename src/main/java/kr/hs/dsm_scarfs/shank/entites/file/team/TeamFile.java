@@ -1,4 +1,4 @@
-package kr.hs.dsm_scarfs.shank.entites.file.sigle;
+package kr.hs.dsm_scarfs.shank.entites.file.team;
 
 import lombok.*;
 
@@ -10,15 +10,15 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SingleFile {
+public class TeamFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer userId;
+    private Integer assignmentId;
 
-    private Integer homeworkId;
+    private Integer teamId;
 
     private String fileName;
 

@@ -1,4 +1,4 @@
-package kr.hs.dsm_scarfs.shank.entites.evaluation.self;
+package kr.hs.dsm_scarfs.shank.entites.evaluation.team;
 
 import lombok.*;
 
@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -14,21 +13,21 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SelfEvaluation {
+public class TeamEvaluation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer studentId;
+    private Integer userId;
 
-    private Integer homeworkId;
+    private Integer assignmentId;
 
-    private Integer scientificAccuracy;
+    private Integer targetId;
 
     private Integer communication;
 
-    private Integer attitude;
+    private Integer cooperation;
 
     private LocalDateTime createdAt;
 

@@ -1,6 +1,6 @@
 package kr.hs.dsm_scarfs.shank.service.member;
 
-import kr.hs.dsm_scarfs.shank.entites.homework.repository.HomeworkRepository;
+import kr.hs.dsm_scarfs.shank.entites.assignment.repository.AssignmentRepository;
 import kr.hs.dsm_scarfs.shank.entites.member.Member;
 import kr.hs.dsm_scarfs.shank.entites.member.repository.MemberRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
@@ -23,7 +23,6 @@ public class MemberServiceImpl implements MemberService{
     private final AuthenticationFacade authenticationFacade;
 
     private final StudentRepository studentRepository;
-    private final HomeworkRepository homeworkRepository;
     private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
 
@@ -37,12 +36,12 @@ public class MemberServiceImpl implements MemberService{
                 .orElseThrow(TeamNotFoundException::new);
 
 
-        memberRepository.findByStudentIdAndHomeworkId(memberRequest.getTargetId(), team.getHomeworkId())
+        memberRepository.findByStudentIdAndAssignmentId(memberRequest.getTargetId(), team.getAssignmentId())
                 .ifPresent(member -> { throw new MemberAlreadyIncludeException();});
 
         memberRepository.save(
                 Member.builder()
-                    .homeworkId(team.getHomeworkId())
+                    .assignmentId(team.getAssignmentId())
                     .studentId(memberRequest.getTargetId())
                     .teamId(team.getId())
                     .build()

@@ -1,4 +1,4 @@
-package kr.hs.dsm_scarfs.shank.entites.file.multi;
+package kr.hs.dsm_scarfs.shank.entites.file.personal;
 
 import lombok.*;
 
@@ -10,15 +10,15 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MultiFile {
+public class PersonalFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer homeworkId;
+    private Integer userId;
 
-    private Integer teamId;
+    private Integer assignmentId;
 
     private String fileName;
 

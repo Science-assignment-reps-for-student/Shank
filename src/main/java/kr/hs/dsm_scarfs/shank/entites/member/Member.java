@@ -19,6 +19,6 @@ public class Member {
 
     private Integer studentId;
 
-    private Integer homeworkId;
+    private Integer assignmentId;
 
 }

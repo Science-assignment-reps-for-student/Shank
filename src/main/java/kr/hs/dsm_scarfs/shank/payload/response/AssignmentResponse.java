@@ -1,7 +1,7 @@
 package kr.hs.dsm_scarfs.shank.payload.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import kr.hs.dsm_scarfs.shank.entites.homework.enums.HomeworkType;
+import kr.hs.dsm_scarfs.shank.entites.assignment.enums.HomeworkType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,9 +9,9 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class HomeworkResponse {
+public class AssignmentResponse {
 
-    private Integer homeworkId;
+    private Integer assignmentId;
 
     private String title;
 

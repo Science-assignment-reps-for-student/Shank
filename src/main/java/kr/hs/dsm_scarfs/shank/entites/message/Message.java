@@ -38,4 +38,9 @@ public class Message {
         return this;
     }
 
+    public Message delete() {
+        this.isDeleted = true;
+        return this;
+    }
+
 }

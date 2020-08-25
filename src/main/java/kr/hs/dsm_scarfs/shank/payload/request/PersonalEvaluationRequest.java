@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PersonalEvaluationRequest {
 
-    private Integer homeworkId;
+    private Integer assignmentId;
 
     private Integer scientificAccuracy;
 

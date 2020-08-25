@@ -1,6 +1,6 @@
 package kr.hs.dsm_scarfs.shank.service.team;
 
-import kr.hs.dsm_scarfs.shank.entites.homework.repository.HomeworkRepository;
+import kr.hs.dsm_scarfs.shank.entites.assignment.repository.AssignmentRepository;
 import kr.hs.dsm_scarfs.shank.entites.member.Member;
 import kr.hs.dsm_scarfs.shank.entites.member.repository.MemberRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
@@ -25,19 +25,19 @@ public class TeamServiceImpl implements TeamService{
     private final AuthenticationFacade authenticationFacade;
 
     private final TeamRepository teamRepository;
-    private final HomeworkRepository homeworkRepository;
+    private final AssignmentRepository assignmentRepository;
     private final StudentRepository studentRepository;
     private final MemberRepository memberRepository;
 
     @Override
-    public TeamResponse getTeam(Integer homeworkId) {
+    public TeamResponse getTeam(Integer assignmentId) {
         Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
-        homeworkRepository.findById(homeworkId)
+        assignmentRepository.findById(assignmentId)
                 .orElseThrow(ApplicationNotFoundException::new);
 
-        Team team = teamRepository.findByLeaderIdAndHomeworkId(student.getId(), homeworkId)
+        Team team = teamRepository.findByLeaderIdAndAssignmentId(student.getId(), assignmentId)
                 .orElseThrow(TeamNotFoundException::new);
 
         Student leader = studentRepository.findById(team.getLeaderId())
@@ -73,12 +73,12 @@ public class TeamServiceImpl implements TeamService{
         Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
-        homeworkRepository.findById(teamRequest.getHomeworkId())
+        assignmentRepository.findById(teamRequest.getAssignmentId())
                 .orElseThrow(ApplicationNotFoundException::new);
 
         Team team = teamRepository.save(
                 Team.builder()
-                    .homeworkId(teamRequest.getHomeworkId())
+                    .assignmentId(teamRequest.getAssignmentId())
                     .name(teamRequest.getTeamName())
                     .leaderId(student.getId())
                     .build()
@@ -88,7 +88,7 @@ public class TeamServiceImpl implements TeamService{
                 Member.builder()
                     .teamId(team.getId())
                     .studentId(student.getId())
-                    .homeworkId(team.getHomeworkId())
+                    .assignmentId(team.getAssignmentId())
                     .build()
         );
     }

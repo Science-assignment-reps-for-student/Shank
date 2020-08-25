@@ -1,11 +1,11 @@
 package kr.hs.dsm_scarfs.shank.service.user;
 
 import kr.hs.dsm_scarfs.shank.entites.authcode.repository.AuthCodeRepository;
-import kr.hs.dsm_scarfs.shank.entites.file.multi.repository.MultiFileRepository;
-import kr.hs.dsm_scarfs.shank.entites.file.sigle.repository.SingleFileRepository;
-import kr.hs.dsm_scarfs.shank.entites.homework.Homework;
-import kr.hs.dsm_scarfs.shank.entites.homework.enums.HomeworkType;
-import kr.hs.dsm_scarfs.shank.entites.homework.repository.HomeworkRepository;
+import kr.hs.dsm_scarfs.shank.entites.file.team.repository.TeamFileRepository;
+import kr.hs.dsm_scarfs.shank.entites.file.personal.repository.PersonalFileRepository;
+import kr.hs.dsm_scarfs.shank.entites.assignment.Assignment;
+import kr.hs.dsm_scarfs.shank.entites.assignment.enums.HomeworkType;
+import kr.hs.dsm_scarfs.shank.entites.assignment.repository.AssignmentRepository;
 import kr.hs.dsm_scarfs.shank.entites.member.Member;
 import kr.hs.dsm_scarfs.shank.entites.member.repository.MemberRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.User;
@@ -45,9 +45,9 @@ public class UserServiceImpl implements UserService {
     private final EmailVerificationRepository verificationRepository;
     private final EmailVerificationRepository emailVerificationRepository;
     private final AuthenticationFacade authenticationFacade;
-    private final SingleFileRepository singleFileRepository;
-    private final MultiFileRepository multiFileRepository;
-    private final HomeworkRepository homeworkRepository;
+    private final PersonalFileRepository personalFileRepository;
+    private final TeamFileRepository teamFileRepository;
+    private final AssignmentRepository assignmentRepository;
     private final MemberRepository memberRepository;
 
     private final UserFactory userFactory;
@@ -114,17 +114,17 @@ public class UserServiceImpl implements UserService {
         int remainingAssignment = 0, completionAssignment = 0;
 
         String methodName = "findAllByDeadline" + user.getStudentClassNumber() + "After";
-        Page<Homework> homeworkPage = (Page<Homework>) HomeworkRepository.class
+        Page<Assignment> assignmentPage = (Page<Assignment>) AssignmentRepository.class
                 .getDeclaredMethod(methodName, Pageable.class, LocalDate.class)
-                .invoke(homeworkRepository, page, LocalDate.now(ZoneId.of("Asia/Seoul")));
+                .invoke(assignmentRepository, page, LocalDate.now(ZoneId.of("Asia/Seoul")));
 
-        for (Homework homework : homeworkPage) {
+        for (Assignment assignment : assignmentPage) {
             if (user.getType().equals(AuthorityType.ADMIN)) break;
-            Optional<Member> member = memberRepository.findByStudentIdAndHomeworkId(user.getId(), homework.getId());
+            Optional<Member> member = memberRepository.findByStudentIdAndAssignmentId(user.getId(), assignment.getId());
 
-            if (homework.getType().equals(HomeworkType.MULTI)) {
+            if (assignment.getType().equals(HomeworkType.MULTI)) {
                 if (member.isPresent()) {
-                    if (multiFileRepository.existsByHomeworkIdAndTeamId(homework.getId(), member.get().getTeamId())) {
+                    if (teamFileRepository.existsByAssignmentIdAndTeamId(assignment.getId(), member.get().getTeamId())) {
                         completionAssignment++;
                         continue;
                     }
@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
 
                 remainingAssignment++;
             } else {
-                if (singleFileRepository.existsByHomeworkIdAndUserId(homework.getId(), user.getId()))
+                if (personalFileRepository.existsByAssignmentIdAndUserId(assignment.getId(), user.getId()))
                     completionAssignment++;
                 else
                     remainingAssignment++;
@@ -143,6 +143,7 @@ public class UserServiceImpl implements UserService {
                 .id(user.getId())
                 .name(user.getName())
                 .studentNumber(user.getStudentNumber())
+                .type(user.getType())
                 .completionAssignment(completionAssignment)
                 .remainingAssignment(remainingAssignment)
                 .build();
