@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -27,9 +27,9 @@ public class Board {
 
     private Integer adminId;
 
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     private Integer view;
 
@@ -41,7 +41,7 @@ public class Board {
     public Board update(String title, String content) {
         this.title = title;
         this.content = content;
-        this.updatedAt = LocalDate.now();
+        this.updatedAt = LocalDateTime.now();
         return this;
     }
 

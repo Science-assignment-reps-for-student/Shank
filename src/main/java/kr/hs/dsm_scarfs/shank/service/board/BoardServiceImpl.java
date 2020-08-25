@@ -32,7 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -169,7 +169,7 @@ public class BoardServiceImpl implements BoardService, SearchService {
                         .title(title)
                         .adminId(admin.getId())
                         .content(content)
-                        .createdAt(LocalDate.now())
+                        .createdAt(LocalDateTime.now())
                         .view(0)
                         .build()
         );
