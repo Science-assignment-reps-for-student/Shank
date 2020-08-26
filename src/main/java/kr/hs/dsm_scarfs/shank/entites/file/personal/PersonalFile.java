@@ -16,7 +16,7 @@ public class PersonalFile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer userId;
+    private Integer studentId;
 
     private Integer assignmentId;
 

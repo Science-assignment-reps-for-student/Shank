@@ -78,7 +78,7 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
                 }
             }
         } else {
-            if (personalFileRepository.existsByAssignmentIdAndUserId(assignment.getId(), user.getId()))
+            if (personalFileRepository.existsByAssignmentIdAndStudentId(assignment.getId(), user.getId()))
                 isComplete = true;
         }
 
@@ -124,7 +124,7 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
                             member.get().getTeamId());
                 }
             } else {
-                isComplete = personalFileRepository.existsByAssignmentIdAndUserId(assignment.getId(), user.getId());
+                isComplete = personalFileRepository.existsByAssignmentIdAndStudentId(assignment.getId(), user.getId());
             }
 
             String preViewContent =

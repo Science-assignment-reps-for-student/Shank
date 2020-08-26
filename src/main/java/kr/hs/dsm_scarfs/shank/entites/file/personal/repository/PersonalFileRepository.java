@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PersonalFileRepository extends CrudRepository<PersonalFile, Integer> {
-    boolean existsByAssignmentIdAndUserId(Integer assignment, Integer userId);
+    boolean existsByAssignmentIdAndStudentId(Integer assignment, Integer studentId);
 }

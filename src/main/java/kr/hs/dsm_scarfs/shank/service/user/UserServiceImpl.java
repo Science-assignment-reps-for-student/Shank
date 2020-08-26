@@ -131,7 +131,7 @@ public class UserServiceImpl implements UserService {
 
                 remainingAssignment++;
             } else {
-                if (personalFileRepository.existsByAssignmentIdAndUserId(assignment.getId(), user.getId()))
+                if (personalFileRepository.existsByAssignmentIdAndStudentId(assignment.getId(), user.getId()))
                     completionAssignment++;
                 else
                     remainingAssignment++;
