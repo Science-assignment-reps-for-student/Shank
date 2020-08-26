@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("/message")
+@RestController
+@RequestMapping("/message")
 @RequiredArgsConstructor
 public class MessageController {
 
