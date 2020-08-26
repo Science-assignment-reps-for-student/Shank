@@ -1,49 +1,29 @@
 package kr.hs.dsm_scarfs.shank.controllers;
 
+import com.corundumstudio.socketio.SocketIOServer;
 import kr.hs.dsm_scarfs.shank.payload.request.MessageRequest;
-import kr.hs.dsm_scarfs.shank.payload.response.MessageListResponse;
-import kr.hs.dsm_scarfs.shank.payload.response.MessageResponse;
-import kr.hs.dsm_scarfs.shank.service.message.MessageService;
+import kr.hs.dsm_scarfs.shank.service.socket.SocketService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
+import javax.annotation.PostConstruct;
 
-@RestController("/message")
+@Component
 @RequiredArgsConstructor
 public class SocketController {
 
-    private final MessageService messageService;
+    private final SocketIOServer server;
 
-    @GetMapping
-    public List<MessageListResponse> getMessageList() {
-        return messageService.getMessageList();
-    }
+    private final SocketService socketService;
 
-    @GetMapping("/{userId}")
-    public List<MessageResponse> getChats(@PathVariable Integer userId) {
-        return messageService.getChats(userId);
-    }
+    @PostConstruct
+    public void setSocketMapping() {
 
-    @PostMapping("/{messageId}")
-    public void readMessage(@PathVariable Integer messageId) {
-        messageService.readMessage(messageId);
-    }
+        server.addConnectListener(socketService::connect);
 
-    @DeleteMapping("/{messageId}")
-    public void deleteMessage(@PathVariable Integer messageId) {
-        messageService.deleteMessage(messageId);
-    }
+        server.addEventListener("send", MessageRequest.class,
+                (client, data, ackSender) -> socketService.chat(client, data));
 
-    @MessageMapping("/send/{studentId}/{adminId}")
-    @SendTo({"/receive/{studentId}/{adminId}", "/receive/admin"})
-    public MessageResponse sendToAdmin(@DestinationVariable Integer studentId,
-                                       @DestinationVariable Integer adminId,
-                                       MessageRequest messageRequest) {
-        return messageService.chat(studentId, adminId, messageRequest);
     }
 
 }

@@ -4,6 +4,7 @@ import kr.hs.dsm_scarfs.shank.entites.user.admin.Admin;
 import kr.hs.dsm_scarfs.shank.entites.user.admin.repository.AdminRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
 import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
+import kr.hs.dsm_scarfs.shank.exceptions.UserNotFoundException;
 import kr.hs.dsm_scarfs.shank.security.AuthorityType;
 import kr.hs.dsm_scarfs.shank.security.auth.AuthDetails;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class UserFactory {
                 .map(student -> new AuthDetails(student, AuthorityType.STUDENT))
                 .orElseGet(() -> adminRepository.findByEmail(userEmail)
                         .map(admin -> new AuthDetails(admin, AuthorityType.ADMIN))
-                        .orElseThrow(RuntimeException::new)
+                        .orElseThrow(UserNotFoundException::new)
                 );
     }
 
@@ -33,7 +34,7 @@ public class UserFactory {
         Optional<Student> student = studentRepository.findByEmail(email);
         if (student.isPresent()) return student.get();
         else return adminRepository.findByEmail(email)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
     }
 
     public List<User> getChattedMessageList(User user) {

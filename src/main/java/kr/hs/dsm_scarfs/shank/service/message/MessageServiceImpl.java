@@ -23,7 +23,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService{
 
-    private final JwtTokenProvider jwtTokenProvider;
     private final UserFactory userFactory;
     private final AuthenticationFacade authenticationFacade;
 
@@ -104,28 +103,4 @@ public class MessageServiceImpl implements MessageService{
         messageRepository.save(message.delete());
     }
 
-    @Override
-    public MessageResponse chat(Integer studentId, Integer adminId, MessageRequest messageRequest) {
-        User user = userFactory.getUser(jwtTokenProvider.getUserEmail(messageRequest.getToken()));
-        if (!user.getId().equals(studentId) && !user.getId().equals(adminId))
-            throw new PermissionDeniedException();
-
-        Message message = messageRepository.save(
-                Message.builder()
-                    .studentId(studentId)
-                    .adminId(adminId)
-                    .message(messageRequest.getMessage())
-                    .time(LocalDateTime.now())
-                    .isDeleted(false)
-                    .isShow(false)
-                    .build()
-        );
-
-        return MessageResponse.builder()
-                .id(message.getId())
-                .message(message.getMessage())
-                .time(message.getTime())
-                .type(message.getType())
-                .build();
-    }
 }

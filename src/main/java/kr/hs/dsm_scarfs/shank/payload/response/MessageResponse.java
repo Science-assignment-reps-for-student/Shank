@@ -21,5 +21,4 @@ public class MessageResponse {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime time;
 
-    private String errorMessage;
 }
