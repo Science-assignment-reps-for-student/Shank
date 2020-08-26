@@ -164,7 +164,7 @@ public class BoardServiceImpl implements BoardService {
 
     @SneakyThrows
     @Override
-    public Integer writeBoard(String title, String content, MultipartFile[] files) {
+    public Integer writeBoard(String title, String content, Integer classNumber, MultipartFile[] files) {
         Admin admin = adminRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(PermissionDeniedException::new);
 
@@ -173,6 +173,7 @@ public class BoardServiceImpl implements BoardService {
                         .title(title)
                         .adminId(admin.getId())
                         .content(content)
+                        .classNumber(classNumber)
                         .createdAt(LocalDateTime.now())
                         .view(0)
                         .build()

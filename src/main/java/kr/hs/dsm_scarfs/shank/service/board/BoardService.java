@@ -9,7 +9,7 @@ public interface BoardService {
     ApplicationListResponse getBoardList(Integer classNumber, Pageable page);
     BoardContentResponse getBoardContent(Integer boardId);
     void deleteBoard(Integer boardId);
-    Integer writeBoard(String title, String content, MultipartFile[] files);
+    Integer writeBoard(String title, String content, Integer classNumber, MultipartFile[] files);
     void changeBoard(Integer boardId, String title, String content, MultipartFile[] files);
     ApplicationListResponse searchBoard(String query, Integer classNumber, Pageable page);
 }
