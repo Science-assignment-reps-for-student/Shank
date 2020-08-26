@@ -20,7 +20,7 @@ public interface AssignmentRepository extends CrudRepository<Assignment, Integer
 
     Page<Assignment> findAllByDeadline4After(Pageable page, LocalDate date);
 
-    Page<Assignment> findAllByTitleContainsOrContentContains(String tileQuery, String contentQuery, Pageable page);
+    Page<Assignment> findAllByTitleContainsOrDescriptionContains(String tileQuery, String descriptionQuery, Pageable page);
 
     Optional<Assignment> findTop1ByIdBeforeOrderByIdAsc(Integer id);
 

@@ -78,11 +78,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void sendEmail(String email) {
         studentRepository.findByEmail(email).ifPresent(student -> {
-            throw new UserNotFoundException();
+            throw new UserAlreadyExistsException();
         });
 
         String code = randomCode();
-        System.out.println(code);
         emailService.sendEmail(email, code);
         verificationRepository.save(
                 EmailVerification.builder()
