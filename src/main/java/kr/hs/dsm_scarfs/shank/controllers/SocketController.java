@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
@@ -18,6 +20,19 @@ public class SocketController {
 
     @PostConstruct
     public void setSocketMapping() {
+        Date date = new Date();
+        SimpleDateFormat DateFor = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S");
+        String stringDate= DateFor.format(date);
+
+        server.addConnectListener(client -> {
+            System.out.printf(
+                    "%s %s - %s - Socket Connected. Session Id: %s%n",
+                    stringDate,
+                    "SOCKET",
+                    client.getRemoteAddress(),
+                    client.getSessionId()
+            );
+        });
 
         server.addConnectListener(socketService::connect);
 
