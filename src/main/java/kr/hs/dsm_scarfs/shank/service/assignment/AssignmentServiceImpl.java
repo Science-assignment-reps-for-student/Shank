@@ -90,7 +90,7 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
                     .createdAt(assignment.getCreatedAt())
                     .deadLine(deadLine)
                     .view(assignment.getView())
-                    .content(assignment.getContent())
+                    .content(assignment.getDescription())
                     .nextBoardTitle(nextAssignment.getTitle())
                     .preBoardTitle(preAssignment.getTitle())
                     .nextBoardId(nextAssignment.getId())
@@ -117,7 +117,8 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
         for (Assignment assignment : assignmentPages) {
             boolean isComplete = false;
             if (assignment.getType().equals(HomeworkType.MULTI)) {
-                Optional<Member> member = memberRepository.findByStudentIdAndAssignmentId(user.getId(), assignment.getId());
+                Optional<Member> member =
+                        memberRepository.findByStudentIdAndAssignmentId(user.getId(), assignment.getId());
                 if (member.isPresent()) {
                     isComplete = teamFileRepository.existsByAssignmentIdAndTeamId(assignment.getId(),
                             member.get().getTeamId());
@@ -126,7 +127,8 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
                 isComplete = personalFileRepository.existsByAssignmentIdAndUserId(assignment.getId(), user.getId());
             }
 
-            String preViewContent = assignment.getContent().substring(0, Math.min(50, assignment.getContent().length()));
+            String preViewContent =
+                    assignment.getDescription().substring(0, Math.min(50, assignment.getDescription().length()));
             assignmentResponses.add(
                     AssignmentResponse.builder()
                             .assignmentId(assignment.getId())

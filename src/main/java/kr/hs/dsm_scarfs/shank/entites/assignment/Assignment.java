@@ -32,7 +32,7 @@ public class Assignment {
 
     private String title;
 
-    private String content;
+    private String description;
 
     @Enumerated(EnumType.STRING)
     private HomeworkType type;
