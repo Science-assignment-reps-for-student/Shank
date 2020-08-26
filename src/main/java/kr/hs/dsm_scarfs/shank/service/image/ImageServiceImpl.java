@@ -2,6 +2,7 @@ package kr.hs.dsm_scarfs.shank.service.image;
 
 import com.amazonaws.util.IOUtils;
 import kr.hs.dsm_scarfs.shank.entites.file.image.repository.ImageRepository;
+import kr.hs.dsm_scarfs.shank.exceptions.ImageNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +24,11 @@ public class ImageServiceImpl implements ImageService{
     @SneakyThrows
     @Override
     public byte[] getImage(String imageName) {
-        InputStream inputStream = new FileInputStream(new File(imageDirPath, imageName));
+        File file = new File(imageDirPath, imageName);
+        if (!file.exists())
+            throw new ImageNotFoundException();
+        
+        InputStream inputStream = new FileInputStream(file);
 
         return IOUtils.toByteArray(inputStream);
     }

@@ -23,6 +23,7 @@ public enum ErrorCode {
     MESSAGE_NOT_FOUND(404, "Message Not Found"),
     APPLICATION_NOT_FOUND(404,"Application Not Found"),
     TEAM_LEADER_NOT_FOUND(404, "Team Leader Not Found"),
+    IMAGE_NOT_FOUND(404, "Image Not Found"),
     NUMBER_DUPLICATION(409,"Number Duplication"),
     USER_ALREADY_EVALUATION_EXCEPTION(409, "User Already Evaluation Exception"),
     USER_ALREADY_EXISTS_EXCEPTION(409,"User Already Exists Exception"),
