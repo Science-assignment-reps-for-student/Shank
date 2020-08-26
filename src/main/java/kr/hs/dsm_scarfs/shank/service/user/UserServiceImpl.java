@@ -4,7 +4,7 @@ import kr.hs.dsm_scarfs.shank.entites.authcode.repository.AuthCodeRepository;
 import kr.hs.dsm_scarfs.shank.entites.file.team.repository.TeamFileRepository;
 import kr.hs.dsm_scarfs.shank.entites.file.personal.repository.PersonalFileRepository;
 import kr.hs.dsm_scarfs.shank.entites.assignment.Assignment;
-import kr.hs.dsm_scarfs.shank.entites.assignment.enums.HomeworkType;
+import kr.hs.dsm_scarfs.shank.entites.assignment.enums.AssignmentType;
 import kr.hs.dsm_scarfs.shank.entites.assignment.repository.AssignmentRepository;
 import kr.hs.dsm_scarfs.shank.entites.member.Member;
 import kr.hs.dsm_scarfs.shank.entites.member.repository.MemberRepository;
@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService {
             if (user.getType().equals(AuthorityType.ADMIN)) break;
             Optional<Member> member = memberRepository.findByStudentIdAndAssignmentId(user.getId(), assignment.getId());
 
-            if (assignment.getType().equals(HomeworkType.MULTI)) {
+            if (assignment.getType().equals(AssignmentType.TEAM)) {
                 if (member.isPresent()) {
                     if (teamFileRepository.existsByAssignmentIdAndTeamId(assignment.getId(), member.get().getTeamId())) {
                         completionAssignment++;

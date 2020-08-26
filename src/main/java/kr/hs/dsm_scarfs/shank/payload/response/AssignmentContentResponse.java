@@ -1,7 +1,7 @@
 package kr.hs.dsm_scarfs.shank.payload.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import kr.hs.dsm_scarfs.shank.entites.assignment.enums.HomeworkType;
+import kr.hs.dsm_scarfs.shank.entites.assignment.enums.AssignmentType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,7 +14,7 @@ public class AssignmentContentResponse {
 
     private String title;
 
-    private HomeworkType type;
+    private AssignmentType type;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;

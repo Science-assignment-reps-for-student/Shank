@@ -27,7 +27,7 @@ public class ImageServiceImpl implements ImageService{
         File file = new File(imageDirPath, imageName);
         if (!file.exists())
             throw new ImageNotFoundException();
-        
+
         InputStream inputStream = new FileInputStream(file);
 
         return IOUtils.toByteArray(inputStream);

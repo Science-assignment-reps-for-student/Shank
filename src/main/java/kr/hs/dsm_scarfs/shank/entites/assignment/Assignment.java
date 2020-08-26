@@ -1,6 +1,6 @@
 package kr.hs.dsm_scarfs.shank.entites.assignment;
 
-import kr.hs.dsm_scarfs.shank.entites.assignment.enums.HomeworkType;
+import kr.hs.dsm_scarfs.shank.entites.assignment.enums.AssignmentType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -35,7 +35,7 @@ public class Assignment {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    private HomeworkType type;
+    private AssignmentType type;
 
     private LocalDateTime createdAt;
 
