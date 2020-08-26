@@ -24,7 +24,7 @@ public class BoardController {
     @PostMapping
     public Integer writeBoard(@RequestParam String title,
                            @RequestParam String content,
-                           @RequestParam Integer classNumber,
+                           @RequestParam("class_number") String classNumber,
                            MultipartFile[] files) {
         return boardService.writeBoard(title, content, classNumber, files);
     }

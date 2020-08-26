@@ -118,7 +118,8 @@ class BoardApiTest {
     private Integer writeBoard() throws Exception {
         MvcResult result = mvc.perform(post("/board")
                 .param("title", "제목")
-                .param("content", "내용"))
+                .param("content", "내용")
+                .param("class_number", "1"))
                 .andExpect(status().isOk()).andReturn();
 
         String boardId = result.getResponse().getContentAsString();
