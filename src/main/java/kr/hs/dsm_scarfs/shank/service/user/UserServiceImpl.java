@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
 
         int remainingAssignment = 0, completionAssignment = 0;
 
-        String methodName = "findAllByDeadline" + user.getStudentClassNumber() + "After";
+        String methodName = "findAllByDeadline" + user.getStudentClassNumber() + "AfterOrderByCreatedAtDesc";
         Page<Assignment> assignmentPage = (Page<Assignment>) AssignmentRepository.class
                 .getDeclaredMethod(methodName, Pageable.class, LocalDate.class)
                 .invoke(assignmentRepository, page, LocalDate.now(ZoneId.of("Asia/Seoul")));
