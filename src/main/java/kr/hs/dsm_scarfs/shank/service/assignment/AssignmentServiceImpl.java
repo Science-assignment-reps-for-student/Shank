@@ -103,7 +103,7 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
     @Override
     public ApplicationListResponse searchApplication(String query, Pageable page) {
         return this.getAssignmentList(
-                assignmentRepository.findAllByTitleContainsOrDescriptionContains(query, query, page)
+                assignmentRepository.findAllByTitleContainsOrDescriptionContainsOrderByCreatedAtDesc(query, query, page)
         );
     }
 

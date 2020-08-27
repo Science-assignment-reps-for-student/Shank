@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -57,7 +56,7 @@ public class NoticeServiceImpl implements NoticeService, SearchService {
 
     @Override
     public ApplicationListResponse searchApplication(String query, Pageable page) {
-        Page<Notice> noticePage = noticeRepository.findAllByTitleContainsOrContentContains(query, query, page);
+        Page<Notice> noticePage = noticeRepository.findAllByTitleContainsOrContentContainsOrderByCreatedAtDesc(query, query, page);
 
         List<NoticeResponse> noticeResponses = new ArrayList<>();
 

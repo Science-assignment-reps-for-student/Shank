@@ -12,15 +12,15 @@ import java.util.Optional;
 @Repository
 public interface AssignmentRepository extends CrudRepository<Assignment, Integer> {
 
-    Page<Assignment> findAllByDeadline1After(Pageable page, LocalDate date);
+    Page<Assignment> findAllByDeadline1AfterOrderByCreatedAtDesc(Pageable page, LocalDate date);
 
-    Page<Assignment> findAllByDeadline2After(Pageable page, LocalDate date);
+    Page<Assignment> findAllByDeadline2AfterOrderByCreatedAtDesc(Pageable page, LocalDate date);
 
-    Page<Assignment> findAllByDeadline3After(Pageable page, LocalDate date);
+    Page<Assignment> findAllByDeadline3AfterOrderByCreatedAtDesc(Pageable page, LocalDate date);
 
-    Page<Assignment> findAllByDeadline4After(Pageable page, LocalDate date);
+    Page<Assignment> findAllByDeadline4AfterOrderByCreatedAtDesc(Pageable page, LocalDate date);
 
-    Page<Assignment> findAllByTitleContainsOrDescriptionContains(String tileQuery, String descriptionQuery, Pageable page);
+    Page<Assignment> findAllByTitleContainsOrDescriptionContainsOrderByCreatedAtDesc(String tileQuery, String descriptionQuery, Pageable page);
 
     Optional<Assignment> findTop1ByIdBeforeOrderByIdAsc(Integer id);
 

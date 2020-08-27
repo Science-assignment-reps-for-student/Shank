@@ -10,8 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface NoticeRepository extends CrudRepository<Notice, Integer> {
-    Page<Notice> findAllBy(Pageable page);
-    Page<Notice> findAllByTitleContainsOrContentContains(String tileQuery, String contentQuery, Pageable page);
+    Page<Notice> findAllByTitleContainsOrContentContainsOrderByCreatedAtDesc(String tileQuery, String contentQuery, Pageable page);
 
     Optional<Notice> findTop1ByIdBeforeOrderByIdAsc(Integer id);
 

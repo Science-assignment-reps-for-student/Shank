@@ -229,7 +229,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public ApplicationListResponse searchBoard(String query, Integer classNumber, Pageable page) {
-        Page<Board> boardPage = boardRepository.findAllByClassNumber(classNumber, page);
+        Page<Board> boardPage = boardRepository.findAllByClassNumberOrderByCreatedAtDesc(classNumber, page);
 
         List<BoardResponse> boardResponse = new ArrayList<>();
 
