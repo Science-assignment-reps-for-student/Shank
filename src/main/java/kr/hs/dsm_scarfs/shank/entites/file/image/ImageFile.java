@@ -12,7 +12,7 @@ import javax.persistence.Id;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Image {
+public class ImageFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

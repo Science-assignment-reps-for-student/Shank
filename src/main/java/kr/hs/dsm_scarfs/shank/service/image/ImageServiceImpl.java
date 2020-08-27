@@ -1,7 +1,7 @@
 package kr.hs.dsm_scarfs.shank.service.image;
 
 import com.amazonaws.util.IOUtils;
-import kr.hs.dsm_scarfs.shank.entites.file.image.repository.ImageRepository;
+import kr.hs.dsm_scarfs.shank.entites.file.image.repository.ImageFileRepository;
 import kr.hs.dsm_scarfs.shank.exceptions.ImageNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -16,7 +16,7 @@ import java.io.InputStream;
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService{
 
-    private final ImageRepository imageRepository;
+    private final ImageFileRepository imageFileRepository;
 
     @Value("${image.upload.dir}")
     private String imageDirPath;

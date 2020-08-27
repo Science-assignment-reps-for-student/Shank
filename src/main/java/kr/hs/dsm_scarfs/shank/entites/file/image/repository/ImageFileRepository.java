@@ -1,13 +1,13 @@
 package kr.hs.dsm_scarfs.shank.entites.file.image.repository;
 
-import kr.hs.dsm_scarfs.shank.entites.file.image.Image;
+import kr.hs.dsm_scarfs.shank.entites.file.image.ImageFile;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface ImageRepository extends CrudRepository<Image, Integer> {
+public interface ImageFileRepository extends CrudRepository<ImageFile, Integer> {
     void deleteByBoardId(Integer boardId);
-    List<Image> findByBoardId(Integer boardId);
+    List<ImageFile> findByBoardId(Integer boardId);
 }

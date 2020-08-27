@@ -1,7 +1,7 @@
 package kr.hs.dsm_scarfs.shank.service.board;
 
-import kr.hs.dsm_scarfs.shank.entites.file.image.Image;
-import kr.hs.dsm_scarfs.shank.entites.file.image.repository.ImageRepository;
+import kr.hs.dsm_scarfs.shank.entites.file.image.ImageFile;
+import kr.hs.dsm_scarfs.shank.entites.file.image.repository.ImageFileRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.User;
 import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
 import kr.hs.dsm_scarfs.shank.entites.user.admin.Admin;
@@ -22,7 +22,6 @@ import kr.hs.dsm_scarfs.shank.payload.response.*;
 import kr.hs.dsm_scarfs.shank.security.AuthorityType;
 import kr.hs.dsm_scarfs.shank.security.auth.AuthenticationFacade;
 import kr.hs.dsm_scarfs.shank.service.comment.CommentService;
-import kr.hs.dsm_scarfs.shank.service.search.SearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +44,7 @@ public class BoardServiceImpl implements BoardService {
     private final AdminRepository adminRepository;
     private final StudentRepository studentRepository;
     private final CommentRepository commentRepository;
-    private final ImageRepository imageRepository;
+    private final ImageFileRepository imageFileRepository;
     private final CocommentRepository cocommentRepository;
 
     private final AuthenticationFacade authenticationFacade;
@@ -83,8 +82,8 @@ public class BoardServiceImpl implements BoardService {
                 .orElseGet(() -> Board.builder().build());
 
         List<String> imageNames = new ArrayList<>();
-        for (Image image : imageRepository.findByBoardId(boardId))
-            imageNames.add(image.getFileName());
+        for (ImageFile imageFile : imageFileRepository.findByBoardId(boardId))
+            imageNames.add(imageFile.getFileName());
 
         for (Comment co : comment) {
             User commentWriter;
@@ -158,7 +157,7 @@ public class BoardServiceImpl implements BoardService {
         for (Comment comment : commentRepository.findAllByBoardId(boardId))
             commentService.deleteComment(comment.getId());
 
-        imageRepository.deleteByBoardId(boardId);
+        imageFileRepository.deleteByBoardId(boardId);
         boardRepository.deleteById(boardId);
     }
 
@@ -182,8 +181,8 @@ public class BoardServiceImpl implements BoardService {
         for (MultipartFile file : Optional.ofNullable(files)
                 .orElseGet(() -> new MultipartFile[0])) {
             String fileName = UUID.randomUUID().toString();
-            imageRepository.save(
-                    Image.builder()
+            imageFileRepository.save(
+                    ImageFile.builder()
                             .boardId(board.getId())
                             .fileName(fileName)
                             .build()
@@ -205,19 +204,19 @@ public class BoardServiceImpl implements BoardService {
 
         boardRepository.save(board.update(title, content));
 
-        List<Image> images = imageRepository.findByBoardId(boardId);
+        List<ImageFile> imageFiles = imageFileRepository.findByBoardId(boardId);
 
-        for (Image image : images) {
-            new File(imageDirPath, image.getFileName()).deleteOnExit();
+        for (ImageFile imageFile : imageFiles) {
+            new File(imageDirPath, imageFile.getFileName()).deleteOnExit();
         }
 
-        imageRepository.deleteByBoardId(boardId);
+        imageFileRepository.deleteByBoardId(boardId);
 
         for (MultipartFile file : Optional.ofNullable(files)
                 .orElseGet(() -> new MultipartFile[0])) {
             String fileName = UUID.randomUUID().toString();
-            imageRepository.save(
-                    Image.builder()
+            imageFileRepository.save(
+                    ImageFile.builder()
                             .boardId(boardId)
                             .fileName(fileName)
                             .build()
