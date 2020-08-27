@@ -43,7 +43,7 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         String methodName = "findAllByDeadline" + user.getStudentClassNumber() + "After";
-        return this.getHomeworkList(
+        return this.getAssignmentList(
                 (Page<Assignment>) assignmentRepository.getClass()
                     .getDeclaredMethod(methodName, Pageable.class, LocalDate.class)
                     .invoke(assignmentRepository, page, LocalDate.ofYearDay(2020, 1))
@@ -101,12 +101,12 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
 
     @Override
     public ApplicationListResponse searchApplication(String query, Pageable page) {
-        return this.getHomeworkList(
+        return this.getAssignmentList(
                 assignmentRepository.findAllByTitleContainsOrDescriptionContains(query, query, page)
         );
     }
 
-    public ApplicationListResponse getHomeworkList(Page<Assignment> assignmentPages) {
+    public ApplicationListResponse getAssignmentList(Page<Assignment> assignmentPages) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         List<AssignmentResponse> assignmentResponses = new ArrayList<>();
