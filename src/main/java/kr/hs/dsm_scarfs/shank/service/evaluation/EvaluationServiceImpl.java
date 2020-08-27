@@ -2,8 +2,8 @@ package kr.hs.dsm_scarfs.shank.service.evaluation;
 
 import kr.hs.dsm_scarfs.shank.entites.evaluation.team.TeamEvaluation;
 import kr.hs.dsm_scarfs.shank.entites.evaluation.team.repository.TeamEvaluationRepository;
-import kr.hs.dsm_scarfs.shank.entites.evaluation.personal.PersonalEvaluation;
-import kr.hs.dsm_scarfs.shank.entites.evaluation.personal.repository.PersonalEvaluationRepository;
+import kr.hs.dsm_scarfs.shank.entites.evaluation.self.SelfEvaluation;
+import kr.hs.dsm_scarfs.shank.entites.evaluation.self.repository.SelfEvaluationRepository;
 import kr.hs.dsm_scarfs.shank.entites.assignment.repository.AssignmentRepository;
 import kr.hs.dsm_scarfs.shank.entites.member.Member;
 import kr.hs.dsm_scarfs.shank.entites.member.repository.MemberRepository;
@@ -13,9 +13,9 @@ import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
 import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
 import kr.hs.dsm_scarfs.shank.exceptions.*;
 import kr.hs.dsm_scarfs.shank.payload.request.TeamEvaluationRequest;
-import kr.hs.dsm_scarfs.shank.payload.request.PersonalEvaluationRequest;
+import kr.hs.dsm_scarfs.shank.payload.request.SelfEvaluationRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.EvaluationResponse;
-import kr.hs.dsm_scarfs.shank.payload.response.PersonalEvaluationResponse;
+import kr.hs.dsm_scarfs.shank.payload.response.SelfEvaluationResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.TeamEvaluationInfo;
 import kr.hs.dsm_scarfs.shank.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
@@ -33,24 +33,24 @@ public class EvaluationServiceImpl implements EvaluationService {
     private final AuthenticationFacade authenticationFacade;
 
     private final StudentRepository studentRepository;
-    private final PersonalEvaluationRepository personalEvaluationRepository;
+    private final SelfEvaluationRepository selfEvaluationRepository;
     private final TeamEvaluationRepository teamEvaluationRepository;
     private final AssignmentRepository assignmentRepository;
     private final MemberRepository memberRepository;
 
     @Override
-    public void personalEvaluation(PersonalEvaluationRequest selfEvaluationRequest) {
+    public void personalEvaluation(SelfEvaluationRequest selfEvaluationRequest) {
         Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
         assignmentRepository.findById(selfEvaluationRequest.getAssignmentId())
                 .orElseThrow(ApplicationNotFoundException::new);
 
-        personalEvaluationRepository.findByAssignmentIdAndStudentId(selfEvaluationRequest.getAssignmentId(), student.getId())
-                .ifPresent(personalEvaluation -> {throw new UserAlreadyEvaluationException();});
+        selfEvaluationRepository.findByAssignmentIdAndStudentId(selfEvaluationRequest.getAssignmentId(), student.getId())
+                .ifPresent(selfEvaluation -> {throw new UserAlreadyEvaluationException();});
 
-        personalEvaluationRepository.save(
-                PersonalEvaluation.builder()
+        selfEvaluationRepository.save(
+                SelfEvaluation.builder()
                     .assignmentId(selfEvaluationRequest.getAssignmentId())
                     .attitude(selfEvaluationRequest.getAttitude())
                     .communication(selfEvaluationRequest.getCommunication())
@@ -109,7 +109,7 @@ public class EvaluationServiceImpl implements EvaluationService {
                     .studentId(student.getId())
                     .studentNumber(student.getStudentNumber())
                     .studentName(student.getName())
-                    .isFinish(personalEvaluationRepository.existsByAssignmentIdAndStudentId(
+                    .isFinish(selfEvaluationRepository.existsByAssignmentIdAndStudentId(
                             assignmentId, student.getId()
                     ))
                     .build()
@@ -135,17 +135,17 @@ public class EvaluationServiceImpl implements EvaluationService {
     }
 
     @Override
-    public PersonalEvaluationResponse personalEvaluationInfo(Integer assignmentId) {
+    public SelfEvaluationResponse personalEvaluationInfo(Integer assignmentId) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
-        PersonalEvaluation personalEvaluation = personalEvaluationRepository.findByAssignmentIdAndStudentId(assignmentId, user.getId())
+        SelfEvaluation selfEvaluation = selfEvaluationRepository.findByAssignmentIdAndStudentId(assignmentId, user.getId())
                 .orElseThrow(ApplicationNotFoundException::new);
 
-        return PersonalEvaluationResponse.builder()
-                    .attitude(personalEvaluation.getAttitude())
-                    .communication(personalEvaluation.getCommunication())
-                    .scientificAccuracy(personalEvaluation.getScientificAccuracy())
-                    .createdAt(personalEvaluation.getCreatedAt())
+        return SelfEvaluationResponse.builder()
+                    .attitude(selfEvaluation.getAttitude())
+                    .communication(selfEvaluation.getCommunication())
+                    .scientificAccuracy(selfEvaluation.getScientificAccuracy())
+                    .createdAt(selfEvaluation.getCreatedAt())
                     .build();
     }
 

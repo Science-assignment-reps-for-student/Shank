@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PersonalEvaluationRequest {
+public class SelfEvaluationRequest {
 
     private Integer assignmentId;
 

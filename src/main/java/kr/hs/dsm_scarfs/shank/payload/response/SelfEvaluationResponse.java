@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class PersonalEvaluationResponse {
+public class SelfEvaluationResponse {
 
     private Integer scientificAccuracy;
 

@@ -1,4 +1,4 @@
-package kr.hs.dsm_scarfs.shank.entites.evaluation.personal;
+package kr.hs.dsm_scarfs.shank.entites.evaluation.self;
 
 import lombok.*;
 
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PersonalEvaluation {
+public class SelfEvaluation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

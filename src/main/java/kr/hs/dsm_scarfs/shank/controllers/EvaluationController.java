@@ -1,9 +1,9 @@
 package kr.hs.dsm_scarfs.shank.controllers;
 
 import kr.hs.dsm_scarfs.shank.payload.request.TeamEvaluationRequest;
-import kr.hs.dsm_scarfs.shank.payload.request.PersonalEvaluationRequest;
+import kr.hs.dsm_scarfs.shank.payload.request.SelfEvaluationRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.EvaluationResponse;
-import kr.hs.dsm_scarfs.shank.payload.response.PersonalEvaluationResponse;
+import kr.hs.dsm_scarfs.shank.payload.response.SelfEvaluationResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.TeamEvaluationInfo;
 import kr.hs.dsm_scarfs.shank.service.evaluation.EvaluationService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class EvaluationController {
     }
 
     @GetMapping("/info/personal/{assignmentId}")
-    public PersonalEvaluationResponse selfEvaluationInfo(@PathVariable Integer assignmentId) {
+    public SelfEvaluationResponse selfEvaluationInfo(@PathVariable Integer assignmentId) {
         return evaluationService.personalEvaluationInfo(assignmentId);
     }
 
@@ -34,7 +34,7 @@ public class EvaluationController {
     }
 
     @PostMapping("/personal")
-    public void selfEvaluation(@RequestBody PersonalEvaluationRequest selfEvaluationRequest) {
+    public void selfEvaluation(@RequestBody SelfEvaluationRequest selfEvaluationRequest) {
         evaluationService.personalEvaluation(selfEvaluationRequest);
     }
 
