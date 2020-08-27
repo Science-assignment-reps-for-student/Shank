@@ -1,7 +1,5 @@
 package kr.hs.dsm_scarfs.shank.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -15,8 +13,6 @@ import java.util.Date;
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class SpringLogger implements Filter {
-
-    Logger logger = LoggerFactory.getLogger(SpringLogger.class);
 
     @Override
     public void doFilter(
