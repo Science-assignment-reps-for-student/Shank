@@ -25,7 +25,7 @@ public class SocketController {
         String stringDate= DateFor.format(date);
 
         server.addConnectListener(client -> System.out.printf(
-                "%s %s - %s - Socket Connected. Session Id: %s%n",
+                "%s  %s - %s - Socket Connected. Session Id: %s%n",
                 stringDate,
                 "SOCKET",
                 client.getRemoteAddress(),
