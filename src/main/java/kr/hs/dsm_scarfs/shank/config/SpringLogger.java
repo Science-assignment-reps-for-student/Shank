@@ -32,30 +32,35 @@ public class SpringLogger implements Filter {
         String stringDate= DateFor.format(date);
         String info = "INFO";
         String warn = "WARN";
+        String param = "";
+        if (req.getQueryString() != null)
+            param = "?" + req.getQueryString();
 
         try {
             chain.doFilter(request, response);
-            System.out.println(String.format(
-                    "%s %s - %s - [%s %s] %s",
+            System.out.printf(
+                    "%s %s - %s - [%s %s%s] %s%n",
                     stringDate,
                     info,
                     req.getHeader("X-Real-IP"),
                     req.getMethod(),
                     req.getRequestURI(),
+                    param,
                     res.getStatus()
-            ));
+            );
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println(String.format(
-                    "%s %s - %s - [%s %s] %s",
+            System.out.printf(
+                    "%s %s - %s - [%s %s%s] %s%n",
                     stringDate,
                     warn,
                     req.getRemoteHost(),
                     req.getMethod(),
                     req.getRequestURI(),
+                    param,
                     res.getStatus()
-            ));
+            );
         }
     }
 
