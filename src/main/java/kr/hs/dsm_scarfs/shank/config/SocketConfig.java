@@ -1,4 +1,4 @@
-package kr.hs.dsm_scarfs.shank.security;
+package kr.hs.dsm_scarfs.shank.config;
 
 import com.corundumstudio.socketio.SocketIOServer;
 import lombok.RequiredArgsConstructor;
