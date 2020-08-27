@@ -90,7 +90,8 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
                     .createdAt(assignment.getCreatedAt())
                     .deadLine(deadLine)
                     .view(assignment.getView())
-                    .content(assignment.getDescription())
+                    .description(assignment.getDescription())
+                    .deadLine(assignment.getCurrentDeadLine(user.getStudentClassNumber()))
                     .nextBoardTitle(nextAssignment.getTitle())
                     .preBoardTitle(preAssignment.getTitle())
                     .nextBoardId(nextAssignment.getId())
@@ -127,7 +128,7 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
                 isComplete = personalFileRepository.existsByAssignmentIdAndStudentId(assignment.getId(), user.getId());
             }
 
-            String preViewContent =
+            String preViewDescription =
                     assignment.getDescription().substring(0, Math.min(50, assignment.getDescription().length()));
             assignmentResponses.add(
                     AssignmentResponse.builder()
@@ -135,7 +136,8 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
                             .view(assignment.getView())
                             .title(assignment.getTitle())
                             .createdAt(assignment.getCreatedAt())
-                            .preViewContent(preViewContent)
+                            .preViewDescription(preViewDescription)
+                            .deadLine(assignment.getCurrentDeadLine(user.getStudentClassNumber()))
                             .type(assignment.getType())
                             .isComplete(isComplete)
                             .build()

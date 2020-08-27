@@ -21,7 +21,7 @@ public class AssignmentContentResponse {
 
     private LocalDate deadLine;
 
-    private String content;
+    private String description;
 
     private Integer view;
 

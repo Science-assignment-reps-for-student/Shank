@@ -1,6 +1,7 @@
 package kr.hs.dsm_scarfs.shank.entites.assignment;
 
 import kr.hs.dsm_scarfs.shank.entites.assignment.enums.AssignmentType;
+import kr.hs.dsm_scarfs.shank.exceptions.InvalidClassNumberException;
 import lombok.*;
 
 import javax.persistence.*;
@@ -39,11 +40,22 @@ public class Assignment {
 
     private LocalDateTime createdAt;
 
+    @Column(columnDefinition = "integer default 0")
     private Integer view;
 
     public Assignment view() {
         this.view++;
         return this;
+    }
+
+    public LocalDate getCurrentDeadLine(Integer classNumber) {
+        switch (classNumber) {
+            case 1: return deadline1;
+            case 2: return deadline2;
+            case 3: return deadline3;
+            case 4: return deadline4;
+            default: throw new InvalidClassNumberException();
+        }
     }
 
 }

@@ -5,6 +5,7 @@ import kr.hs.dsm_scarfs.shank.entites.assignment.enums.AssignmentType;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -18,7 +19,9 @@ public class AssignmentResponse {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
-    private String preViewContent;
+    private LocalDate deadLine;
+
+    private String preViewDescription;
 
     private AssignmentType type;
 
