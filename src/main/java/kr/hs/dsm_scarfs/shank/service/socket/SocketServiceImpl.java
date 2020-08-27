@@ -6,6 +6,7 @@ import kr.hs.dsm_scarfs.shank.entites.message.Message;
 import kr.hs.dsm_scarfs.shank.entites.message.repository.MessageRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.User;
 import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
+import kr.hs.dsm_scarfs.shank.exceptions.InvalidTokenException;
 import kr.hs.dsm_scarfs.shank.exceptions.PermissionDeniedException;
 import kr.hs.dsm_scarfs.shank.payload.request.MessageRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.MessageResponse;
@@ -14,7 +15,9 @@ import kr.hs.dsm_scarfs.shank.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -29,18 +32,43 @@ public class SocketServiceImpl implements SocketService {
 
     @Override
     public void connect(SocketIOClient client) {
-        Integer studentId = Integer.parseInt(client.getHandshakeData().getSingleUrlParam("studentId"));
-        Integer adminId = Integer.parseInt(client.getHandshakeData().getSingleUrlParam("adminId"));
+        int studentId;
+        int adminId;
+        try {
+            studentId = Integer.parseInt(client.getHandshakeData().getSingleUrlParam("studentId"));
+            adminId = Integer.parseInt(client.getHandshakeData().getSingleUrlParam("adminId"));
+        } catch (NumberFormatException e) {
+            client.disconnect();
+            return;
+        }
         String token = client.getHandshakeData().getSingleUrlParam("token");
+        if (!jwtTokenProvider.validateToken(token)) {
+            client.disconnect();
+            return;
+        }
         User user = userFactory.getUser(jwtTokenProvider.getUserEmail(token));
 
         client.set("user", user);
-        if (user.getType().equals(AuthorityType.STUDENT) && user.getId().equals(studentId))
+        if (user.getType().equals(AuthorityType.STUDENT) && user.getId().equals(studentId)) {
             client.joinRoom(studentId + ":" + adminId);
-        else if (user.getType().equals(AuthorityType.ADMIN) && user.getId().equals(adminId))
+        } else if (user.getType().equals(AuthorityType.ADMIN) && user.getId().equals(adminId)) {
             client.joinRoom(studentId + ":" + adminId);
-        else
+        } else {
             client.disconnect();
+            return;
+        }
+
+        Date date = new Date();
+        SimpleDateFormat DateFor = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S");
+        String stringDate= DateFor.format(date);
+
+        System.out.printf(
+                "%s  %s - %s - Socket Connected. Session Id: %s%n",
+                stringDate,
+                "SOCKET",
+                client.getRemoteAddress(),
+                client.getSessionId()
+        );
     }
 
     @Override
