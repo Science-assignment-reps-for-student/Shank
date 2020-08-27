@@ -1,4 +1,4 @@
-package kr.hs.dsm_scarfs.shank.entites.evaluation.team;
+package kr.hs.dsm_scarfs.shank.entites.evaluation.mutual;
 
 import lombok.*;
 
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TeamEvaluation {
+public class MutualEvaluation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

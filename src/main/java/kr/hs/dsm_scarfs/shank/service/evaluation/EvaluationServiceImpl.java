@@ -1,7 +1,7 @@
 package kr.hs.dsm_scarfs.shank.service.evaluation;
 
-import kr.hs.dsm_scarfs.shank.entites.evaluation.team.TeamEvaluation;
-import kr.hs.dsm_scarfs.shank.entites.evaluation.team.repository.TeamEvaluationRepository;
+import kr.hs.dsm_scarfs.shank.entites.evaluation.mutual.MutualEvaluation;
+import kr.hs.dsm_scarfs.shank.entites.evaluation.mutual.repository.MutualEvaluationRepository;
 import kr.hs.dsm_scarfs.shank.entites.evaluation.self.SelfEvaluation;
 import kr.hs.dsm_scarfs.shank.entites.evaluation.self.repository.SelfEvaluationRepository;
 import kr.hs.dsm_scarfs.shank.entites.assignment.repository.AssignmentRepository;
@@ -12,11 +12,11 @@ import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
 import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
 import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
 import kr.hs.dsm_scarfs.shank.exceptions.*;
-import kr.hs.dsm_scarfs.shank.payload.request.TeamEvaluationRequest;
+import kr.hs.dsm_scarfs.shank.payload.request.MutualEvaluationRequest;
 import kr.hs.dsm_scarfs.shank.payload.request.SelfEvaluationRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.EvaluationResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.SelfEvaluationResponse;
-import kr.hs.dsm_scarfs.shank.payload.response.TeamEvaluationInfo;
+import kr.hs.dsm_scarfs.shank.payload.response.MutualEvaluationInfo;
 import kr.hs.dsm_scarfs.shank.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class EvaluationServiceImpl implements EvaluationService {
 
     private final StudentRepository studentRepository;
     private final SelfEvaluationRepository selfEvaluationRepository;
-    private final TeamEvaluationRepository teamEvaluationRepository;
+    private final MutualEvaluationRepository mutualEvaluationRepository;
     private final AssignmentRepository assignmentRepository;
     private final MemberRepository memberRepository;
 
@@ -61,32 +61,32 @@ public class EvaluationServiceImpl implements EvaluationService {
     }
 
     @Override
-    public void teamEvaluation(TeamEvaluationRequest teamEvaluationRequest) {
+    public void teamEvaluation(MutualEvaluationRequest mutualEvaluationRequest) {
         Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
-        Student target = studentRepository.findById(teamEvaluationRequest.getTargetId())
+        Student target = studentRepository.findById(mutualEvaluationRequest.getTargetId())
                 .orElseThrow(TargetNotFoundException::new);
 
-        assignmentRepository.findById(teamEvaluationRequest.getAssignmentId())
+        assignmentRepository.findById(mutualEvaluationRequest.getAssignmentId())
                 .orElseThrow(ApplicationNotFoundException::new);
 
-        Integer assignmentId = teamEvaluationRequest.getAssignmentId();
+        Integer assignmentId = mutualEvaluationRequest.getAssignmentId();
         Integer userId = student.getId();
         Integer targetId = target.getId();
 
         if (userId.equals(targetId)) throw new TargetNotFoundException();
 
-        teamEvaluationRepository.findByAssignmentIdAndUserIdAndTargetId(assignmentId, userId, targetId)
-                .ifPresent(teamEvaluation -> {throw new UserAlreadyEvaluationException();});
+        mutualEvaluationRepository.findByAssignmentIdAndUserIdAndTargetId(assignmentId, userId, targetId)
+                .ifPresent(mutualEvaluation -> {throw new UserAlreadyEvaluationException();});
 
-        teamEvaluationRepository.save(
-                TeamEvaluation.builder()
+        mutualEvaluationRepository.save(
+                MutualEvaluation.builder()
                     .assignmentId(assignmentId)
                     .userId(userId)
                     .targetId(targetId)
-                    .communication(teamEvaluationRequest.getCommunication())
-                    .cooperation(teamEvaluationRequest.getCooperation())
+                    .communication(mutualEvaluationRequest.getCommunication())
+                    .cooperation(mutualEvaluationRequest.getCooperation())
                     .createdAt(LocalDateTime.now())
                     .build()
         );
@@ -124,7 +124,7 @@ public class EvaluationServiceImpl implements EvaluationService {
                         .studentId(memberStudent.getId())
                         .studentNumber(memberStudent.getStudentNumber())
                         .studentName(memberStudent.getName())
-                        .isFinish(teamEvaluationRepository.existsByAssignmentIdAndUserIdAndTargetId(
+                        .isFinish(mutualEvaluationRepository.existsByAssignmentIdAndUserIdAndTargetId(
                                 assignmentId, student.getId(), member.getStudentId()
                         ))
                         .build()
@@ -150,16 +150,16 @@ public class EvaluationServiceImpl implements EvaluationService {
     }
 
     @Override
-    public TeamEvaluationInfo teamEvaluationInfo(Integer assignmentId, Integer targetId) {
+    public MutualEvaluationInfo teamEvaluationInfo(Integer assignmentId, Integer targetId) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
-        TeamEvaluation teamEvaluation =
-                teamEvaluationRepository.findByAssignmentIdAndUserIdAndTargetId(assignmentId, user.getId(), targetId)
+        MutualEvaluation mutualEvaluation =
+                mutualEvaluationRepository.findByAssignmentIdAndUserIdAndTargetId(assignmentId, user.getId(), targetId)
                         .orElseThrow(ApplicationNotFoundException::new);
 
-        return TeamEvaluationInfo.builder()
-                    .communication(teamEvaluation.getCommunication())
-                    .cooperation(teamEvaluation.getCooperation())
+        return MutualEvaluationInfo.builder()
+                    .communication(mutualEvaluation.getCommunication())
+                    .cooperation(mutualEvaluation.getCooperation())
                     .build();
     }
 

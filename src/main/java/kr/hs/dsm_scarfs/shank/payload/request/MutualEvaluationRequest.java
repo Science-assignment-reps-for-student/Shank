@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TeamEvaluationRequest {
+public class MutualEvaluationRequest {
 
     private Integer assignmentId;
 

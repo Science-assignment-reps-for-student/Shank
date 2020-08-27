@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class TeamEvaluationInfo {
+public class MutualEvaluationInfo {
 
     private Integer cooperation;
 
