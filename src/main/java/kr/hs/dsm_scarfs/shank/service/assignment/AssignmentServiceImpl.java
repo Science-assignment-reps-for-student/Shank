@@ -42,7 +42,7 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
     public ApplicationListResponse getAssignmentList(Pageable page) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
-        String methodName = "findAllByDeadline" + user.getStudentClassNumber() + "After";
+        String methodName = "findAllByDeadline" + user.getStudentClassNumber() + "AfterOrderByCreatedAtDesc";
         return this.getAssignmentList(
                 (Page<Assignment>) assignmentRepository.getClass()
                     .getDeclaredMethod(methodName, Pageable.class, LocalDate.class)
@@ -58,9 +58,7 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
         Assignment assignment = assignmentRepository.findById(homeworkId)
                 .orElseThrow(ApplicationNotFoundException::new);
 
-        LocalDate deadLine = (LocalDate) Assignment.class
-                .getDeclaredMethod("getDeadline" + user.getStudentClassNumber())
-                .invoke(assignment);
+        LocalDate deadLine = assignment.getCurrentDeadLine(user.getStudentClassNumber());
 
         boolean isComplete = false;
 
