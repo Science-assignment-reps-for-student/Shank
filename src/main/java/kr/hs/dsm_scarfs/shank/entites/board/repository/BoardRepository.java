@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface BoardRepository extends CrudRepository<Board, Integer> {
     Page<Board> findAllByClassNumberOrderByCreatedAtDesc(Integer classNumber, Pageable page);
 
-    Optional<Board> findTop1ByIdBeforeOrderByIdAsc(Integer id);
+    Optional<Board> findTop1ByIdAndClassNumberBeforeOrderByIdAsc(Integer id, Integer classNumber);
 
-    Optional<Board> findTop1ByIdAfterOrderByIdAsc(Integer id);
+    Optional<Board> findTop1ByIdAndClassNumberAfterOrderByIdAsc(Integer id, Integer classNumber);
 }

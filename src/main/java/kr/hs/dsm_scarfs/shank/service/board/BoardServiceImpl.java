@@ -75,10 +75,10 @@ public class BoardServiceImpl implements BoardService {
         List<Comment> comment = commentRepository.findAllByBoardId(boardId);
         List<BoardCommentsResponse> commentsResponses = new ArrayList<>();
 
-        Board nextBoard = boardRepository.findTop1ByIdAfterOrderByIdAsc(boardId)
+        Board nextBoard = boardRepository.findTop1ByIdAndClassNumberAfterOrderByIdAsc(boardId, board.getClassNumber())
                 .orElseGet(() -> Board.builder().build());
 
-        Board preBoard = boardRepository.findTop1ByIdBeforeOrderByIdAsc(boardId)
+        Board preBoard = boardRepository.findTop1ByIdAndClassNumberBeforeOrderByIdAsc(boardId, board.getClassNumber())
                 .orElseGet(() -> Board.builder().build());
 
         List<String> imageNames = new ArrayList<>();
@@ -197,7 +197,7 @@ public class BoardServiceImpl implements BoardService {
     @SneakyThrows
     @Override
     public void changeBoard(Integer boardId, String title, String content, MultipartFile[] files) {
-        Admin admin = adminRepository.findByEmail(authenticationFacade.getUserEmail())
+        adminRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(PermissionDeniedException::new);
 
         Board board = boardRepository.findById(boardId)
