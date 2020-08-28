@@ -254,6 +254,7 @@ public class BoardServiceImpl implements BoardService {
         return ApplicationListResponse.builder()
                 .totalElements((int) boardPage.getTotalElements())
                 .totalPages(boardPage.getTotalPages())
+                .class_number(classNumber)
                 .applicationResponses(boardResponse)
                 .build();
     }

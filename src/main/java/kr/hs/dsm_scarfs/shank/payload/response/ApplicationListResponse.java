@@ -9,9 +9,11 @@ import java.util.List;
 @Builder
 public class ApplicationListResponse {
 
-    private int totalElements;
+    private Integer totalElements;
 
-    private int totalPages;
+    private Integer totalPages;
+
+    private Integer class_number;
 
     private List applicationResponses;
 
