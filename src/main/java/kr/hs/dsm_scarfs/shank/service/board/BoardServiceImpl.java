@@ -137,6 +137,7 @@ public class BoardServiceImpl implements BoardService {
                     .createdAt(board.getCreatedAt())
                     .view(board.getView())
                     .content(board.getContent())
+                    .classNumber(board.getClassNumber())
                     .nextBoardTitle(nextBoard.getTitle())
                     .preBoardTitle(preBoard.getTitle())
                     .nextBoardId(nextBoard.getId())

@@ -22,6 +22,8 @@ public class BoardContentResponse {
 
     private String content;
 
+    private Integer classNumber;
+
     private String nextBoardTitle;
 
     private String preBoardTitle;
