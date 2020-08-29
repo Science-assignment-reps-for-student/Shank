@@ -75,10 +75,10 @@ public class BoardServiceImpl implements BoardService {
         List<Comment> comment = commentRepository.findAllByBoardId(boardId);
         List<BoardCommentsResponse> commentsResponses = new ArrayList<>();
 
-        Board nextBoard = boardRepository.findTop1ByIdAfterAndClassNumber(boardId, board.getClassNumber())
+        Board nextBoard = boardRepository.findTop1ByIdAfterAndClassNumberOrderByIdAsc(boardId, board.getClassNumber())
                 .orElseGet(() -> Board.builder().build());
 
-        Board preBoard = boardRepository.findTop1ByIdBeforeAndClassNumber(boardId, board.getClassNumber())
+        Board preBoard = boardRepository.findTop1ByIdBeforeAndClassNumberOrderByIdDesc(boardId, board.getClassNumber())
                 .orElseGet(() -> Board.builder().build());
 
         List<String> imageNames = new ArrayList<>();
