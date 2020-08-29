@@ -10,6 +10,7 @@ import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
 import kr.hs.dsm_scarfs.shank.exceptions.ApplicationNotFoundException;
 import kr.hs.dsm_scarfs.shank.exceptions.CommentNotFoundException;
 import kr.hs.dsm_scarfs.shank.exceptions.PermissionDeniedException;
+import kr.hs.dsm_scarfs.shank.payload.request.CommentRequest;
 import kr.hs.dsm_scarfs.shank.security.AuthorityType;
 import kr.hs.dsm_scarfs.shank.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class CommentServiceImpl implements CommentService{
     private final CocommentRepository cocommentRepository;
 
     @Override
-    public void postComment(Integer boardId, String content) {
+    public void postComment(Integer boardId, CommentRequest commentRequest) {
         AuthorityType authorityType = authenticationFacade.getAuthorityType();
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
@@ -38,8 +39,9 @@ public class CommentServiceImpl implements CommentService{
 
         commentRepository.save(
                 Comment.builder()
-                    .content(content)
+                    .content(commentRequest.getContent())
                     .createdAt(LocalDateTime.now())
+                    .boardId(boardId)
                     .updateAt(LocalDateTime.now())
                     .authorType(authorityType)
                     .authorId(user.getId())
@@ -48,7 +50,7 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public void postCocomment(Integer commentId, String content) {
+    public void postCocomment(Integer commentId, CommentRequest commentRequest) {
         AuthorityType authorityType = authenticationFacade.getAuthorityType();
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
@@ -57,7 +59,8 @@ public class CommentServiceImpl implements CommentService{
 
         cocommentRepository.save(
                 Cocomment.builder()
-                    .content(content)
+                    .content(commentRequest.getContent())
+                    .commentId(commentId)
                     .createdAt(LocalDateTime.now())
                     .updateAt(LocalDateTime.now())
                     .authorType(authorityType)
@@ -67,29 +70,29 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public void changeComment(Integer commentId, String content) {
+    public void changeComment(Integer commentId, CommentRequest commentRequest) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
 
-        if (!comment.getAuthorId().equals(user.getId()))
+        if (!user.getType().equals(comment.getAuthorType()) || !user.getId().equals(comment.getAuthorId()))
             throw new PermissionDeniedException();
 
-        commentRepository.save(comment.updateContent(content));
+        commentRepository.save(comment.updateContent(commentRequest.getContent()));
     }
 
     @Override
-    public void changeCocomment(Integer cocommentId, String content) {
+    public void changeCocomment(Integer cocommentId, CommentRequest commentRequest) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         Cocomment cocomment = cocommentRepository.findById(cocommentId)
                 .orElseThrow(CommentNotFoundException::new);
 
-        if (!cocomment.getAuthorId().equals(user.getId()))
-            throw new RuntimeException();
+        if (!user.getType().equals(cocomment.getAuthorType()) || !user.getId().equals(cocomment.getAuthorId()))
+            throw new PermissionDeniedException();
 
-        cocommentRepository.save(cocomment.updateContent(content));
+        cocommentRepository.save(cocomment.updateContent(commentRequest.getContent()));
     }
 
     @Override
@@ -99,8 +102,8 @@ public class CommentServiceImpl implements CommentService{
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(RuntimeException::new);
 
-        if (!comment.getAuthorId().equals(user.getId()))
-            throw new RuntimeException();
+        if (!user.getType().equals(comment.getAuthorType()) || !user.getId().equals(comment.getAuthorId()))
+            throw new PermissionDeniedException();
 
         cocommentRepository.deleteAllByCommentId(commentId);
         commentRepository.delete(comment);
@@ -113,7 +116,7 @@ public class CommentServiceImpl implements CommentService{
         Cocomment cocomment = cocommentRepository.findById(cocommentId)
                 .orElseThrow(CommentNotFoundException::new);
 
-        if (!cocomment.getAuthorId().equals(user.getId()))
+        if (!user.getType().equals(cocomment.getAuthorType()) || !user.getId().equals(cocomment.getAuthorId()))
             throw new PermissionDeniedException();
 
         cocommentRepository.delete(cocomment);

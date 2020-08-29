@@ -1,5 +1,6 @@
 package kr.hs.dsm_scarfs.shank.controllers;
 
+import kr.hs.dsm_scarfs.shank.payload.request.CommentRequest;
 import kr.hs.dsm_scarfs.shank.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +13,13 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/{boardId}")
-    public void postComment(@PathVariable Integer boardId, @RequestBody String content) {
-        commentService.postComment(boardId, content);
+    public void postComment(@PathVariable Integer boardId, @RequestBody CommentRequest commentRequest) {
+        commentService.postComment(boardId, commentRequest);
     }
 
     @PutMapping("/{commentId}")
-    public void chageComment(@PathVariable Integer commentId, @RequestBody String content) {
-        commentService.changeComment(commentId, content);
+    public void chageComment(@PathVariable Integer commentId, @RequestBody CommentRequest commentRequest) {
+        commentService.changeComment(commentId, commentRequest);
     }
 
     @DeleteMapping("/{commentId}")
@@ -27,13 +28,13 @@ public class CommentController {
     }
 
     @PostMapping("/sub/{commentId}")
-    public void postCocomment(@PathVariable Integer commentId, @RequestBody String content) {
-        commentService.postCocomment(commentId, content);
+    public void postCocomment(@PathVariable Integer commentId, @RequestBody CommentRequest commentRequest) {
+        commentService.postCocomment(commentId, commentRequest);
     }
 
     @PutMapping("/sub/{cocommentId}")
-    public void chageCocomment(@PathVariable Integer cocommentId, @RequestBody String content) {
-        commentService.changeCocomment(cocommentId, content);
+    public void chageCocomment(@PathVariable Integer cocommentId, @RequestBody CommentRequest commentRequest) {
+        commentService.changeCocomment(cocommentId, commentRequest);
     }
 
     @DeleteMapping("/sub/{cocommentId}")

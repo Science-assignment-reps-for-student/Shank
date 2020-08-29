@@ -127,8 +127,8 @@ public class BoardServiceImpl implements BoardService {
                         .studentNumber(commentWriter.getStudentNumber())
                         .writerName(commentWriter.getName())
                         .createdAt(co.getUpdateAt())
-                        .cocomments(cocommentsResponses)
                         .isMine(user.equals(commentWriter))
+                        .cocomments(cocommentsResponses)
                         .build()
             );
         }

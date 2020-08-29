@@ -22,8 +22,8 @@ public class BoardCommentsResponse {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
-    private List<BoardCocommentsResponse> cocomments;
-
     private boolean isMine;
+
+    private List<BoardCocommentsResponse> cocomments;
 
 }
