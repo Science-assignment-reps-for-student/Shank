@@ -5,6 +5,7 @@ import kr.hs.dsm_scarfs.shank.entites.message.repository.MessageRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.User;
 import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
 import kr.hs.dsm_scarfs.shank.exceptions.MessageNotFoundException;
+import kr.hs.dsm_scarfs.shank.exceptions.PermissionDeniedException;
 import kr.hs.dsm_scarfs.shank.payload.response.MessageListResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.MessageResponse;
 import kr.hs.dsm_scarfs.shank.security.AuthorityType;
@@ -95,6 +96,13 @@ public class MessageServiceImpl implements MessageService{
     public void deleteMessage(Integer messageId) {
         Message message = messageRepository.findById(messageId)
                 .orElseThrow(MessageNotFoundException::new);
+
+        User user = userFactory.getUser(authenticationFacade.getUserEmail());
+
+        if (user.getType().equals(AuthorityType.STUDENT) && !user.getId().equals(message.getStudentId()))
+            throw new PermissionDeniedException();
+        else if (user.getType().equals(AuthorityType.ADMIN) && !user.getId().equals(message.getAdminId()))
+            throw new PermissionDeniedException();
 
         messageRepository.save(message.delete());
     }
