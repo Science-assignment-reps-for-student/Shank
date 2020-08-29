@@ -72,6 +72,7 @@ public class MessageServiceImpl implements MessageService{
                         .message(message.getMessage())
                         .time(message.getTime())
                         .type(message.getType())
+                        .isDeleted(message.isDeleted())
                         .build()
             );
             if (!user.getType().equals(message.getType()))

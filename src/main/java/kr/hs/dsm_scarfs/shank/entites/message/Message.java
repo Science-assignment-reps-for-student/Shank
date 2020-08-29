@@ -43,4 +43,9 @@ public class Message {
         return this;
     }
 
+    public String getMessage() {
+        if (this.isDeleted) return "";
+        return this.message;
+    }
+
 }
