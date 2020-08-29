@@ -69,6 +69,9 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(ApplicationNotFoundException::new);
 
+        if (!user.getStudentClassNumber().equals(board.getClassNumber()))
+            throw new PermissionDeniedException();
+
         Admin admin = adminRepository.findById(board.getAdminId())
                 .orElseThrow(UserNotLeaderException::new);
 
