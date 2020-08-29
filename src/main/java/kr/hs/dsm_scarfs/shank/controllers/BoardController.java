@@ -39,8 +39,8 @@ public class BoardController {
     public void changeBoard(@PathVariable Integer boardId,
                             @RequestParam String title,
                             @RequestParam String content,
-                            MultipartFile[] files) {
-        boardService.changeBoard(boardId, title, content, files);
+                            MultipartFile[] images) {
+        boardService.changeBoard(boardId, title, content, images);
     }
 
 

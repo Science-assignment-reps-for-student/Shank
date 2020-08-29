@@ -196,7 +196,7 @@ public class BoardServiceImpl implements BoardService {
 
     @SneakyThrows
     @Override
-    public void changeBoard(Integer boardId, String title, String content, MultipartFile[] files) {
+    public void changeBoard(Integer boardId, String title, String content, MultipartFile[] images) {
         adminRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(PermissionDeniedException::new);
 
@@ -213,7 +213,7 @@ public class BoardServiceImpl implements BoardService {
 
         imageFileRepository.deleteByBoardId(boardId);
 
-        for (MultipartFile file : Optional.ofNullable(files)
+        for (MultipartFile file : Optional.ofNullable(images)
                 .orElseGet(() -> new MultipartFile[0])) {
             String fileName = UUID.randomUUID().toString();
             imageFileRepository.save(
