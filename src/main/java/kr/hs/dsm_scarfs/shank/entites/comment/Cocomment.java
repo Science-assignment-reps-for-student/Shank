@@ -3,10 +3,7 @@ package kr.hs.dsm_scarfs.shank.entites.comment;
 import kr.hs.dsm_scarfs.shank.security.AuthorityType;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
@@ -22,6 +19,7 @@ public class Cocomment {
 
     private Integer authorId;
 
+    @Enumerated(EnumType.STRING)
     private AuthorityType authorType;
 
     private Integer commentId;

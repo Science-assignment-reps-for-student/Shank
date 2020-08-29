@@ -19,6 +19,7 @@ public class Comment {
 
     private Integer authorId;
 
+    @Enumerated(EnumType.STRING)
     private AuthorityType authorType;
 
     private Integer boardId;
