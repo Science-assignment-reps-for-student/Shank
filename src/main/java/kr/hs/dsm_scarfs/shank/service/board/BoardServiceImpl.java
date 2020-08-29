@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -233,6 +234,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public ApplicationListResponse searchBoard(String query, Integer classNumber, Pageable page) {
+        page = PageRequest.of(page.getPageNumber()-1, page.getPageSize());
         Page<Board> boardPage = boardRepository.findAllByClassNumberOrderByCreatedAtDesc(classNumber, page);
 
         List<BoardResponse> boardResponse = new ArrayList<>();

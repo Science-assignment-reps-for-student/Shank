@@ -11,6 +11,7 @@ import kr.hs.dsm_scarfs.shank.payload.response.NoticeResponse;
 import kr.hs.dsm_scarfs.shank.service.search.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +57,9 @@ public class NoticeServiceImpl implements NoticeService, SearchService {
 
     @Override
     public ApplicationListResponse searchApplication(String query, Pageable page) {
-        Page<Notice> noticePage = noticeRepository.findAllByTitleContainsOrContentContainsOrderByCreatedAtDesc(query, query, page);
+        page = PageRequest.of(page.getPageNumber()-1, page.getPageSize());
+        Page<Notice> noticePage =
+                noticeRepository.findAllByTitleContainsOrContentContainsOrderByCreatedAtDesc(query, query, page);
 
         List<NoticeResponse> noticeResponses = new ArrayList<>();
 

@@ -18,6 +18,7 @@ import kr.hs.dsm_scarfs.shank.service.search.SearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,7 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
     @Override
     public ApplicationListResponse getAssignmentList(Pageable page) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
+        page = PageRequest.of(page.getPageNumber()-1, page.getPageSize());
 
         String methodName = "findAllByDeadline" + user.getStudentClassNumber() + "AfterOrderByCreatedAtDesc";
         return this.getAssignmentList(
@@ -100,6 +102,7 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
 
     @Override
     public ApplicationListResponse searchApplication(String query, Pageable page) {
+        page = PageRequest.of(page.getPageNumber()-1, page.getPageSize());
         return this.getAssignmentList(
                 assignmentRepository.findAllByTitleContainsOrDescriptionContainsOrderByCreatedAtDesc(query, query, page)
         );
