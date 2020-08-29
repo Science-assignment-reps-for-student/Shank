@@ -42,7 +42,7 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
     @Override
     public ApplicationListResponse getAssignmentList(Pageable page) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
-        page = PageRequest.of(page.getPageNumber()-1, page.getPageSize());
+        page = PageRequest.of(Math.max(0, page.getPageNumber()-1), page.getPageSize());
 
         String methodName = "findAllByDeadline" + user.getStudentClassNumber() + "AfterOrderByCreatedAtDesc";
         return this.getAssignmentList(
@@ -102,7 +102,7 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
 
     @Override
     public ApplicationListResponse searchApplication(String query, Pageable page) {
-        page = PageRequest.of(page.getPageNumber()-1, page.getPageSize());
+        page = PageRequest.of(Math.max(0, page.getPageNumber()-1), page.getPageSize());
         return this.getAssignmentList(
                 assignmentRepository.findAllByTitleContainsOrDescriptionContainsOrderByCreatedAtDesc(query, query, page)
         );

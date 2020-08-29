@@ -234,7 +234,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public ApplicationListResponse searchBoard(String query, Integer classNumber, Pageable page) {
-        page = PageRequest.of(page.getPageNumber()-1, page.getPageSize());
+        page = PageRequest.of(Math.max(0, page.getPageNumber()-1), page.getPageSize());
         Page<Board> boardPage = boardRepository.findAllByClassNumberOrderByCreatedAtDesc(classNumber, page);
 
         List<BoardResponse> boardResponse = new ArrayList<>();

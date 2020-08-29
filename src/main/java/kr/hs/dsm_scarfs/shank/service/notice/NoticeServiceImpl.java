@@ -57,7 +57,7 @@ public class NoticeServiceImpl implements NoticeService, SearchService {
 
     @Override
     public ApplicationListResponse searchApplication(String query, Pageable page) {
-        page = PageRequest.of(page.getPageNumber()-1, page.getPageSize());
+        page = PageRequest.of(Math.max(0, page.getPageNumber()-1), page.getPageSize());
         Page<Notice> noticePage =
                 noticeRepository.findAllByTitleContainsOrContentContainsOrderByCreatedAtDesc(query, query, page);
 
