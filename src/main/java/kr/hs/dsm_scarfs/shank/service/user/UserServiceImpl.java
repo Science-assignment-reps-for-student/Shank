@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -49,6 +50,7 @@ public class UserServiceImpl implements UserService {
     private final AssignmentRepository assignmentRepository;
     private final MemberRepository memberRepository;
 
+    private final PasswordEncoder passwordEncoder;
     private final UserFactory userFactory;
 
     @Override
@@ -68,7 +70,7 @@ public class UserServiceImpl implements UserService {
                Student.builder()
                    .email(signUpRequest.getEmail())
                    .studentNumber(signUpRequest.getNumber())
-                   .password(signUpRequest.getPassword())
+                   .password(passwordEncoder.encode(signUpRequest.getPassword()))
                    .name(signUpRequest.getName())
                    .build()
        );
