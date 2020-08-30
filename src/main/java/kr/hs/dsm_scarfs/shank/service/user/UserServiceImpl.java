@@ -100,8 +100,12 @@ public class UserServiceImpl implements UserService {
         EmailVerification emailVerification = emailVerificationRepository.findById(email)
                 .orElseThrow(InvalidAuthEmailException::new);
 
-        if (!emailVerification.getCode().equals(code))
-            throw new InvalidAuthCodeException();
+        try {
+            if (!emailVerification.getCode().equals(code))
+                throw new InvalidAuthCodeException();
+        } catch (NullPointerException e) {
+            throw new InvalidAuthEmailException();
+        }
 
         emailVerificationRepository.save(emailVerification.verify());
     }
