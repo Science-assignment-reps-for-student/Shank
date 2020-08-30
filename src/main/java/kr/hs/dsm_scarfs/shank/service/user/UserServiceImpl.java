@@ -74,6 +74,8 @@ public class UserServiceImpl implements UserService {
                    .name(signUpRequest.getName())
                    .build()
        );
+
+       authCodeRepository.deleteById(signUpRequest.getNumber());
     }
 
     @Override
