@@ -8,9 +8,9 @@ import kr.hs.dsm_scarfs.shank.entites.user.admin.Admin;
 import kr.hs.dsm_scarfs.shank.entites.user.admin.repository.AdminRepository;
 import kr.hs.dsm_scarfs.shank.entites.board.Board;
 import kr.hs.dsm_scarfs.shank.entites.board.repository.BoardRepository;
-import kr.hs.dsm_scarfs.shank.entites.comment.Cocomment;
+import kr.hs.dsm_scarfs.shank.entites.comment.SubComment;
 import kr.hs.dsm_scarfs.shank.entites.comment.Comment;
-import kr.hs.dsm_scarfs.shank.entites.comment.repository.CocommentRepository;
+import kr.hs.dsm_scarfs.shank.entites.comment.repository.SubCommentRepository;
 import kr.hs.dsm_scarfs.shank.entites.comment.repository.CommentRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
 import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
@@ -31,6 +31,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -46,7 +47,7 @@ public class BoardServiceImpl implements BoardService {
     private final StudentRepository studentRepository;
     private final CommentRepository commentRepository;
     private final ImageFileRepository imageFileRepository;
-    private final CocommentRepository cocommentRepository;
+    private final SubCommentRepository subCommentRepository;
 
     private final AuthenticationFacade authenticationFacade;
     private final UserFactory userFactory;
@@ -70,7 +71,8 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(ApplicationNotFoundException::new);
 
-        if (!user.getStudentClassNumber().equals(board.getClassNumber()))
+        if (user.getType().equals(AuthorityType.STUDENT) &&
+                !user.getStudentClassNumber().equals(board.getClassNumber()))
             throw new PermissionDeniedException();
 
         Admin admin = adminRepository.findById(board.getAdminId())
@@ -99,7 +101,7 @@ public class BoardServiceImpl implements BoardService {
                     .orElseGet(() -> userFactory.getDefaultUser(Student.class));
 
             List<BoardCocommentsResponse> cocommentsResponses = new ArrayList<>();
-            for (Cocomment coco : cocommentRepository.findAllByCommentId(co.getId())) {
+            for (SubComment coco : subCommentRepository.findAllByCommentId(co.getId())) {
                 User cocommentWriter;
                 if (coco.getAuthorType().equals(AuthorityType.ADMIN))
                     cocommentWriter = adminRepository.findById(co.getAuthorId())
@@ -152,6 +154,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional
     public void deleteBoard(Integer boardId) {
        boardRepository.findById(boardId)
                 .orElseThrow(ApplicationNotFoundException::new);
