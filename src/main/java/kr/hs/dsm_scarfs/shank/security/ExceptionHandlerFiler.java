@@ -21,6 +21,7 @@ public class ExceptionHandlerFiler extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         }catch (ServletException | IOException e) {
+            e.printStackTrace();
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.getWriter().write("{\"status\": 401, \"message\": \"Authentication is required and has failed or has not yet been provided.\"}");

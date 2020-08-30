@@ -29,17 +29,17 @@ public class CommentController {
 
     @PostMapping("/sub/{commentId}")
     public void postCocomment(@PathVariable Integer commentId, @RequestBody CommentRequest commentRequest) {
-        commentService.postCocomment(commentId, commentRequest);
+        commentService.postSubComment(commentId, commentRequest);
     }
 
     @PutMapping("/sub/{cocommentId}")
     public void chageCocomment(@PathVariable Integer cocommentId, @RequestBody CommentRequest commentRequest) {
-        commentService.changeCocomment(cocommentId, commentRequest);
+        commentService.changeSubComment(cocommentId, commentRequest);
     }
 
     @DeleteMapping("/sub/{cocommentId}")
     public void deleteCocomment(@PathVariable Integer cocommentId) {
-        commentService.deleteCocomment(cocommentId);
+        commentService.deleteSubComment(cocommentId);
     }
 
 }

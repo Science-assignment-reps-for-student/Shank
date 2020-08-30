@@ -1,9 +1,9 @@
 package kr.hs.dsm_scarfs.shank.service.comment;
 
 import kr.hs.dsm_scarfs.shank.entites.board.repository.BoardRepository;
-import kr.hs.dsm_scarfs.shank.entites.comment.Cocomment;
+import kr.hs.dsm_scarfs.shank.entites.comment.SubComment;
 import kr.hs.dsm_scarfs.shank.entites.comment.Comment;
-import kr.hs.dsm_scarfs.shank.entites.comment.repository.CocommentRepository;
+import kr.hs.dsm_scarfs.shank.entites.comment.repository.SubCommentRepository;
 import kr.hs.dsm_scarfs.shank.entites.comment.repository.CommentRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.User;
 import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
@@ -16,18 +16,19 @@ import kr.hs.dsm_scarfs.shank.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class CommentServiceImpl implements CommentService{
+public class CommentServiceImpl implements CommentService {
 
     private final AuthenticationFacade authenticationFacade;
     private final UserFactory userFactory;
 
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
-    private final CocommentRepository cocommentRepository;
+    private final SubCommentRepository subCommentRepository;
 
     @Override
     public void postComment(Integer boardId, CommentRequest commentRequest) {
@@ -50,15 +51,15 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public void postCocomment(Integer commentId, CommentRequest commentRequest) {
+    public void postSubComment(Integer commentId, CommentRequest commentRequest) {
         AuthorityType authorityType = authenticationFacade.getAuthorityType();
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
 
-        cocommentRepository.save(
-                Cocomment.builder()
+        subCommentRepository.save(
+                SubComment.builder()
                     .content(commentRequest.getContent())
                     .commentId(commentId)
                     .createdAt(LocalDateTime.now())
@@ -83,19 +84,20 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public void changeCocomment(Integer cocommentId, CommentRequest commentRequest) {
+    public void changeSubComment(Integer subCommentId, CommentRequest commentRequest) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
-        Cocomment cocomment = cocommentRepository.findById(cocommentId)
+        SubComment subComment = subCommentRepository.findById(subCommentId)
                 .orElseThrow(CommentNotFoundException::new);
 
-        if (!user.getType().equals(cocomment.getAuthorType()) || !user.getId().equals(cocomment.getAuthorId()))
+        if (!user.getType().equals(subComment.getAuthorType()) || !user.getId().equals(subComment.getAuthorId()))
             throw new PermissionDeniedException();
 
-        cocommentRepository.save(cocomment.updateContent(commentRequest.getContent()));
+        subCommentRepository.save(subComment.updateContent(commentRequest.getContent()));
     }
 
     @Override
+    @Transactional
     public void deleteComment(Integer commentId) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
@@ -105,21 +107,21 @@ public class CommentServiceImpl implements CommentService{
         if (!user.getType().equals(comment.getAuthorType()) || !user.getId().equals(comment.getAuthorId()))
             throw new PermissionDeniedException();
 
-        cocommentRepository.deleteAllByCommentId(commentId);
+        subCommentRepository.deleteAllByCommentId(commentId);
         commentRepository.delete(comment);
     }
 
     @Override
-    public void deleteCocomment(Integer cocommentId) {
+    public void deleteSubComment(Integer subCommentId) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
-        Cocomment cocomment = cocommentRepository.findById(cocommentId)
+        SubComment subComment = subCommentRepository.findById(subCommentId)
                 .orElseThrow(CommentNotFoundException::new);
 
-        if (!user.getType().equals(cocomment.getAuthorType()) || !user.getId().equals(cocomment.getAuthorId()))
+        if (!user.getType().equals(subComment.getAuthorType()) || !user.getId().equals(subComment.getAuthorId()))
             throw new PermissionDeniedException();
 
-        cocommentRepository.delete(cocomment);
+        subCommentRepository.delete(subComment);
     }
 
 }

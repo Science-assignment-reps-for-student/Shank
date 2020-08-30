@@ -8,10 +8,10 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-@Entity
+@Entity(name = "cocomment")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Cocomment {
+public class SubComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +30,7 @@ public class Cocomment {
 
     private LocalDateTime updateAt;
 
-    public Cocomment updateContent(String content) {
+    public SubComment updateContent(String content) {
         this.content = content;
         this.updateAt = LocalDateTime.now();
         return this;
