@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class EvaluationServiceImpl implements EvaluationService {
     private final MemberRepository memberRepository;
 
     @Override
-    public void personalEvaluation(SelfEvaluationRequest selfEvaluationRequest) {
+    public void selfEvaluation(SelfEvaluationRequest selfEvaluationRequest) {
         Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
@@ -55,13 +56,13 @@ public class EvaluationServiceImpl implements EvaluationService {
                     .attitude(selfEvaluationRequest.getAttitude())
                     .communication(selfEvaluationRequest.getCommunication())
                     .scientificAccuracy(selfEvaluationRequest.getScientificAccuracy())
-                    .createdAt(LocalDateTime.now())
+                    .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                     .build()
         );
     }
 
     @Override
-    public void teamEvaluation(MutualEvaluationRequest mutualEvaluationRequest) {
+    public void mutualEvaluation(MutualEvaluationRequest mutualEvaluationRequest) {
         Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
@@ -87,7 +88,7 @@ public class EvaluationServiceImpl implements EvaluationService {
                     .targetId(targetId)
                     .communication(mutualEvaluationRequest.getCommunication())
                     .cooperation(mutualEvaluationRequest.getCooperation())
-                    .createdAt(LocalDateTime.now())
+                    .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                     .build()
         );
     }
@@ -135,7 +136,7 @@ public class EvaluationServiceImpl implements EvaluationService {
     }
 
     @Override
-    public SelfEvaluationResponse personalEvaluationInfo(Integer assignmentId) {
+    public SelfEvaluationResponse selfEvaluationInfo(Integer assignmentId) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         SelfEvaluation selfEvaluation = selfEvaluationRepository.findByAssignmentIdAndStudentId(assignmentId, user.getId())
@@ -150,7 +151,7 @@ public class EvaluationServiceImpl implements EvaluationService {
     }
 
     @Override
-    public MutualEvaluationInfo teamEvaluationInfo(Integer assignmentId, Integer targetId) {
+    public MutualEvaluationInfo mutualEvaluationInfo(Integer assignmentId, Integer targetId) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         MutualEvaluation mutualEvaluation =

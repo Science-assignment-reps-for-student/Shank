@@ -34,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -181,7 +182,7 @@ public class BoardServiceImpl implements BoardService {
                         .adminId(admin.getId())
                         .content(content)
                         .classNumber(Integer.parseInt(classNumber))
-                        .createdAt(LocalDateTime.now())
+                        .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                         .view(0)
                         .build()
         );

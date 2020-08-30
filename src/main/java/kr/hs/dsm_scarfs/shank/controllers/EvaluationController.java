@@ -25,22 +25,22 @@ public class EvaluationController {
 
     @GetMapping("/info/personal/{assignmentId}")
     public SelfEvaluationResponse selfEvaluationInfo(@PathVariable Integer assignmentId) {
-        return evaluationService.personalEvaluationInfo(assignmentId);
+        return evaluationService.selfEvaluationInfo(assignmentId);
     }
 
     @GetMapping("/info/team/{assignmentId}")
     public MutualEvaluationInfo targetEvaluationInfo(@PathVariable Integer assignmentId, @RequestParam Integer targetId) {
-        return evaluationService.teamEvaluationInfo(assignmentId, targetId);
+        return evaluationService.mutualEvaluationInfo(assignmentId, targetId);
     }
 
     @PostMapping("/personal")
     public void selfEvaluation(@RequestBody SelfEvaluationRequest selfEvaluationRequest) {
-        evaluationService.personalEvaluation(selfEvaluationRequest);
+        evaluationService.selfEvaluation(selfEvaluationRequest);
     }
 
     @PostMapping("/team")
     public void mutualEvaluation(@RequestBody MutualEvaluationRequest mutualEvaluationRequest) {
-        evaluationService.teamEvaluation(mutualEvaluationRequest);
+        evaluationService.mutualEvaluation(mutualEvaluationRequest);
     }
 
 }

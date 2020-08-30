@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Getter
 @Builder
@@ -32,7 +33,7 @@ public class SubComment {
 
     public SubComment updateContent(String content) {
         this.content = content;
-        this.updateAt = LocalDateTime.now();
+        this.updateAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         return this;
     }
 

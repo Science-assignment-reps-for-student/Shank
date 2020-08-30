@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Service
 @RequiredArgsConstructor
@@ -41,9 +42,9 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.save(
                 Comment.builder()
                     .content(commentRequest.getContent())
-                    .createdAt(LocalDateTime.now())
+                    .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                     .boardId(boardId)
-                    .updateAt(LocalDateTime.now())
+                    .updateAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                     .authorType(authorityType)
                     .authorId(user.getId())
                     .build()
@@ -62,8 +63,8 @@ public class CommentServiceImpl implements CommentService {
                 SubComment.builder()
                     .content(commentRequest.getContent())
                     .commentId(commentId)
-                    .createdAt(LocalDateTime.now())
-                    .updateAt(LocalDateTime.now())
+                    .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                    .updateAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                     .authorType(authorityType)
                     .authorId(user.getId())
                     .build()

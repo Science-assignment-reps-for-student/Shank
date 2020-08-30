@@ -9,9 +9,9 @@ import kr.hs.dsm_scarfs.shank.payload.response.MutualEvaluationInfo;
 import java.util.List;
 
 public interface EvaluationService {
-    void personalEvaluation(SelfEvaluationRequest selfEvaluationRequest);
-    void teamEvaluation(MutualEvaluationRequest mutualEvaluationRequest);
+    void selfEvaluation(SelfEvaluationRequest selfEvaluationRequest);
+    void mutualEvaluation(MutualEvaluationRequest mutualEvaluationRequest);
     List<EvaluationResponse> getEvaluationInfo(Integer assignmentId);
-    SelfEvaluationResponse personalEvaluationInfo(Integer assignmentId);
-    MutualEvaluationInfo teamEvaluationInfo(Integer assignmentId, Integer targetId);
+    SelfEvaluationResponse selfEvaluationInfo(Integer assignmentId);
+    MutualEvaluationInfo mutualEvaluationInfo(Integer assignmentId, Integer targetId);
 }
