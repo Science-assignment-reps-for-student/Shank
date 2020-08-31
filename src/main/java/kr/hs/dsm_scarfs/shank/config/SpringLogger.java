@@ -26,8 +26,6 @@ public class SpringLogger implements Filter {
         Date date = new Date();
         SimpleDateFormat DateFor = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
         String stringDate= DateFor.format(date);
-        String info = "INFO";
-        String warn = "WARN";
         String param = "";
         if (req.getQueryString() != null)
             param = "?" + req.getQueryString();
@@ -35,9 +33,8 @@ public class SpringLogger implements Filter {
         try {
             chain.doFilter(request, response);
             System.out.printf(
-                    "%s %s - %s - [%s %s%s] %s%n",
+                    "%s INFO - %s - [%s %s%s] %s%n",
                     stringDate,
-                    info,
                     req.getHeader("X-Real-IP"),
                     req.getMethod(),
                     req.getRequestURI(),
@@ -48,14 +45,14 @@ public class SpringLogger implements Filter {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.printf(
-                    "%s %s - %s - [%s %s%s] %s%n",
+                    "%s WARN - %s - [%s %s%s] %s : %s%n",
                     stringDate,
-                    warn,
-                    req.getRemoteHost(),
+                    req.getHeader("X-Real-IP"),
                     req.getMethod(),
                     req.getRequestURI(),
                     param,
-                    res.getStatus()
+                    res.getStatus(),
+                    e.getMessage()
             );
         }
     }
