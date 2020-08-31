@@ -101,24 +101,25 @@ public class BoardServiceImpl implements BoardService {
                 commentWriter = studentRepository.findById(co.getAuthorId())
                     .orElseGet(() -> userFactory.getDefaultUser(Student.class));
 
-            List<BoardCocommentsResponse> cocommentsResponses = new ArrayList<>();
-            for (SubComment coco : subCommentRepository.findAllByCommentId(co.getId())) {
-                User cocommentWriter;
-                if (coco.getAuthorType().equals(AuthorityType.ADMIN))
-                    cocommentWriter = adminRepository.findById(co.getAuthorId())
+            List<BoardCocommentsResponse> subCommentsResponses = new ArrayList<>();
+            for (SubComment subComment : subCommentRepository.findAllByCommentId(co.getId())) {
+                User subCommentWriter;
+                if (subComment.getAuthorType().equals(AuthorityType.ADMIN))
+                    subCommentWriter = adminRepository.findById(co.getAuthorId())
                             .orElseGet(() -> userFactory.getDefaultUser(Admin.class));
                 else
-                    cocommentWriter = studentRepository.findById(co.getAuthorId())
+                    subCommentWriter = studentRepository.findById(co.getAuthorId())
                             .orElseGet(() -> userFactory.getDefaultUser(Student.class));
 
-                cocommentsResponses.add(
+                subCommentsResponses.add(
                         BoardCocommentsResponse.builder()
-                            .cocommentId(coco.getId())
-                            .content(coco.getContent())
-                            .createdAt(coco.getUpdateAt())
-                            .studentNumber(cocommentWriter.getStudentNumber())
-                            .writerName(cocommentWriter.getName())
-                            .isMine(user.equals(cocommentWriter))
+                            .cocommentId(subComment.getId())
+                            .content(subComment.getContent())
+                            .createdAt(subComment.getUpdateAt())
+                            .studentNumber(subCommentWriter.getStudentNumber())
+                            .writerName(subCommentWriter.getName())
+                            .type(subCommentWriter.getType())
+                            .isMine(user.equals(subCommentWriter))
                             .build()
                 );
             }
@@ -129,9 +130,10 @@ public class BoardServiceImpl implements BoardService {
                         .content(co.getContent())
                         .studentNumber(commentWriter.getStudentNumber())
                         .writerName(commentWriter.getName())
+                        .type(commentWriter.getType())
                         .createdAt(co.getUpdateAt())
                         .isMine(user.equals(commentWriter))
-                        .cocomments(cocommentsResponses)
+                        .cocomments(subCommentsResponses)
                         .build()
             );
         }
