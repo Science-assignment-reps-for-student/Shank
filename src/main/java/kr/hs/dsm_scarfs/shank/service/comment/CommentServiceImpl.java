@@ -72,7 +72,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void changeComment(Integer commentId, CommentRequest commentRequest) {
+    public Integer changeComment(Integer commentId, CommentRequest commentRequest) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         Comment comment = commentRepository.findById(commentId)
@@ -82,10 +82,12 @@ public class CommentServiceImpl implements CommentService {
             throw new PermissionDeniedException();
 
         commentRepository.save(comment.updateContent(commentRequest.getContent()));
+
+        return commentId;
     }
 
     @Override
-    public void changeSubComment(Integer subCommentId, CommentRequest commentRequest) {
+    public Integer changeSubComment(Integer subCommentId, CommentRequest commentRequest) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         SubComment subComment = subCommentRepository.findById(subCommentId)
@@ -95,6 +97,8 @@ public class CommentServiceImpl implements CommentService {
             throw new PermissionDeniedException();
 
         subCommentRepository.save(subComment.updateContent(commentRequest.getContent()));
+
+        return subCommentId;
     }
 
     @Override

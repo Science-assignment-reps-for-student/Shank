@@ -36,11 +36,11 @@ public class BoardController {
     }
 
     @PutMapping("/{boardId}")
-    public void changeBoard(@PathVariable Integer boardId,
+    public Integer changeBoard(@PathVariable Integer boardId,
                             @RequestParam String title,
                             @RequestParam String content,
                             MultipartFile[] images) {
-        boardService.changeBoard(boardId, title, content, images);
+        return boardService.changeBoard(boardId, title, content, images);
     }
 
 

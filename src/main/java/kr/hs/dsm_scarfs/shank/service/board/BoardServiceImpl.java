@@ -206,7 +206,7 @@ public class BoardServiceImpl implements BoardService {
 
     @SneakyThrows
     @Override
-    public void changeBoard(Integer boardId, String title, String content, MultipartFile[] images) {
+    public Integer changeBoard(Integer boardId, String title, String content, MultipartFile[] images) {
         adminRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(PermissionDeniedException::new);
 
@@ -236,6 +236,7 @@ public class BoardServiceImpl implements BoardService {
             file.transferTo(new File(imageDirPath, fileName));
         }
 
+        return boardId;
     }
 
     @Override

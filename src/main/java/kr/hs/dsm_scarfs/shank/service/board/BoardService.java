@@ -10,6 +10,6 @@ public interface BoardService {
     BoardContentResponse getBoardContent(Integer boardId);
     void deleteBoard(Integer boardId);
     Integer writeBoard(String title, String content, String classNumber, MultipartFile[] files);
-    void changeBoard(Integer boardId, String title, String content, MultipartFile[] images);
+    Integer changeBoard(Integer boardId, String title, String content, MultipartFile[] images);
     ApplicationListResponse searchBoard(String query, Integer classNumber, Pageable page);
 }

@@ -18,8 +18,8 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public void chageComment(@PathVariable Integer commentId, @RequestBody CommentRequest commentRequest) {
-        commentService.changeComment(commentId, commentRequest);
+    public Integer changeComment(@PathVariable Integer commentId, @RequestBody CommentRequest commentRequest) {
+        return commentService.changeComment(commentId, commentRequest);
     }
 
     @DeleteMapping("/{commentId}")
@@ -28,17 +28,17 @@ public class CommentController {
     }
 
     @PostMapping("/sub/{commentId}")
-    public void postCocomment(@PathVariable Integer commentId, @RequestBody CommentRequest commentRequest) {
+    public void postSubComment(@PathVariable Integer commentId, @RequestBody CommentRequest commentRequest) {
         commentService.postSubComment(commentId, commentRequest);
     }
 
     @PutMapping("/sub/{cocommentId}")
-    public void chageCocomment(@PathVariable Integer cocommentId, @RequestBody CommentRequest commentRequest) {
-        commentService.changeSubComment(cocommentId, commentRequest);
+    public Integer changeSubComment(@PathVariable Integer cocommentId, @RequestBody CommentRequest commentRequest) {
+        return commentService.changeSubComment(cocommentId, commentRequest);
     }
 
     @DeleteMapping("/sub/{cocommentId}")
-    public void deleteCocomment(@PathVariable Integer cocommentId) {
+    public void deleteSubComment(@PathVariable Integer cocommentId) {
         commentService.deleteSubComment(cocommentId);
     }
 
