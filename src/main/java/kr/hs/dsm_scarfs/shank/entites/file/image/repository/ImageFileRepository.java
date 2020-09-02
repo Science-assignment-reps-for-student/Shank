@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface ImageFileRepository extends CrudRepository<ImageFile, Integer> {
     void deleteByBoardId(Integer boardId);
-    List<ImageFile> findByBoardId(Integer boardId);
+    List<ImageFile> findByBoardIdOrderById(Integer boardId);
 }

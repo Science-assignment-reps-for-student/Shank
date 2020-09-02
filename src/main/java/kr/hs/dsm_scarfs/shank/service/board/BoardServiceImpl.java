@@ -89,7 +89,7 @@ public class BoardServiceImpl implements BoardService {
                 .orElseGet(() -> Board.builder().build());
 
         List<String> imageNames = new ArrayList<>();
-        for (ImageFile imageFile : imageFileRepository.findByBoardId(boardId))
+        for (ImageFile imageFile : imageFileRepository.findByBoardIdOrderById(boardId))
             imageNames.add(imageFile.getFileName());
 
         for (Comment co : comment) {
@@ -216,7 +216,7 @@ public class BoardServiceImpl implements BoardService {
 
         boardRepository.save(board.update(title, content));
 
-        List<ImageFile> imageFiles = imageFileRepository.findByBoardId(boardId);
+        List<ImageFile> imageFiles = imageFileRepository.findByBoardIdOrderById(boardId);
 
         for (ImageFile imageFile : imageFiles) {
             new File(imageDirPath, imageFile.getFileName()).deleteOnExit();
