@@ -52,7 +52,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void postSubComment(Integer commentId, CommentRequest commentRequest) {
+    public Integer postSubComment(Integer commentId, CommentRequest commentRequest) {
         AuthorityType authorityType = authenticationFacade.getAuthorityType();
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
@@ -69,6 +69,8 @@ public class CommentServiceImpl implements CommentService {
                     .authorId(user.getId())
                     .build()
         );
+
+        return commentId;
     }
 
     @Override

@@ -32,9 +32,9 @@ public class CommentController {
     }
 
     @PostMapping("/sub/{commentId}")
-    public void postSubComment(@PathVariable Integer commentId,
+    public Integer postSubComment(@PathVariable Integer commentId,
                                @RequestBody @Valid CommentRequest commentRequest) {
-        commentService.postSubComment(commentId, commentRequest);
+        return commentService.postSubComment(commentId, commentRequest);
     }
 
     @PutMapping("/sub/{subCommentId}")
