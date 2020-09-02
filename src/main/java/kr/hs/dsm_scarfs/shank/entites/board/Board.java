@@ -28,9 +28,9 @@ public class Board {
 
     private Integer adminId;
 
-    private LocalDateTime updatedAt;
-
     private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
     private Integer view;
 

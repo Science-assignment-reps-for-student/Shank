@@ -143,7 +143,7 @@ public class BoardServiceImpl implements BoardService {
         return BoardContentResponse.builder()
                     .title(board.getTitle())
                     .writerName(admin.getName())
-                    .createdAt(board.getCreatedAt())
+                    .createdAt(board.getUpdatedAt())
                     .view(board.getView())
                     .content(board.getContent())
                     .classNumber(board.getClassNumber())
@@ -185,6 +185,7 @@ public class BoardServiceImpl implements BoardService {
                         .content(content)
                         .classNumber(Integer.parseInt(classNumber))
                         .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                        .updatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                         .view(0)
                         .build()
         );
@@ -258,7 +259,7 @@ public class BoardServiceImpl implements BoardService {
                             .title(board.getTitle())
                             .name(admin.getName())
                             .preViewContent(preViewContent)
-                            .createdAt(board.getCreatedAt())
+                            .createdAt(board.getUpdatedAt())
                             .build()
             );
         }
