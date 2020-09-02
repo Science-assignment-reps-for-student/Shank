@@ -32,6 +32,7 @@ public class SpringLogger implements Filter {
 
         try {
             chain.doFilter(request, response);
+
             System.out.printf(
                     "%s INFO - %s - [%s %s%s] %s%n",
                     stringDate,
@@ -43,7 +44,6 @@ public class SpringLogger implements Filter {
             );
 
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.printf(
                     "%s WARN - %s - [%s %s%s] %s : %s%n",
                     stringDate,
