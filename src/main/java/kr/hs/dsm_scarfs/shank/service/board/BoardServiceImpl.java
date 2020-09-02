@@ -207,6 +207,7 @@ public class BoardServiceImpl implements BoardService {
 
     @SneakyThrows
     @Override
+    @Transactional
     public Integer changeBoard(Integer boardId, String title, String content, MultipartFile[] images) {
         adminRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(PermissionDeniedException::new);
