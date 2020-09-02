@@ -79,7 +79,7 @@ public class BoardServiceImpl implements BoardService {
         Admin admin = adminRepository.findById(board.getAdminId())
                 .orElseThrow(UserNotLeaderException::new);
 
-        List<Comment> comment = commentRepository.findAllByBoardId(boardId);
+        List<Comment> comment = commentRepository.findAllByBoardIdOrderByIdAsc(boardId);
         List<BoardCommentsResponse> commentsResponses = new ArrayList<>();
 
         Board nextBoard = boardRepository.findTop1ByIdAfterAndClassNumberOrderByIdAsc(boardId, board.getClassNumber())
@@ -102,7 +102,7 @@ public class BoardServiceImpl implements BoardService {
                     .orElseGet(() -> userFactory.getDefaultUser(Student.class));
 
             List<BoardCocommentsResponse> subCommentsResponses = new ArrayList<>();
-            for (SubComment subComment : subCommentRepository.findAllByCommentId(co.getId())) {
+            for (SubComment subComment : subCommentRepository.findAllByCommentIdOrderByIdAsc(co.getId())) {
                 User subCommentWriter;
                 if (subComment.getAuthorType().equals(AuthorityType.ADMIN))
                     subCommentWriter = adminRepository.findById(subComment.getAuthorId())
@@ -165,7 +165,7 @@ public class BoardServiceImpl implements BoardService {
         adminRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
-        for (Comment comment : commentRepository.findAllByBoardId(boardId))
+        for (Comment comment : commentRepository.findAllByBoardIdOrderByIdAsc(boardId))
             commentService.deleteComment(comment.getId());
 
         imageFileRepository.deleteByBoardId(boardId);

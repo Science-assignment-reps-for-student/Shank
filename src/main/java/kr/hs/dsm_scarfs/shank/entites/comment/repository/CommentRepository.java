@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface CommentRepository extends CrudRepository<Comment, Integer> {
-    List<Comment> findAllByBoardId(Integer boardId);
+    List<Comment> findAllByBoardIdOrderByIdAsc(Integer boardId);
 }
