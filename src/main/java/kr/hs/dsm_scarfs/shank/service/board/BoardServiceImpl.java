@@ -105,10 +105,10 @@ public class BoardServiceImpl implements BoardService {
             for (SubComment subComment : subCommentRepository.findAllByCommentId(co.getId())) {
                 User subCommentWriter;
                 if (subComment.getAuthorType().equals(AuthorityType.ADMIN))
-                    subCommentWriter = adminRepository.findById(co.getAuthorId())
+                    subCommentWriter = adminRepository.findById(subComment.getAuthorId())
                             .orElseGet(() -> userFactory.getDefaultUser(Admin.class));
                 else
-                    subCommentWriter = studentRepository.findById(co.getAuthorId())
+                    subCommentWriter = studentRepository.findById(subComment.getAuthorId())
                             .orElseGet(() -> userFactory.getDefaultUser(Student.class));
 
                 subCommentsResponses.add(
