@@ -33,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.File;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -156,10 +157,11 @@ public class BoardServiceImpl implements BoardService {
                     .build();
     }
 
+    @SneakyThrows
     @Override
     @Transactional
     public void deleteBoard(Integer boardId) {
-       boardRepository.findById(boardId)
+        boardRepository.findById(boardId)
                 .orElseThrow(ApplicationNotFoundException::new);
 
         adminRepository.findByEmail(authenticationFacade.getUserEmail())
@@ -167,6 +169,9 @@ public class BoardServiceImpl implements BoardService {
 
         for (Comment comment : commentRepository.findAllByBoardIdOrderByIdAsc(boardId))
             commentService.deleteComment(comment.getId());
+
+        for (ImageFile imageFile : imageFileRepository.findByBoardIdOrderById(boardId))
+            Files.delete(new File(imageDirPath, imageFile.getFileName()).toPath());
 
         imageFileRepository.deleteByBoardId(boardId);
         boardRepository.deleteById(boardId);
@@ -220,7 +225,7 @@ public class BoardServiceImpl implements BoardService {
         List<ImageFile> imageFiles = imageFileRepository.findByBoardIdOrderById(boardId);
 
         for (ImageFile imageFile : imageFiles) {
-            new File(imageDirPath, imageFile.getFileName()).deleteOnExit();
+            Files.delete(new File(imageDirPath, imageFile.getFileName()).toPath());
         }
 
         imageFileRepository.deleteByBoardId(boardId);
