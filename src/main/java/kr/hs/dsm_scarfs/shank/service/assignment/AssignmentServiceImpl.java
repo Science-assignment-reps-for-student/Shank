@@ -67,7 +67,7 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
         Assignment nextAssignment = assignmentRepository.findTop1ByIdAfterOrderByIdAsc(homeworkId)
                 .orElseGet(() -> Assignment.builder().build());
 
-        Assignment preAssignment = assignmentRepository.findTop1ByIdBeforeOrderByIdAsc(homeworkId)
+        Assignment preAssignment = assignmentRepository.findTop1ByIdBeforeOrderByIdDesc(homeworkId)
                 .orElseGet(() -> Assignment.builder().build());
 
         Optional<Member> member = memberRepository.findByStudentIdAndAssignmentId(user.getId(), assignment.getId());
@@ -149,6 +149,7 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
         return ApplicationListResponse.builder()
                 .totalElements(totalElement)
                 .totalPages(totalPage)
+                .classNumber(user.getStudentClassNumber())
                 .applicationResponses(assignmentResponses)
                 .build();
     }

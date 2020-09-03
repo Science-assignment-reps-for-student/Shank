@@ -13,7 +13,7 @@ public class ApplicationListResponse {
 
     private Integer totalPages;
 
-    private Integer class_number;
+    private Integer classNumber;
 
     private List applicationResponses;
 
