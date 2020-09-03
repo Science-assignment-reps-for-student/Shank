@@ -22,7 +22,7 @@ public interface AssignmentRepository extends CrudRepository<Assignment, Integer
 
     Page<Assignment> findAllByTitleContainsOrDescriptionContainsOrderByCreatedAtDesc(String tileQuery, String descriptionQuery, Pageable page);
 
-    Optional<Assignment> findTop1ByIdBeforeOrderByIdAsc(Integer id);
+    Optional<Assignment> findTop1ByIdBeforeOrderByIdDesc(Integer id);
 
     Optional<Assignment> findTop1ByIdAfterOrderByIdAsc(Integer id);
 }
