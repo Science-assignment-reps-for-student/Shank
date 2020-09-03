@@ -9,6 +9,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotBlank;
+
 @RestController
 @RequestMapping("/board")
 @RequiredArgsConstructor
@@ -24,7 +26,7 @@ public class BoardController {
 
     @PostMapping
     public Integer writeBoard(@RequestParam String title,
-                           @RequestParam String content,
+                           @RequestParam @NotBlank String content,
                            @RequestParam("class_number") String classNumber,
                            MultipartFile[] images) {
         return boardService.writeBoard(title, content, classNumber, images);
@@ -38,7 +40,7 @@ public class BoardController {
     @PutMapping("/{boardId}")
     public Integer changeBoard(@PathVariable Integer boardId,
                             @RequestParam String title,
-                            @RequestParam String content,
+                            @RequestParam @NotBlank String content,
                             MultipartFile[] images) {
         return boardService.changeBoard(boardId, title, content, images);
     }
