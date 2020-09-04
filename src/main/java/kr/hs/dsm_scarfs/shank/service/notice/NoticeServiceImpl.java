@@ -45,7 +45,7 @@ public class NoticeServiceImpl implements NoticeService, SearchService {
         Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(ApplicationNotFoundException::new);
 
-        Notice preNotice = noticeRepository.findTop1ByIdBeforeOrderByIdAsc(noticeId)
+        Notice preNotice = noticeRepository.findTop1ByIdBeforeOrderByIdDesc(noticeId)
                 .orElseGet(() -> Notice.builder().build());
 
         Notice nextNotice = noticeRepository.findTop1ByIdAfterOrderByIdAsc(noticeId)
