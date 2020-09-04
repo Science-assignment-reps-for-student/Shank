@@ -9,4 +9,5 @@ public interface NoticeService {
     ApplicationListResponse getNoticeList(Pageable page);
     NoticeContentResponse getNoticeContent(Integer noticeId);
     Integer writeNotice(NoticeRequest noticeRequest);
+    ApplicationListResponse searchNotice(String query, Pageable page);
 }

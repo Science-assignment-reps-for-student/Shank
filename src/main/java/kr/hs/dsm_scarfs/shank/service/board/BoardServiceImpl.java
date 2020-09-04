@@ -248,7 +248,11 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public ApplicationListResponse searchBoard(String query, Integer classNumber, Pageable page) {
+        User user = userFactory.getUser(authenticationFacade.getUserEmail());
         page = PageRequest.of(Math.max(0, page.getPageNumber()-1), page.getPageSize());
+
+        if (user.getType().equals(AuthorityType.STUDENT))
+            classNumber = user.getStudentClassNumber();
         Page<Board> boardPage = boardRepository.findAllByClassNumberOrderByCreatedAtDesc(classNumber, page);
 
         List<BoardResponse> boardResponse = new ArrayList<>();

@@ -28,7 +28,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class NoticeServiceImpl implements NoticeService, SearchService {
+public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeRepository noticeRepository;
 
@@ -37,7 +37,7 @@ public class NoticeServiceImpl implements NoticeService, SearchService {
 
     @Override
     public ApplicationListResponse getNoticeList(Pageable page) {
-        return this.searchApplication("", page);
+        return this.searchNotice("", page);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class NoticeServiceImpl implements NoticeService, SearchService {
     }
 
     @Override
-    public ApplicationListResponse searchApplication(String query, Pageable page) {
+    public ApplicationListResponse searchNotice(String query, Pageable page) {
         page = PageRequest.of(Math.max(0, page.getPageNumber()-1), page.getPageSize());
         Page<Notice> noticePage =
                 noticeRepository.findAllByTitleContainsOrContentContainsOrderByCreatedAtDesc(query, query, page);

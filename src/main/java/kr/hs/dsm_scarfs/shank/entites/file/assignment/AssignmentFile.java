@@ -13,7 +13,7 @@ import javax.persistence.Id;
 public class AssignmentFile {
 
     @Id
-    private Integer assignmentId;
+    private Integer id;
 
     private String fileName;
 

@@ -7,4 +7,5 @@ import org.springframework.data.domain.Pageable;
 public interface AssignmentService {
     ApplicationListResponse getAssignmentList(Integer classNumber, Pageable page);
     AssignmentContentResponse getAssignmentContent(Integer assignment);
+    ApplicationListResponse searchAssignment(String query, Pageable page);
 }

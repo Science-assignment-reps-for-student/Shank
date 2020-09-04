@@ -11,6 +11,7 @@ public enum ErrorCode {
     EXPIRED_AUTH_CODE(400,"Expired Auth Code"),
     INVALID_AUTH_EMAIL(400,"Invalid Auth Email"),
     INVALID_CLASS_NUMBER(400,"Invalid Class Number"),
+    INVALID_SEARCH_TYPE(400,"Invalid Search Type"),
     INVALID_TOKEN(401,"Invalid Token"),
     EXPIRED_TOKEN(401,"Expired Token"),
     USER_NOT_LEADER(401, "User Not Leader"),

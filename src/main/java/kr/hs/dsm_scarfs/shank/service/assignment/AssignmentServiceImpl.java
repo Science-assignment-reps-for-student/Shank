@@ -30,7 +30,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class AssignmentServiceImpl implements AssignmentService, SearchService {
+public class AssignmentServiceImpl implements AssignmentService {
 
     private final AuthenticationFacade authenticationFacade;
     private final UserFactory userFactory;
@@ -107,7 +107,7 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
     }
 
     @Override
-    public ApplicationListResponse searchApplication(String query, Pageable page) {
+    public ApplicationListResponse searchAssignment(String query, Pageable page) {
         page = PageRequest.of(Math.max(0, page.getPageNumber()-1), page.getPageSize());
         return this.getAssignmentList(null,
                 assignmentRepository.findAllByTitleContainsOrDescriptionContainsOrderByCreatedAtDesc(query, query, page)
