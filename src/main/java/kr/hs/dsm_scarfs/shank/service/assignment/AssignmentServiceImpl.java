@@ -13,6 +13,7 @@ import kr.hs.dsm_scarfs.shank.exceptions.ApplicationNotFoundException;
 import kr.hs.dsm_scarfs.shank.payload.response.ApplicationListResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.AssignmentContentResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.AssignmentResponse;
+import kr.hs.dsm_scarfs.shank.security.AuthorityType;
 import kr.hs.dsm_scarfs.shank.security.auth.AuthenticationFacade;
 import kr.hs.dsm_scarfs.shank.service.search.SearchService;
 import lombok.RequiredArgsConstructor;
@@ -40,11 +41,16 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
 
     @SneakyThrows
     @Override
-    public ApplicationListResponse getAssignmentList(Pageable page) {
+    public ApplicationListResponse getAssignmentList(Integer classNumber, Pageable page) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
         page = PageRequest.of(Math.max(0, page.getPageNumber()-1), page.getPageSize());
 
-        String methodName = "findAllByDeadline" + user.getStudentClassNumber() + "AfterOrderByCreatedAtDesc";
+        String methodName;
+        if (user.getType().equals(AuthorityType.ADMIN))
+            methodName = "findAllByDeadline" + classNumber + "AfterOrderByCreatedAtDesc";
+        else
+            methodName = "findAllByDeadline" + user.getStudentClassNumber() + "AfterOrderByCreatedAtDesc";
+
         return this.getAssignmentList(
                 (Page<Assignment>) assignmentRepository.getClass()
                     .getDeclaredMethod(methodName, Pageable.class, LocalDate.class)

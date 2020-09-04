@@ -5,10 +5,7 @@ import kr.hs.dsm_scarfs.shank.payload.response.AssignmentContentResponse;
 import kr.hs.dsm_scarfs.shank.service.assignment.AssignmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -19,8 +16,9 @@ public class AssignmentController {
     private final AssignmentService assignmentService;
 
     @GetMapping
-    public ApplicationListResponse assignmentList(Pageable page) {
-        return assignmentService.getAssignmentList(page);
+    public ApplicationListResponse assignmentList(@RequestParam("class_number") Integer classNumber,
+                                                  Pageable page) {
+        return assignmentService.getAssignmentList(classNumber, page);
     }
 
     @GetMapping("/{assignmentId}")

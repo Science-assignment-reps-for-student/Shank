@@ -5,6 +5,6 @@ import kr.hs.dsm_scarfs.shank.payload.response.AssignmentContentResponse;
 import org.springframework.data.domain.Pageable;
 
 public interface AssignmentService {
-    ApplicationListResponse getAssignmentList(Pageable page);
+    ApplicationListResponse getAssignmentList(Integer classNumber, Pageable page);
     AssignmentContentResponse getAssignmentContent(Integer assignment);
 }
