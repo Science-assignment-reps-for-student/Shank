@@ -60,7 +60,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public ApplicationListResponse getBoardList(Integer classNumber, Pageable page) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
-        if (user.getType().equals(AuthorityType.ADMIN))
+        if (user.getType().equals(AuthorityType.ADMIN) && classNumber != null)
             return this.searchBoard("", classNumber, page);
         else
             return this.searchBoard("", user.getStudentClassNumber(), page);

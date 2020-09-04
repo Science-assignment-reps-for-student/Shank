@@ -46,7 +46,7 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
         page = PageRequest.of(Math.max(0, page.getPageNumber()-1), page.getPageSize());
 
         String methodName;
-        if (user.getType().equals(AuthorityType.ADMIN))
+        if (user.getType().equals(AuthorityType.ADMIN) && classNumber != null)
             methodName = "findAllByDeadline" + classNumber + "AfterOrderByCreatedAtDesc";
         else
             methodName = "findAllByDeadline" + user.getStudentClassNumber() + "AfterOrderByCreatedAtDesc";
