@@ -29,7 +29,7 @@ public class Board {
 
     private LocalDateTime updatedAt;
 
-    @Column(columnDefinition = "integer default 0")
+    @Column(columnDefinition = "int default 0")
     private Integer view;
 
     public Board view() {
