@@ -51,7 +51,7 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
         else
             methodName = "findAllByDeadline" + user.getStudentClassNumber() + "AfterOrderByCreatedAtDesc";
 
-        return this.getAssignmentList(
+        return this.getAssignmentList(classNumber,
                 (Page<Assignment>) assignmentRepository.getClass()
                     .getDeclaredMethod(methodName, Pageable.class, LocalDate.class)
                     .invoke(assignmentRepository, page, LocalDate.ofYearDay(2020, 1))
@@ -109,13 +109,15 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
     @Override
     public ApplicationListResponse searchApplication(String query, Pageable page) {
         page = PageRequest.of(Math.max(0, page.getPageNumber()-1), page.getPageSize());
-        return this.getAssignmentList(
+        return this.getAssignmentList(null,
                 assignmentRepository.findAllByTitleContainsOrDescriptionContainsOrderByCreatedAtDesc(query, query, page)
         );
     }
 
-    public ApplicationListResponse getAssignmentList(Page<Assignment> assignmentPages) {
+    private ApplicationListResponse getAssignmentList(Integer classNumber, Page<Assignment> assignmentPages) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
+        if (user.getType().equals(AuthorityType.STUDENT))
+            classNumber = user.getStudentClassNumber();
 
         List<AssignmentResponse> assignmentResponses = new ArrayList<>();
 
@@ -155,7 +157,7 @@ public class AssignmentServiceImpl implements AssignmentService, SearchService {
         return ApplicationListResponse.builder()
                 .totalElements(totalElement)
                 .totalPages(totalPage)
-                .classNumber(user.getStudentClassNumber())
+                .classNumber(classNumber)
                 .applicationResponses(assignmentResponses)
                 .build();
     }
