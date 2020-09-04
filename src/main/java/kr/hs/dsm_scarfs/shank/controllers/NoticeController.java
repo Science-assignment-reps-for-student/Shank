@@ -1,14 +1,14 @@
 package kr.hs.dsm_scarfs.shank.controllers;
 
+import kr.hs.dsm_scarfs.shank.payload.request.NoticeRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.ApplicationListResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.NoticeContentResponse;
 import kr.hs.dsm_scarfs.shank.service.notice.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/notice")
@@ -20,6 +20,11 @@ public class NoticeController {
     @GetMapping
     public ApplicationListResponse noticeList(Pageable page) {
         return noticeService.getNoticeList(page);
+    }
+
+    @PostMapping
+    public Integer writeNotice(@RequestBody @Valid NoticeRequest noticeRequest) {
+        return noticeService.writeNotice(noticeRequest);
     }
 
     @GetMapping("/{noticeId}")
