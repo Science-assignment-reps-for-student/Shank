@@ -2,10 +2,7 @@ package kr.hs.dsm_scarfs.shank.entites.board;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -32,6 +29,7 @@ public class Board {
 
     private LocalDateTime updatedAt;
 
+    @Column(columnDefinition = "integer default 0")
     private Integer view;
 
     public Board view() {
