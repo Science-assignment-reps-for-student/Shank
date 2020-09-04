@@ -40,7 +40,6 @@ public class Assignment {
 
     private LocalDateTime createdAt;
 
-    @Column(columnDefinition = "int default 0")
     private Integer view;
 
     public Assignment view() {

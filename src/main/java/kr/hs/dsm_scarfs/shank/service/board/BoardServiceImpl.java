@@ -191,6 +191,7 @@ public class BoardServiceImpl implements BoardService {
                         .classNumber(Integer.parseInt(classNumber))
                         .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                         .updatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                        .view(0)
                         .build()
         );
 

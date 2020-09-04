@@ -74,10 +74,11 @@ public class NoticeServiceImpl implements NoticeService, SearchService {
 
         Notice notice = noticeRepository.save(
                 Notice.builder()
-                    .title(noticeRequest.getTitle())
-                    .content(noticeRequest.getContent())
-                    .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-                    .build()
+                        .title(noticeRequest.getTitle())
+                        .content(noticeRequest.getContent())
+                        .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                        .view(0)
+                        .build()
         );
 
         return notice.getId();

@@ -22,7 +22,6 @@ public class Notice {
 
     private LocalDateTime createdAt;
 
-    @Column(columnDefinition = "int default 0")
     private Integer view;
 
     public Notice view() {
