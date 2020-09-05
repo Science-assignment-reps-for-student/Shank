@@ -253,7 +253,11 @@ public class BoardServiceImpl implements BoardService {
 
         if (user.getType().equals(AuthorityType.STUDENT))
             classNumber = user.getStudentClassNumber();
-        Page<Board> boardPage = boardRepository.findAllByClassNumberOrderByCreatedAtDesc(classNumber, page);
+
+        Page<Board> boardPage = boardRepository
+                .findAllByClassNumberAndTitleContainsOrClassNumberAndContentContainsOrderByCreatedAtDesc(
+                        classNumber, query, classNumber, query, page
+                );
 
         List<BoardResponse> boardResponse = new ArrayList<>();
 

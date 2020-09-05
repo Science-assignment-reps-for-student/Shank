@@ -10,7 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface BoardRepository extends CrudRepository<Board, Integer> {
-    Page<Board> findAllByClassNumberOrderByCreatedAtDesc(Integer classNumber, Pageable page);
+    Page<Board> findAllByClassNumberAndTitleContainsOrClassNumberAndContentContainsOrderByCreatedAtDesc(
+            Integer classNumber1, String title, Integer classNumber2, String content, Pageable pageable);
 
     Optional<Board> findTop1ByIdBeforeAndClassNumberOrderByIdDesc(Integer id, Integer classNumber);
 
