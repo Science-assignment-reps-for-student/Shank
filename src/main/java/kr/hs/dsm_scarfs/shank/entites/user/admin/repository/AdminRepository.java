@@ -1,6 +1,5 @@
 package kr.hs.dsm_scarfs.shank.entites.user.admin.repository;
 
-import kr.hs.dsm_scarfs.shank.entites.user.User;
 import kr.hs.dsm_scarfs.shank.entites.user.admin.Admin;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

@@ -1,5 +1,6 @@
 package kr.hs.dsm_scarfs.shank.entites.user;
 
+import kr.hs.dsm_scarfs.shank.entites.message.Message;
 import kr.hs.dsm_scarfs.shank.entites.user.admin.Admin;
 import kr.hs.dsm_scarfs.shank.entites.user.admin.repository.AdminRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
@@ -46,6 +47,15 @@ public class UserFactory {
         }
 
         return users;
+    }
+
+    public User getMessageSender(Message message) {
+        if (message.getType().equals(AuthorityType.ADMIN))
+            return adminRepository.findById(message.getAdminId())
+                    .orElseGet(() -> this.getDefaultUser(Admin.class));
+        else
+            return studentRepository.findById(message.getStudentId())
+                    .orElseGet(() -> this.getDefaultUser(Student.class));
     }
 
     public int[] getSortedId(User user1, User user2) {

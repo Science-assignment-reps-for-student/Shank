@@ -23,4 +23,6 @@ public class MessageResponse {
 
     private boolean isDeleted;
 
+    private boolean isMine;
+
 }

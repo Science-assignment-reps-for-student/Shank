@@ -36,6 +36,7 @@ public class MessageServiceImpl implements MessageService{
                     sortedId[0], sortedId[1]
             ).orElseThrow(MessageNotFoundException::new);
 
+            User sender = userFactory.getMessageSender(message);
             messageListResponses.add(
                     MessageListResponse.builder()
                         .userId(targetUser.getId())
@@ -45,6 +46,7 @@ public class MessageServiceImpl implements MessageService{
                         .messageTime(message.getTime())
                         .isShow(user.getType().equals(message.getType()) || message.isShow())
                         .isDeleted(message.isDeleted())
+                        .isMine(user.equals(sender))
                         .build()
             );
         }
@@ -66,6 +68,7 @@ public class MessageServiceImpl implements MessageService{
 
         List<MessageResponse> messageResponses = new ArrayList<>();
         for (Message message : messages) {
+            User sender = userFactory.getMessageSender(message);
             messageResponses.add(
                     MessageResponse.builder()
                         .id(message.getId())
@@ -73,6 +76,7 @@ public class MessageServiceImpl implements MessageService{
                         .time(message.getTime())
                         .type(message.getType())
                         .isDeleted(message.isDeleted())
+                        .isMine(user.equals(sender))
                         .build()
             );
             if (!user.getType().equals(message.getType()))

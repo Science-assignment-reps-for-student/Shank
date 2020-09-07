@@ -25,4 +25,6 @@ public class MessageListResponse {
 
     private boolean isDeleted;
 
+    private boolean isMine;
+
 }
