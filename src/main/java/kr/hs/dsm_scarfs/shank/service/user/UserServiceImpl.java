@@ -19,6 +19,7 @@ import kr.hs.dsm_scarfs.shank.exceptions.*;
 import kr.hs.dsm_scarfs.shank.payload.request.SignUpRequest;
 import kr.hs.dsm_scarfs.shank.payload.request.VerifyCodeRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.UserResponse;
+import kr.hs.dsm_scarfs.shank.payload.response.UserSearchResponse;
 import kr.hs.dsm_scarfs.shank.security.AuthorityType;
 import kr.hs.dsm_scarfs.shank.security.auth.AuthenticationFacade;
 import kr.hs.dsm_scarfs.shank.service.email.EmailService;
@@ -31,6 +32,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -153,6 +156,26 @@ public class UserServiceImpl implements UserService {
                 .completionAssignment(completionAssignment)
                 .remainingAssignment(remainingAssignment)
                 .build();
+    }
+
+    @Override
+    public List<UserSearchResponse> searchUsers(String query) {
+        User user = userFactory.getUser(authenticationFacade.getUserEmail());
+
+        List<UserSearchResponse> responses = new ArrayList<>();
+        for (Student student : studentRepository.findAllByNameContainsOrStudentNumberContains(query, query)) {
+            if (user.getType().equals(AuthorityType.STUDENT) && user.getId().equals(student.getId())) continue;
+
+            responses.add(
+                    UserSearchResponse.builder()
+                            .id(student.getId())
+                            .number(student.getStudentNumber())
+                            .name(student.getName())
+                            .build()
+            );
+        }
+
+        return responses;
     }
 
     private String randomCode() {
