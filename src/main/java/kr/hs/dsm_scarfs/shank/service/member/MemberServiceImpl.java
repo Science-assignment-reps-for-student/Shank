@@ -6,10 +6,7 @@ import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
 import kr.hs.dsm_scarfs.shank.entites.user.student.repository.StudentRepository;
 import kr.hs.dsm_scarfs.shank.entites.team.Team;
 import kr.hs.dsm_scarfs.shank.entites.team.repository.TeamRepository;
-import kr.hs.dsm_scarfs.shank.exceptions.MemberAlreadyIncludeException;
-import kr.hs.dsm_scarfs.shank.exceptions.MemberNotFoundException;
-import kr.hs.dsm_scarfs.shank.exceptions.TeamNotFoundException;
-import kr.hs.dsm_scarfs.shank.exceptions.UserNotLeaderException;
+import kr.hs.dsm_scarfs.shank.exceptions.*;
 import kr.hs.dsm_scarfs.shank.payload.request.MemberRequest;
 import kr.hs.dsm_scarfs.shank.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
@@ -31,18 +28,21 @@ public class MemberServiceImpl implements MemberService {
         Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotLeaderException::new);
 
+        Student target = studentRepository.findById(memberRequest.getTargetId())
+                .orElseThrow(MemberNotFoundException::new);
+
         Team team = teamRepository.findById(memberRequest.getTeamId())
                 .filter(t -> student.getId().equals(t.getLeaderId()))
                 .orElseThrow(TeamNotFoundException::new);
 
 
-        memberRepository.findByStudentIdAndAssignmentId(memberRequest.getTargetId(), team.getAssignmentId())
+        memberRepository.findByStudentIdAndAssignmentId(target.getId(), team.getAssignmentId())
                 .ifPresent(member -> { throw new MemberAlreadyIncludeException();});
 
         memberRepository.save(
                 Member.builder()
                     .assignmentId(team.getAssignmentId())
-                    .studentId(memberRequest.getTargetId())
+                    .studentId(target.getId())
                     .teamId(team.getId())
                     .build()
         );
@@ -55,6 +55,9 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = memberRepository.findById(targetId)
                 .orElseThrow(MemberNotFoundException::new);
+
+        if (student.getId().equals(targetId))
+            throw new InvalidTargetException();
 
         teamRepository.findById(member.getTeamId())
                 .filter(t -> student.getId().equals(t.getLeaderId()))

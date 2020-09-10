@@ -12,10 +12,11 @@ public enum ErrorCode {
     INVALID_AUTH_EMAIL(400,"Invalid Auth Email"),
     INVALID_CLASS_NUMBER(400,"Invalid Class Number"),
     INVALID_SEARCH_TYPE(400,"Invalid Search Type"),
+    INVALID_TARGET(400,"Invalid Target"),
     INVALID_TOKEN(401,"Invalid Token"),
     EXPIRED_TOKEN(401,"Expired Token"),
     USER_NOT_LEADER(401, "User Not Leader"),
-    PERMISSION_DENIED_EXCEPTION(401,"Permission Denied Exception"),
+    PERMISSION_DENIED_EXCEPTION(401,"Permission Denied"),
     TEAM_NOT_FOUND(404,"Team Not Found"),
     USER_NOT_FOUND(404,"User Not Found"),
     MEMBER_NOT_FOUND(404,"Member Not Found"),
@@ -26,10 +27,11 @@ public enum ErrorCode {
     TEAM_LEADER_NOT_FOUND(404, "Team Leader Not Found"),
     IMAGE_NOT_FOUND(404, "Image Not Found"),
     NUMBER_DUPLICATION(409,"Number Duplication"),
-    USER_ALREADY_EVALUATION_EXCEPTION(409, "User Already Evaluation Exception"),
-    USER_ALREADY_EXISTS_EXCEPTION(409,"User Already Exists Exception"),
-    USER_ALREADY_INCLUDE_EXCEPTION(409,"User Already Include Exception"),
-    MEMBER_ALREADY_INCLUDE_EXCEPTION(409, "Member Already Include Exception");
+    USER_ALREADY_EVALUATION_EXCEPTION(409, "User Already Evaluation"),
+    USER_ALREADY_EXISTS_EXCEPTION(409,"User Already Exists"),
+    USER_ALREADY_INCLUDE_EXCEPTION(409,"User Already Include"),
+    MEMBER_ALREADY_INCLUDE_EXCEPTION(409, "Member Already Include"),
+    TEAM_ALREADY_EXISTS_EXCEPTION(409, "Team Already Exists");
 
     private final int status;
 

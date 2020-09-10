@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface TeamRepository extends CrudRepository<Team, Integer> {
     Optional<Team> findByLeaderIdAndAssignmentId(Integer leaderId, Integer assignmentId);
+    Optional<Team> findByAssignmentIdAndName(Integer assignmentId, String teamName);
 }

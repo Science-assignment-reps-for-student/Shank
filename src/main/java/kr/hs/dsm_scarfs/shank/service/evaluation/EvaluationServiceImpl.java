@@ -101,7 +101,8 @@ public class EvaluationServiceImpl implements EvaluationService {
         assignmentRepository.findById(assignmentId)
                 .orElseThrow(ApplicationNotFoundException::new);
 
-        Member me = memberRepository.findByAssignmentIdAndStudentId(assignmentId, student.getId());
+        Member me = memberRepository.findByStudentIdAndAssignmentId(student.getId(), assignmentId)
+                .orElseThrow(MemberNotFoundException::new);
         List<Member> members = memberRepository.findAllByTeamIdAndStudentIdNot(me.getTeamId(), student.getId());
         List<EvaluationResponse> evaluationResponses = new ArrayList<>();
 

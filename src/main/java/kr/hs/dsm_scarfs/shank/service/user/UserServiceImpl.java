@@ -129,9 +129,9 @@ public class UserServiceImpl implements UserService {
 
         for (Assignment assignment : assignmentPage) {
             if (user.getType().equals(AuthorityType.ADMIN)) break;
-            Optional<Member> member = memberRepository.findByStudentIdAndAssignmentId(user.getId(), assignment.getId());
 
             if (assignment.getType().equals(AssignmentType.TEAM)) {
+                Optional<Member> member = memberRepository.findByStudentIdAndAssignmentId(user.getId(), assignment.getId());
                 if (member.isPresent()) {
                     if (teamFileRepository.existsByAssignmentIdAndTeamId(assignment.getId(), member.get().getTeamId())) {
                         completionAssignment++;

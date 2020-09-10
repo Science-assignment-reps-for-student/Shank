@@ -13,5 +13,4 @@ public interface MemberRepository extends CrudRepository<Member, Integer> {
     List<Member> findAllByTeamId(Integer teamId);
     List<Member> findAllByTeamIdAndStudentIdNot(Integer teamId, Integer selfId);
     void deleteAllByTeamId(Integer teamId);
-    Member findByAssignmentIdAndStudentId(Integer assignmentId, Integer studentId);
 }

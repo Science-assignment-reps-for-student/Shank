@@ -20,7 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class TeamServiceImpl implements TeamService{
+public class TeamServiceImpl implements TeamService {
 
     private final AuthenticationFacade authenticationFacade;
 
@@ -75,6 +75,16 @@ public class TeamServiceImpl implements TeamService{
 
         assignmentRepository.findById(teamRequest.getAssignmentId())
                 .orElseThrow(ApplicationNotFoundException::new);
+
+        memberRepository.findByStudentIdAndAssignmentId(student.getId(), teamRequest.getAssignmentId())
+                .ifPresent(member -> {
+                    throw new UserAlreadyIncludeException();
+                });
+
+        teamRepository.findByAssignmentIdAndName(teamRequest.getAssignmentId(), teamRequest.getTeamName())
+                .ifPresent(team -> {
+                    throw new TeamAlreadyExistsException();
+                });
 
         Team team = teamRepository.save(
                 Team.builder()
