@@ -12,6 +12,10 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+    all {
+        exclude group: 'org.slf4j', module: 'slf4j-simple'
+        exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    }
 }
 
 repositories {
@@ -19,9 +23,7 @@ repositories {
     maven { url 'https://repo.spring.io/milestone' }
     maven { url 'https://repo.spring.io/snapshot' }
 }
-configurations {
-    all*.exclude module : 'spring-boot-starter-logging'
-}
+
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
