@@ -5,7 +5,6 @@ import lombok.Getter;
 
 import java.util.List;
 
-
 @Getter
 @Builder
 public class TeamResponse {
@@ -17,6 +16,8 @@ public class TeamResponse {
     private Integer leaderId;
 
     private String leaderName;
+
+    private boolean isLeader;
 
     private List<MemberResponse> memberList;
 

@@ -68,6 +68,7 @@ public class TeamServiceImpl implements TeamService {
                     .teamName(team.getName())
                     .leaderId(leader.getId())
                     .leaderName(leader.getName())
+                    .isLeader(student.getId().equals(leader.getId()))
                     .memberList(memberResponses)
                     .build();
     }
