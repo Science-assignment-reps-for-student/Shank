@@ -7,6 +7,7 @@ import net.sargue.mailgun.Response;
 import net.sargue.mailgun.content.Body;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -23,6 +24,7 @@ public class EmailServiceImpl implements EmailService {
     @Value("${email.apikey}")
     private String apiKey;
 
+    @Async
     @Override
     public void sendEmail(String receiveEmail, String code) {
         Configuration configuration = new Configuration()
