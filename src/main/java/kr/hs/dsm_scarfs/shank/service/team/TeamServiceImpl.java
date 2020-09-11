@@ -37,7 +37,10 @@ public class TeamServiceImpl implements TeamService {
         assignmentRepository.findById(assignmentId)
                 .orElseThrow(ApplicationNotFoundException::new);
 
-        Team team = teamRepository.findByLeaderIdAndAssignmentId(student.getId(), assignmentId)
+        Member me = memberRepository.findByStudentIdAndAssignmentId(student.getId(), assignmentId)
+                .orElseThrow(TeamNotFoundException::new);
+
+        Team team = teamRepository.findById(me.getTeamId())
                 .orElseThrow(TeamNotFoundException::new);
 
         Student leader = studentRepository.findById(team.getLeaderId())
@@ -46,8 +49,8 @@ public class TeamServiceImpl implements TeamService {
         List<MemberResponse> memberResponses = new ArrayList<>();
 
         for (Member member : memberRepository.findAllByTeamId(team.getId())) {
-            if (member.getId().equals(leader.getId())) continue;
-            Student memberStudent = studentRepository.findById(member.getId())
+            if (member.getStudentId().equals(leader.getId())) continue;
+            Student memberStudent = studentRepository.findById(member.getStudentId())
                     .orElseThrow(MemberNotFoundException::new);
 
             memberResponses.add(

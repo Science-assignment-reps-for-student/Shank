@@ -13,7 +13,7 @@ public class TeamController {
 
     private final TeamService teamService;
 
-    @GetMapping("{homeworkId}")
+    @GetMapping("/{homeworkId}")
     public TeamResponse getTeam(@PathVariable Integer homeworkId) {
         return teamService.getTeam(homeworkId);
     }
