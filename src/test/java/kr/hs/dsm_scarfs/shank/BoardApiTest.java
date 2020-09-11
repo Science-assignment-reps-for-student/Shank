@@ -82,8 +82,8 @@ class BoardApiTest {
     @WithMockUser(username = "test", password = "P@ssw0rd")
     public void getBoardListTest() throws Exception {
         writeBoard();
-        mvc.perform(get("/board")).andDo(print());
-                //.andExpect(status().isOk());
+        mvc.perform(get("/board")).andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
