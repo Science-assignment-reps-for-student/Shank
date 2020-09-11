@@ -7,5 +7,4 @@ public interface TeamService {
     TeamResponse getTeam(Integer assignmentId);
     void addTeam(TeamRequest teamRequest);
     void deleteTeam(Integer teamId);
-
 }
