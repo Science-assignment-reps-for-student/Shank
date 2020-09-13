@@ -58,6 +58,7 @@ public class TeamServiceImpl implements TeamService {
                     MemberResponse.builder()
                         .memberId(member.getId())
                         .memberName(memberStudent.getName())
+                        .memberNumber(memberStudent.getStudentNumber())
                         .build()
             );
         }

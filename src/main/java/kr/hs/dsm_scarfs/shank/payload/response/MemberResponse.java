@@ -6,8 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class MemberResponse {
-
-    private Integer memberId;
-
-    private String memberName;
+    private final Integer memberId;
+    private final String memberName;
+    private final String memberNumber;
 }
