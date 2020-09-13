@@ -13,5 +13,5 @@ public interface UserService {
     void sendEmail(String email);
     void verifyEmail(VerifyCodeRequest verifyCodeRequest);
     UserResponse getUser(Pageable page);
-    List<UserSearchResponse> searchUsers(String query);
+    List<UserSearchResponse> searchUsers(String query, Integer assignmentId);
 }

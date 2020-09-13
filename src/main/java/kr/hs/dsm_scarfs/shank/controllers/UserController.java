@@ -7,6 +7,7 @@ import kr.hs.dsm_scarfs.shank.payload.response.UserResponse;
 import kr.hs.dsm_scarfs.shank.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -41,8 +42,9 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public List<UserSearchResponse> searchMember(@RequestParam("query") String query) {
-        return userService.searchUsers(query);
+    public List<UserSearchResponse> searchMember(@RequestParam("query") String query,
+                                                 @RequestParam("assignment_id") @Nullable Integer assignmentId) {
+        return userService.searchUsers(query, assignmentId);
     }
 
 }

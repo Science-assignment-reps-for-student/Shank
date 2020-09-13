@@ -159,11 +159,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserSearchResponse> searchUsers(String query) {
+    public List<UserSearchResponse> searchUsers(String query, Integer assignmentId) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         List<UserSearchResponse> responses = new ArrayList<>();
-        for (Student student : studentRepository.findAllByNameContainsOrStudentNumberContains(query, query)) {
+        List<Student> students;
+        if (user.getType().equals(AuthorityType.ADMIN))
+            students = studentRepository.findAllByNameContainsOrStudentNumberContains(query, query);
+        else
+            students = studentRepository.searchMember(assignmentId, query);
+
+        for (Student student : students) {
             if (user.getType().equals(AuthorityType.STUDENT) && user.getId().equals(student.getId())) continue;
 
             responses.add(
