@@ -53,6 +53,7 @@ public class EvaluationServiceImpl implements EvaluationService {
         selfEvaluationRepository.save(
                 SelfEvaluation.builder()
                     .assignmentId(selfEvaluationRequest.getAssignmentId())
+                    .studentId(student.getId())
                     .attitude(selfEvaluationRequest.getAttitude())
                     .communication(selfEvaluationRequest.getCommunication())
                     .scientificAccuracy(selfEvaluationRequest.getScientificAccuracy())
