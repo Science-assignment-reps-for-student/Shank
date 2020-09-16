@@ -85,8 +85,11 @@ public class AssignmentServiceImpl implements AssignmentService {
                     isComplete = true;
                 }
             }
-        } else {
+        } else if (assignment.getType().equals(AssignmentType.PERSONAL)){
             if (personalFileRepository.existsByAssignmentIdAndStudentId(assignment.getId(), user.getId()))
+                isComplete = true;
+        } else {
+            if (experimentFileRepository.existsByAssignmentIdAndStudentId(assignment.getId(), user.getId()))
                 isComplete = true;
         }
 
