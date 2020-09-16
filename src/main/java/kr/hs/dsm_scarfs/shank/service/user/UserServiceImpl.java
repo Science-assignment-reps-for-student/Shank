@@ -167,7 +167,11 @@ public class UserServiceImpl implements UserService {
         if (user.getType().equals(AuthorityType.ADMIN))
             students = studentRepository.findAllByNameContainsOrStudentNumberContains(query, query);
         else
-            students = studentRepository.searchMember(assignmentId, "%"+query+"%");
+            students = studentRepository.searchMember(
+                    assignmentId,
+                    "%" + query + "%",
+                    "_" + user.getStudentClassNumber() + "__"
+            );
 
         for (Student student : students) {
             if (user.getType().equals(AuthorityType.STUDENT) && user.getId().equals(student.getId())) continue;
