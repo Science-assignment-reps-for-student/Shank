@@ -1,5 +1,6 @@
 package kr.hs.dsm_scarfs.shank.service.assignment;
 
+import kr.hs.dsm_scarfs.shank.entites.file.experiment.repository.ExperimentFileRepository;
 import kr.hs.dsm_scarfs.shank.entites.file.team.repository.TeamFileRepository;
 import kr.hs.dsm_scarfs.shank.entites.file.personal.repository.PersonalFileRepository;
 import kr.hs.dsm_scarfs.shank.entites.assignment.Assignment;
@@ -38,6 +39,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     private final MemberRepository memberRepository;
     private final TeamFileRepository teamFileRepository;
     private final PersonalFileRepository personalFileRepository;
+    private final ExperimentFileRepository experimentFileRepository;
 
     @SneakyThrows
     @Override
@@ -60,20 +62,20 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @SneakyThrows
     @Override
-    public AssignmentContentResponse getAssignmentContent(Integer homeworkId) {
+    public AssignmentContentResponse getAssignmentContent(Integer assignmentId) {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
-        Assignment assignment = assignmentRepository.findById(homeworkId)
+        Assignment assignment = assignmentRepository.findById(assignmentId)
                 .orElseThrow(ApplicationNotFoundException::new);
 
         LocalDate deadLine = assignment.getCurrentDeadLine(user.getStudentClassNumber());
 
         boolean isComplete = false;
 
-        Assignment nextAssignment = assignmentRepository.findTop1ByIdAfterOrderByIdAsc(homeworkId)
+        Assignment nextAssignment = assignmentRepository.findTop1ByIdAfterOrderByIdAsc(assignmentId)
                 .orElseGet(() -> Assignment.builder().build());
 
-        Assignment preAssignment = assignmentRepository.findTop1ByIdBeforeOrderByIdDesc(homeworkId)
+        Assignment preAssignment = assignmentRepository.findTop1ByIdBeforeOrderByIdDesc(assignmentId)
                 .orElseGet(() -> Assignment.builder().build());
 
         Optional<Member> member = memberRepository.findByStudentIdAndAssignmentId(user.getId(), assignment.getId());
@@ -133,8 +135,10 @@ public class AssignmentServiceImpl implements AssignmentService {
                     isComplete = teamFileRepository.existsByAssignmentIdAndTeamId(assignment.getId(),
                             member.get().getTeamId());
                 }
-            } else {
+            } else if (assignment.getType().equals(AssignmentType.PERSONAL)){
                 isComplete = personalFileRepository.existsByAssignmentIdAndStudentId(assignment.getId(), user.getId());
+            } else {
+                isComplete = experimentFileRepository.existsByAssignmentIdAndStudentId(assignment.getId(), user.getId());
             }
 
             String preViewDescription =
