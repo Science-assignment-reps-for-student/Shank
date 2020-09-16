@@ -1,6 +1,7 @@
 package kr.hs.dsm_scarfs.shank.service.user;
 
 import kr.hs.dsm_scarfs.shank.entites.authcode.repository.AuthCodeRepository;
+import kr.hs.dsm_scarfs.shank.entites.file.experiment.repository.ExperimentFileRepository;
 import kr.hs.dsm_scarfs.shank.entites.file.team.repository.TeamFileRepository;
 import kr.hs.dsm_scarfs.shank.entites.file.personal.repository.PersonalFileRepository;
 import kr.hs.dsm_scarfs.shank.entites.assignment.Assignment;
@@ -49,6 +50,7 @@ public class UserServiceImpl implements UserService {
     private final EmailVerificationRepository emailVerificationRepository;
     private final AuthenticationFacade authenticationFacade;
     private final PersonalFileRepository personalFileRepository;
+    private final ExperimentFileRepository experimentFileRepository;
     private final TeamFileRepository teamFileRepository;
     private final AssignmentRepository assignmentRepository;
     private final MemberRepository memberRepository;
@@ -140,8 +142,13 @@ public class UserServiceImpl implements UserService {
                 }
 
                 remainingAssignment++;
-            } else {
+            } else if (assignment.getType().equals(AssignmentType.PERSONAL)) {
                 if (personalFileRepository.existsByAssignmentIdAndStudentId(assignment.getId(), user.getId()))
+                    completionAssignment++;
+                else
+                    remainingAssignment++;
+            } else {
+                if (experimentFileRepository.existsByAssignmentIdAndStudentId(assignment.getId(), user.getId()))
                     completionAssignment++;
                 else
                     remainingAssignment++;

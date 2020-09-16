@@ -79,13 +79,13 @@ public class EvaluationServiceImpl implements EvaluationService {
 
         if (userId.equals(targetId)) throw new TargetNotFoundException();
 
-        mutualEvaluationRepository.findByAssignmentIdAndUserIdAndTargetId(assignmentId, userId, targetId)
+        mutualEvaluationRepository.findByAssignmentIdAndStudentIdAndTargetId(assignmentId, userId, targetId)
                 .ifPresent(mutualEvaluation -> {throw new UserAlreadyEvaluationException();});
 
         mutualEvaluationRepository.save(
                 MutualEvaluation.builder()
                     .assignmentId(assignmentId)
-                    .userId(userId)
+                    .studentId(userId)
                     .targetId(targetId)
                     .communication(mutualEvaluationRequest.getCommunication())
                     .cooperation(mutualEvaluationRequest.getCooperation())
@@ -127,7 +127,7 @@ public class EvaluationServiceImpl implements EvaluationService {
                         .studentId(memberStudent.getId())
                         .studentNumber(memberStudent.getStudentNumber())
                         .studentName(memberStudent.getName())
-                        .isFinish(mutualEvaluationRepository.existsByAssignmentIdAndUserIdAndTargetId(
+                        .isFinish(mutualEvaluationRepository.existsByAssignmentIdAndStudentIdAndTargetId(
                                 assignmentId, student.getId(), member.getStudentId()
                         ))
                         .build()
@@ -157,7 +157,7 @@ public class EvaluationServiceImpl implements EvaluationService {
         User user = userFactory.getUser(authenticationFacade.getUserEmail());
 
         MutualEvaluation mutualEvaluation =
-                mutualEvaluationRepository.findByAssignmentIdAndUserIdAndTargetId(assignmentId, user.getId(), targetId)
+                mutualEvaluationRepository.findByAssignmentIdAndStudentIdAndTargetId(assignmentId, user.getId(), targetId)
                         .orElseThrow(ApplicationNotFoundException::new);
 
         return MutualEvaluationInfo.builder()

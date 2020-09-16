@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface MutualEvaluationRepository extends CrudRepository<MutualEvaluation, Integer> {
-    Optional<MutualEvaluation> findByAssignmentIdAndUserIdAndTargetId(Integer assignmentId, Integer userId, Integer targetId);
-    boolean existsByAssignmentIdAndUserIdAndTargetId(Integer assignmentId, Integer userId, Integer targetId);
+    Optional<MutualEvaluation> findByAssignmentIdAndStudentIdAndTargetId(Integer assignmentId, Integer studentId, Integer targetId);
+    boolean existsByAssignmentIdAndStudentIdAndTargetId(Integer assignmentId, Integer studentId, Integer targetId);
 }
