@@ -3,6 +3,7 @@ package kr.hs.dsm_scarfs.shank.entites.notice;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -18,5 +19,14 @@ public class Notice {
     private String title;
 
     private String content;
+
+    private LocalDateTime createdAt;
+
+    private Integer view;
+
+    public Notice view() {
+        this.view++;
+        return this;
+    }
 
 }

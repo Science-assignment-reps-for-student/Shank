@@ -17,7 +17,7 @@ public class Team {
 
     private Integer leaderId;
 
-    private Integer homeworkId;
+    private Integer assignmentId;
 
     private String name;
 

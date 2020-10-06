@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -18,14 +19,16 @@ public class SelfEvaluation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer userId;
+    private Integer studentId;
 
-    private Integer homeworkId;
+    private Integer assignmentId;
 
     private Integer scientificAccuracy;
 
     private Integer communication;
 
     private Integer attitude;
+
+    private LocalDateTime createdAt;
 
 }

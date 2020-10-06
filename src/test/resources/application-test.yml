@@ -1,0 +1,44 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  redis:
+    port: ${REDIS_PORT:6379}
+    host: ${REDIS_HOST:localhost}
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 200MB
+      max-request-size: 215MB
+  jpa:
+    database: h2
+    generate-ddl: true
+
+spring.datasource:
+  driver-class-name: org.h2.Driver
+  url: jdbc:h2:mem:test
+  username: test
+  password: 1234
+
+auth:
+  jwt:
+    secret: ${JWT_SECRET_KEY:dGVzdA==}
+    exp:
+      access: ${JWT_ACCESS_EXP:10}
+      refresh: ${JWT_REFRESH_EXP:10}
+    header: ${JWT_HEADER:header}
+    prefix: ${JWT_PREFIX:prefix}
+
+image:
+  upload:
+    dir: ${IMAGE_DIR:dir}
+
+email:
+  domain: ${EMAIL_DOMAIN:asd}
+  apikey: ${EMAIL_APIKEY:asd}
