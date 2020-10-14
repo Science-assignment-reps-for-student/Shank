@@ -25,7 +25,7 @@ public class Admin implements User {
     private String name;
 
     public String getStudentNumber() {
-        return "1101";
+        return "1100";
     }
 
     public Integer getStudentClassNumber() {

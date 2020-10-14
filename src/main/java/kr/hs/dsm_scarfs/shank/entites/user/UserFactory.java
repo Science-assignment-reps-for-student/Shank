@@ -68,7 +68,7 @@ public class UserFactory {
     public <T extends User> T getDefaultUser(Class<T> authorityType) {
         if (authorityType.equals(Student.class))
             return (T) Student.builder()
-                    .studentNumber("1101")
+                    .studentNumber("1100")
                     .name("(알수없음)")
                     .build();
         else
