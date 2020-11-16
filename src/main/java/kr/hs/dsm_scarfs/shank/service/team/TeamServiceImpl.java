@@ -125,6 +125,7 @@ public class TeamServiceImpl implements TeamService {
         if (!student.getId().equals(team.getLeaderId())) throw new UserNotLeaderException();
 
         for (Member member : memberRepository.findAllByTeamId(teamId)) {
+            selfEvaluationRepository.deleteByStudentIdAndAssignmentId(member.getStudentId(), team.getAssignmentId());
             mutualEvaluationRepository.deleteAllByStudentIdAndAssignmentId(member.getStudentId(), team.getAssignmentId());
         }
         selfEvaluationRepository.deleteByStudentIdAndAssignmentId(student.getId(), team.getAssignmentId());
