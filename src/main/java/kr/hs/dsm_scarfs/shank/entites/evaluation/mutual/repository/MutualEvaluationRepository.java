@@ -11,4 +11,5 @@ public interface MutualEvaluationRepository extends CrudRepository<MutualEvaluat
     Optional<MutualEvaluation> findByAssignmentIdAndStudentIdAndTargetId(Integer assignmentId, Integer studentId, Integer targetId);
     boolean existsByAssignmentIdAndStudentIdAndTargetId(Integer assignmentId, Integer studentId, Integer targetId);
     void deleteAllByStudentIdAndAssignmentId(Integer studentId, Integer assignmentId);
+    void deleteAllByAssignmentIdAndTargetId(Integer assignmentId, Integer targetId);
 }
