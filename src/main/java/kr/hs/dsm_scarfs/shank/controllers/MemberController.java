@@ -14,7 +14,7 @@ public class MemberController {
 
     @PostMapping
     public void setMember(@RequestBody MemberRequest memberRequest) {
-        memberService.setMember(memberRequest);
+        memberService.addMember(memberRequest);
     }
 
     @DeleteMapping("/{targetId}")

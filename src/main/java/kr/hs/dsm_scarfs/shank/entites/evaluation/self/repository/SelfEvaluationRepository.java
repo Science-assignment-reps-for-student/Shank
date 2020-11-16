@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface SelfEvaluationRepository extends CrudRepository<SelfEvaluation, Integer> {
     Optional<SelfEvaluation> findByAssignmentIdAndStudentId(Integer assignmentId, Integer studentId);
     boolean existsByAssignmentIdAndStudentId(Integer assignmentId, Integer studentId);
+    void deleteByStudentIdAndAssignmentId(Integer studentId, Integer assignmentId);
 }

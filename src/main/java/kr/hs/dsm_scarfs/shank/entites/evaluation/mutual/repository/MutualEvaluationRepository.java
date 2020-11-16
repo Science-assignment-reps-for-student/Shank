@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface MutualEvaluationRepository extends CrudRepository<MutualEvaluation, Integer> {
     Optional<MutualEvaluation> findByAssignmentIdAndStudentIdAndTargetId(Integer assignmentId, Integer studentId, Integer targetId);
     boolean existsByAssignmentIdAndStudentIdAndTargetId(Integer assignmentId, Integer studentId, Integer targetId);
+    void deleteAllByStudentIdAndAssignmentId(Integer studentId, Integer assignmentId);
 }

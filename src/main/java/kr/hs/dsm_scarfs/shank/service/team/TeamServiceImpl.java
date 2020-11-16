@@ -1,6 +1,8 @@
 package kr.hs.dsm_scarfs.shank.service.team;
 
 import kr.hs.dsm_scarfs.shank.entites.assignment.repository.AssignmentRepository;
+import kr.hs.dsm_scarfs.shank.entites.evaluation.mutual.repository.MutualEvaluationRepository;
+import kr.hs.dsm_scarfs.shank.entites.evaluation.self.repository.SelfEvaluationRepository;
 import kr.hs.dsm_scarfs.shank.entites.member.Member;
 import kr.hs.dsm_scarfs.shank.entites.member.repository.MemberRepository;
 import kr.hs.dsm_scarfs.shank.entites.user.student.Student;
@@ -29,6 +31,8 @@ public class TeamServiceImpl implements TeamService {
     private final AssignmentRepository assignmentRepository;
     private final StudentRepository studentRepository;
     private final MemberRepository memberRepository;
+    private final SelfEvaluationRepository selfEvaluationRepository;
+    private final MutualEvaluationRepository mutualEvaluationRepository;
 
     @Override
     public TeamResponse getTeam(Integer assignmentId) {
@@ -120,6 +124,10 @@ public class TeamServiceImpl implements TeamService {
 
         if (!student.getId().equals(team.getLeaderId())) throw new UserNotLeaderException();
 
+        for (Member member : memberRepository.findAllByTeamId(teamId)) {
+            mutualEvaluationRepository.deleteAllByStudentIdAndAssignmentId(member.getStudentId(), team.getAssignmentId());
+        }
+        selfEvaluationRepository.deleteByStudentIdAndAssignmentId(student.getId(), team.getAssignmentId());
         memberRepository.deleteAllByTeamId(teamId);
         teamRepository.delete(team);
     }

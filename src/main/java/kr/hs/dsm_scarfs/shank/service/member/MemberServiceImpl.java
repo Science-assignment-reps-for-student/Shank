@@ -24,7 +24,7 @@ public class MemberServiceImpl implements MemberService {
     private final AuthenticationFacade authenticationFacade;
 
     @Override
-    public void setMember(MemberRequest memberRequest) {
+    public void addMember(MemberRequest memberRequest) {
         Student student = studentRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotLeaderException::new);
 
@@ -37,7 +37,9 @@ public class MemberServiceImpl implements MemberService {
 
 
         memberRepository.findByStudentIdAndAssignmentId(target.getId(), team.getAssignmentId())
-                .ifPresent(member -> { throw new MemberAlreadyIncludeException();});
+                .ifPresent(member -> {
+                    throw new MemberAlreadyIncludeException();
+                });
 
         memberRepository.save(
                 Member.builder()

@@ -6,6 +6,8 @@ import kr.hs.dsm_scarfs.shank.service.team.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/team")
 @RequiredArgsConstructor
@@ -19,7 +21,7 @@ public class TeamController {
     }
 
     @PostMapping
-    public void addTeam(@RequestBody TeamRequest teamRequest) {
+    public void addTeam(@RequestBody @Valid TeamRequest teamRequest) {
         teamService.addTeam(teamRequest);
     }
 
