@@ -21,6 +21,7 @@ public enum ErrorCode {
     USER_NOT_FOUND(404,"User Not Found"),
     MEMBER_NOT_FOUND(404,"Member Not Found"),
     TARGET_NOT_FOUND(404,"Target Not Found"),
+    NOTICE_NOT_FOUND(404, "Notice Not Found"),
     COMMENT_NOT_FOUND(404, "Comment Not Found"),
     MESSAGE_NOT_FOUND(404, "Message Not Found"),
     APPLICATION_NOT_FOUND(404,"Application Not Found"),
