@@ -5,8 +5,11 @@ import kr.hs.dsm_scarfs.shank.entites.notice.repository.NoticeRepository;
 
 import kr.hs.dsm_scarfs.shank.entites.user.User;
 import kr.hs.dsm_scarfs.shank.entites.user.UserFactory;
+import kr.hs.dsm_scarfs.shank.entites.user.admin.repository.AdminRepository;
 import kr.hs.dsm_scarfs.shank.exceptions.ApplicationNotFoundException;
+import kr.hs.dsm_scarfs.shank.exceptions.NoticeNotFoundException;
 import kr.hs.dsm_scarfs.shank.exceptions.PermissionDeniedException;
+import kr.hs.dsm_scarfs.shank.exceptions.UserNotFoundException;
 import kr.hs.dsm_scarfs.shank.payload.request.NoticeRequest;
 import kr.hs.dsm_scarfs.shank.payload.response.ApplicationListResponse;
 import kr.hs.dsm_scarfs.shank.payload.response.NoticeContentResponse;
@@ -34,6 +37,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     private final AuthenticationFacade authenticationFacade;
     private final UserFactory userFactory;
+    private final AdminRepository adminRepository;
 
     @Override
     public ApplicationListResponse getNoticeList(Pageable page) {
@@ -82,6 +86,17 @@ public class NoticeServiceImpl implements NoticeService {
         );
 
         return notice.getId();
+    }
+
+    @Override
+    public void deleteNotice(Integer noticeId) {
+        noticeRepository.findById(noticeId)
+                .orElseThrow(NoticeNotFoundException::new);
+
+        adminRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
+
+        noticeRepository.deleteById(noticeId);
     }
 
     @Override
