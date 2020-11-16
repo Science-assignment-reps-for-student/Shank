@@ -31,4 +31,9 @@ public class NoticeController {
     public NoticeContentResponse getNoticeContent(@PathVariable Integer noticeId) {
         return noticeService.getNoticeContent(noticeId);
     }
+
+    @DeleteMapping("/{noticeId}")
+    public void deleteNotice(@PathVariable Integer noticeId) {
+        noticeService.deleteNotice(noticeId);
+    }
 }
