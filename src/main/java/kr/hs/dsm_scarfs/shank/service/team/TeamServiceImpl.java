@@ -91,10 +91,10 @@ public class TeamServiceImpl implements TeamService {
                     throw new UserAlreadyIncludeException();
                 });
 
-        teamRepository.findByAssignmentIdAndName(teamRequest.getAssignmentId(), teamRequest.getTeamName())
-                .ifPresent(team -> {
-                    throw new TeamAlreadyExistsException();
-                });
+//        teamRepository.findByAssignmentIdAndName(teamRequest.getAssignmentId(), teamRequest.getTeamName())
+//                .ifPresent(team -> {
+//                    throw new TeamAlreadyExistsException();
+//                });
 
         Team team = teamRepository.save(
                 Team.builder()
