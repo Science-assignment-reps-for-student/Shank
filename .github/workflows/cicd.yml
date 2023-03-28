@@ -24,7 +24,7 @@ jobs:
         run: docker build -t leaguelugas/shank:dev .
 
       - name: Publish To Registry
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           name: leaguelugas/shank:dev
           username: ${{ secrets.DOCKER_USERNAME }}
